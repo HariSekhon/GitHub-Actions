@@ -14,6 +14,7 @@
 # MarketPlace:  https://github.com/marketplace?type=actions
 #               https://github.com/marketplace?query=publisher%3Aactions&type=actions
 
+---
 # XXX: Edit - badges appear with this name
 name: My Workflow
 
@@ -109,7 +110,7 @@ env:
 
 # https://docs.github.com/en/actions/learn-github-actions/events-that-trigger-workflows
 
-on: # [push]
+on:
   push:
     branches:
       - master
@@ -129,7 +130,7 @@ on: # [push]
     #    required: true  # or false
   schedule:
     # * is a special character in YAML so you have to quote this string
-    - cron:  '0 0 * * 1'
+    - cron: '0 0 * * 1'
 
 # ============================================================================ #
 #                                    J o b s
@@ -166,89 +167,89 @@ jobs:
 
     # @<tag/branch/SHA>  # GitHub recommends SHA for 3rd party actions for security
     steps:
-    # ============================================================================ #
-    #                                  S e t u p
-    # ============================================================================ #
-    #
-    # do checkout first so we can generate dynamic environment variables for branch, tags, SHA etc.
-    # https://github.com/marketplace/actions/checkout
-    - uses: actions/checkout@v2
-      with:
+      # ============================================================================ #
+      #                                  S e t u p
+      # ============================================================================ #
+      #
+      # do checkout first so we can generate dynamic environment variables for branch, tags, SHA etc.
+      # https://github.com/marketplace/actions/checkout
+      - uses: actions/checkout@v2
+        with:
           submodules: true
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ env.AWS_DEFAULT_REGION }}
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_DEFAULT_REGION }}
 
-    # https://github.com/marketplace/actions/setup-python
-    - uses: actions/setup-python@v2
-      with:
-        python-version: '3.x' # Version range or exact version of a Python version to use, using SemVer's version range syntax
-        #python-version: ${{ matrix.python-version }}
+      # https://github.com/marketplace/actions/setup-python
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.x' # Version range or exact version of a Python version to use, using SemVer's version range syntax
+          #python-version: ${{ matrix.python-version }}
 
-    # https://github.com/marketplace/actions/setup-java-jdk
-    - uses: actions/setup-java@v2
-      with:
-        distribution: 'temurin' # See 'Supported distributions' for available options
-        java-version: '17'  # 8, 11, 16, 17
+      # https://github.com/marketplace/actions/setup-java-jdk
+      - uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin' # See 'Supported distributions' for available options
+          java-version: '17'  # 8, 11, 16, 17
 
-    # https://github.com/marketplace/actions/setup-node-js-environment
-    #
-    - uses: actions/setup-node@v2
-      with:
-        node-version: '14'
-
-    # ============================================================================ #
-    #                                 B u i l d
-    # ============================================================================ #
-
-    # all run steps seem to operate with 'set -e'
-
-    # Create Dynamic Environment Variables by echo'ing KEY=VALUE >> $GITHUB_ENV
-    #
-    - name: Generate env GITHUB_SHA_SHORT
-      run: echo "GITHUB_SHA_SHORT=$(echo $GITHUB_SHA | cut -c 1-6)" >> $GITHUB_ENV
-    - name: Generate env GITHUB_REPO
-      run: echo "GITHUB_REPO=$(echo "${GITHUB_REPOSITORY##*/}")" >> $GITHUB_ENV
+      # https://github.com/marketplace/actions/setup-node-js-environment
       #
-      # step-specific environment variables
-      #env:
-      #  key: value
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
 
-    - name: Environment
-      #if: ${{ env.DEBUG == '1' }}
-      #if: (github.actor != 'dependabot[bot]')  # skip any PR created by dependabot
-      #if: github.event_name == 'push' && contains(toJson(github.event.commits), '***NO_CI***') == false && contains(toJson(github.event.commits), '[ci skip]') == false && contains(toJson(github.event.commits), '[skip ci]') == false
-      # multi-line scripts start with |
-      run: |
-        [ -e /.dockerenv ] && ls -l /.dockerenv
-        echo
-        cat /etc/*release
-        echo
-        echo "Environment Variables:"
-        echo
-        env | sort
+      # ============================================================================ #
+      #                                 B u i l d
+      # ============================================================================ #
 
-    - name: Install git & make
-      run: yum install -y git make
+      # all run steps seem to operate with 'set -e'
 
-    - name: Git Clone
-      run: |
-        cd /tmp &&
-        git clone "https://github.com/harisekhon/$repo"
+      # Create Dynamic Environment Variables by echo'ing KEY=VALUE >> $GITHUB_ENV
+      #
+      - name: Generate env GITHUB_SHA_SHORT
+        run: echo "GITHUB_SHA_SHORT=$(echo $GITHUB_SHA | cut -c 1-6)" >> $GITHUB_ENV
+      - name: Generate env GITHUB_REPO
+        run: echo "GITHUB_REPO=$(echo "${GITHUB_REPOSITORY##*/}")" >> $GITHUB_ENV
+        #
+        # step-specific environment variables
+        #env:
+        #  key: value
 
-    - name: Build
-      run: |
-        cd "/tmp/$repo" &&
-        make
+      - name: Environment
+        #if: ${{ env.DEBUG == '1' }}
+        #if: (github.actor != 'dependabot[bot]')  # skip any PR created by dependabot
+        #if: github.event_name == 'push' && contains(toJson(github.event.commits), '***NO_CI***') == false && contains(toJson(github.event.commits), '[ci skip]') == false && contains(toJson(github.event.commits), '[skip ci]') == false
+        # multi-line scripts start with |
+        run: |
+          [ -e /.dockerenv ] && ls -l /.dockerenv
+          echo
+          cat /etc/*release
+          echo
+          echo "Environment Variables:"
+          echo
+          env | sort
 
-    - name: Test
-      run: |
-        cd "/tmp/$repo" &&
-        make test
+      - name: Install git & make
+        run: yum install -y git make
+
+      - name: Git Clone
+        run: |
+          cd /tmp &&
+          git clone "https://github.com/harisekhon/$repo"
+
+      - name: Build
+        run: |
+          cd "/tmp/$repo" &&
+          make
+
+      - name: Test
+        run: |
+          cd "/tmp/$repo" &&
+          make test
 
   # ============================================================================ #
   #                                D o c k e r
@@ -260,91 +261,91 @@ jobs:
     timeout-minutes: 10
     runs-on: ubuntu-latest
     steps:
-    - name: Docker Build
-      run: docker build . -f Dockerfile -t "${{env.DOCKER_IMAGE}}:latest"
+      - name: Docker Build
+        run: docker build . -f Dockerfile -t "${{env.DOCKER_IMAGE}}:latest"
 
-    # workaround for GitHub Actions env not being able to reference other env
-    - name: Generate environment variable AWS_ECR_REGISTRY
-      run: echo "AWS_ECR_REGISTRY=${{env.AWS_ACCOUNT_ID}}.dkr.ecr.${{env.AWS_DEFAULT_REGION}}.amazonaws.com" >> $GITHUB_ENV
-    - name: Generate environment variable DOCKER_IMAGE
-      run: echo "DOCKER_IMAGE=${{ env.AWS_ECR_REGISTRY }}/${{ env.APP }}" >> $GITHUB_ENV
-    # $GITHUB_SHA is shown in environment dump but evaluates to blank, so use our own generated env var instead
-    - name: Generate environment variable GIT_SHA
-      run: echo "GIT_SHA=$(git rev-parse HEAD)" >> $GITHUB_ENV
-    - name: Generate environment variable GIT_BRANCH
-      run: echo "GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)" >> $GITHUB_ENV
-    - name: Generate environment variable GIT_TAG
-      run: echo "GIT_TAG=$(git tag --points-at HEAD)" >> $GITHUB_ENV
-    - name: Generate environment variable EPOCH
-      run: echo "EPOCH=$(date --utc '+%s')" >> $GITHUB_ENV
-    - name: Generate environment variable DATESTAMP
-      run: echo "DATESTAMP=$(date --utc --date="@${{env.EPOCH}}" '+%FT%H%M%SZ')" >> $GITHUB_ENV
-    - name: Generate environment variable TIMESTAMP
-      run: echo "TIMESTAMP=$(date --utc --date="@${{env.EPOCH}}" '+%F')" >> $GITHUB_ENV
+      # workaround for GitHub Actions env not being able to reference other env
+      - name: Generate environment variable AWS_ECR_REGISTRY
+        run: echo "AWS_ECR_REGISTRY=${{env.AWS_ACCOUNT_ID}}.dkr.ecr.${{env.AWS_DEFAULT_REGION}}.amazonaws.com" >> $GITHUB_ENV
+      - name: Generate environment variable DOCKER_IMAGE
+        run: echo "DOCKER_IMAGE=${{ env.AWS_ECR_REGISTRY }}/${{ env.APP }}" >> $GITHUB_ENV
+      # $GITHUB_SHA is shown in environment dump but evaluates to blank, so use our own generated env var instead
+      - name: Generate environment variable GIT_SHA
+        run: echo "GIT_SHA=$(git rev-parse HEAD)" >> $GITHUB_ENV
+      - name: Generate environment variable GIT_BRANCH
+        run: echo "GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)" >> $GITHUB_ENV
+      - name: Generate environment variable GIT_TAG
+        run: echo "GIT_TAG=$(git tag --points-at HEAD)" >> $GITHUB_ENV
+      - name: Generate environment variable EPOCH
+        run: echo "EPOCH=$(date --utc '+%s')" >> $GITHUB_ENV
+      - name: Generate environment variable DATESTAMP
+        run: echo "DATESTAMP=$(date --utc --date="@${{env.EPOCH}}" '+%FT%H%M%SZ')" >> $GITHUB_ENV
+      - name: Generate environment variable TIMESTAMP
+        run: echo "TIMESTAMP=$(date --utc --date="@${{env.EPOCH}}" '+%F')" >> $GITHUB_ENV
 
-    # don't split Docker Login to separate job as it may happen on a separate machine, resulting in a docker push error of 'no basic auth credentials'
-    # also can't dynamically create AWS_ECR_REGISTRY env var for 2 jobs, would have to set statically in workflow env or duplicate generation in each job
-    - name: AWS CLI version
-      run: aws --version
-    - name: Docker version
-      run: docker --version
-    #- name: Configure AWS credentials
-    #  uses: aws-actions/configure-aws-credentials@v1
-    #  with:
-    #    aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-    #    aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    #    aws-region: ${{ env.AWS_DEFAULT_REGION }}
-    - name: AWS CLI whoami
-      run: aws sts get-caller-identity
-    # doing this in 2 steps so we can differentiate AWS CLI failures from Docker CLI failures
-    - name: AWS ECR password
-      run: echo "AWS_ECR_PASSWORD=$(aws ecr get-login-password --region "${{env.AWS_DEFAULT_REGION}}")" >> $GITHUB_ENV
-    - name: Docker Login ECR
-      run: docker login "${{env.AWS_ECR_REGISTRY}}" -u AWS -p "${{env.AWS_ECR_PASSWORD}}"
-    - name: Docker Login GHCR
-      run: docker login ghcr.io -u "${{env.GITHUB_USER}}" -p "${{env.GITHUB_TOKEN}}"
+      # don't split Docker Login to separate job as it may happen on a separate machine, resulting in a docker push error of 'no basic auth credentials'
+      # also can't dynamically create AWS_ECR_REGISTRY env var for 2 jobs, would have to set statically in workflow env or duplicate generation in each job
+      - name: AWS CLI version
+        run: aws --version
+      - name: Docker version
+        run: docker --version
+      #- name: Configure AWS credentials
+      #  uses: aws-actions/configure-aws-credentials@v1
+      #  with:
+      #    aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #    aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #    aws-region: ${{ env.AWS_DEFAULT_REGION }}
+      - name: AWS CLI whoami
+        run: aws sts get-caller-identity
+      # doing this in 2 steps so we can differentiate AWS CLI failures from Docker CLI failures
+      - name: AWS ECR password
+        run: echo "AWS_ECR_PASSWORD=$(aws ecr get-login-password --region "${{env.AWS_DEFAULT_REGION}}")" >> $GITHUB_ENV
+      - name: Docker Login ECR
+        run: docker login "${{env.AWS_ECR_REGISTRY}}" -u AWS -p "${{env.AWS_ECR_PASSWORD}}"
+      - name: Docker Login GHCR
+        run: docker login ghcr.io -u "${{env.GITHUB_USER}}" -p "${{env.GITHUB_TOKEN}}"
 
-    - name: Login to DockerHub
-      uses: docker/login-action@v1
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    # or consider using a script to do all of the below like aws_ecr_docker_build_push.sh from DevOps Bash tools repo - https://github.com/HariSekhon/DevOps-Bash-tools
-    - name: Docker Build
-      run: docker build . -f Dockerfile -t "${{env.DOCKER_IMAGE}}:latest"
+      # or consider using a script to do all of the below like aws_ecr_docker_build_push.sh from DevOps Bash tools repo - https://github.com/HariSekhon/DevOps-Bash-tools
+      - name: Docker Build
+        run: docker build . -f Dockerfile -t "${{env.DOCKER_IMAGE}}:latest"
 
-    - name: Docker Tagging
-      run: |
-        set -eux
-        # env.GIT_TAG is not quoted in case it's blank
-        for tag in \
-                  "${{env.GIT_BRANCH}}" \
-                  ${{env.GIT_TAG}} \
-                  "${{env.GIT_SHA}}" \
-                  "${{env.DATESTAMP}}" \
-                  "${{env.TIMESTAMP}}" \
-                  latest; do \
-            docker tag "${{env.DOCKER_IMAGE}}:latest" "${{env.DOCKER_IMAGE}}:$tag"
-        done
+      - name: Docker Tagging
+        run: |
+          set -eux
+          # env.GIT_TAG is not quoted in case it's blank
+          for tag in \
+                    "${{env.GIT_BRANCH}}" \
+                    ${{env.GIT_TAG}} \
+                    "${{env.GIT_SHA}}" \
+                    "${{env.DATESTAMP}}" \
+                    "${{env.TIMESTAMP}}" \
+                    latest; do \
+              docker tag "${{env.DOCKER_IMAGE}}:latest" "${{env.DOCKER_IMAGE}}:$tag"
+          done
 
-    - name: Docker Push Tags
-      # push latest last for an atomic cutover of latest once new tags are available
-      run: |
-        set -eux
-        # env.GIT_TAG is not quoted in case it's blank
-        for tag in \
-                  "${{env.GIT_BRANCH}}" \
-                  ${{env.GIT_TAG}} \
-                  "${{env.GIT_SHA}}" \
-                  "${{env.DATESTAMP}}" \
-                  "${{env.TIMESTAMP}}" \
-                  latest; do \
-                    docker push "${{env.DOCKER_IMAGE}}:$tag"
-        done
+      - name: Docker Push Tags
+        # push latest last for an atomic cutover of latest once new tags are available
+        run: |
+          set -eux
+          # env.GIT_TAG is not quoted in case it's blank
+          for tag in \
+                    "${{env.GIT_BRANCH}}" \
+                    ${{env.GIT_TAG}} \
+                    "${{env.GIT_SHA}}" \
+                    "${{env.DATESTAMP}}" \
+                    "${{env.TIMESTAMP}}" \
+                    latest; do \
+                      docker push "${{env.DOCKER_IMAGE}}:$tag"
+          done
 
-    - name: Docker Scan
-      run: docker scan "${{env.DOCKER_IMAGE}}:latest"  # requires docker-scan-cli plugin (see HariSekhon/DevOps-Bash-tools setup/install_docker_scan.sh)
+      - name: Docker Scan
+        run: docker scan "${{env.DOCKER_IMAGE}}:latest"  # requires docker-scan-cli plugin (see HariSekhon/DevOps-Bash-tools setup/install_docker_scan.sh)
 
   # ============================================================================ #
   #                                  D e p l o y
@@ -358,8 +359,8 @@ jobs:
       name: production  # set up Environment 'production' to require approval to wait here
     timeout-minutes: 10
     steps:
-    - name: Deploy
-      run: kubectl apply -f ./
+      - name: Deploy
+        run: kubectl apply -f ./
 
   argocd:
     name: ArgoCD Deploy
@@ -374,16 +375,16 @@ jobs:
       ARGOCD_AUTH_TOKEN: ${{ secrets.ARGOCD_AUTH_TOKEN }}
     timeout-minutes: 10
     steps:
-    - name: ArgoCD Sync
-      run: argocd app sync "$APP" --grpc-web --force
-    - name: ArgoCD Wait
-      run: argocd app wait "$APP" --grpc-web --timeout 600
+      - name: ArgoCD Sync
+        run: argocd app sync "$APP" --grpc-web --force
+      - name: ArgoCD Wait
+        run: argocd app wait "$APP" --grpc-web --timeout 600
 
-	# ============================================================================ #
-	#                                V a l i d a t e
-	# ============================================================================ #
+  # ============================================================================ #
+  #                                V a l i d a t e
+  # ============================================================================ #
 
-	validate:
+  validate:
     name: Validate
     uses: HariSekhon/GitHub-Actions/.github/workflows/validate.yaml@master
 
