@@ -173,6 +173,8 @@ jobs:
     # do checkout first so we can generate dynamic environment variables for branch, tags, SHA etc.
     # https://github.com/marketplace/actions/checkout
     - uses: actions/checkout@v2
+      with:
+          submodules: true
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
@@ -422,6 +424,8 @@ jobs:
     steps:
       # Fetch project source
       - uses: actions/checkout@v2
+        with:
+          submodules: true
 
       - uses: returntocorp/semgrep-action@v1
         with:
