@@ -35,9 +35,11 @@ jobs:
     runs-on: ubuntu-latest
     container: harisekhon/pytools:debian
     steps:
-    - uses: actions/checkout@v2
-    - name: Validate
-      #env:
-      #  DEBUG: 1
-      run: |
-        check_all.sh
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Validate
+        #env:
+        #  DEBUG: 1
+        run: |
+          check_all.sh
