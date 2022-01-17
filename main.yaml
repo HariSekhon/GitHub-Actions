@@ -118,6 +118,8 @@ on: # [push]
     branches:
       - master
       - main
+  # https://docs.github.com/en/actions/using-workflows/reusing-workflows#creating-a-reusable-workflow
+  workflow_call:
   # https://docs.github.com/en/actions/managing-workflow-runs/manually-running-a-workflow#running-a-workflow
   workflow_dispatch:
     #inputs:
@@ -374,6 +376,14 @@ jobs:
       run: argocd app sync "$APP" --grpc-web --force
     - name: ArgoCD Wait
       run: argocd app wait "$APP" --grpc-web --timeout 600
+
+	# ============================================================================ #
+	#                                V a l i d a t e
+	# ============================================================================ #
+
+	validate:
+    name: Validate
+    uses: HariSekhon/GitHub-Actions/.github/workflows/validate.yaml@master
 
   # ============================================================================ #
   #                                 C h e c k o v
