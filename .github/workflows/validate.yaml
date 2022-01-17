@@ -37,7 +37,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Validate
-      env:
-        DEBUG: 1
+      #env:
+      #  DEBUG: 1
       run: |
         check_all.sh
