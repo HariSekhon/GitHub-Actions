@@ -29,7 +29,7 @@ on:
     - cron:  '30 0 * * 1'
 
 jobs:
-  build:
+  validate:
     name: Validate
     timeout-minutes: 10
     runs-on: ubuntu-latest
