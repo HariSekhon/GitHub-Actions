@@ -22,21 +22,24 @@ on:
     branches:
       - master
       - main
+  workflow_call:
   workflow_dispatch:
   schedule:
     # * is a special character in YAML so you have to quote this string
-    - cron:  '30 0 * * 1'
+    - cron:  '0 0 * * 1'
 
 jobs:
-  build:
+  validate:
     name: Validate
     timeout-minutes: 10
     runs-on: ubuntu-latest
-    container: harisekhon/pytools:debian
+    container: harisekhon/pytools
     steps:
-    - uses: actions/checkout@v2
-    - name: Validate
-      env:
-        DEBUG: 1
-      run: |
-        check_all.sh
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Validate
+        #env:
+        #  DEBUG: 1
+        run: |
+          check_all.sh
