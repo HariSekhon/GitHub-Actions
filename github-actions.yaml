@@ -171,6 +171,11 @@ jobs:
     # do checkout first so we can generate dynamic environment variables for branch, tags, SHA etc.
     # https://github.com/marketplace/actions/checkout
     - uses: actions/checkout@v2
+      with:
+        submodules: 'true'
+        #remote: true
+        # if not https:// public, give a token to fetch the submodule
+        #token: ${{ secrets.PAT_TOKEN }}
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
