@@ -1,0 +1,49 @@
+#
+#  Author: Hari Sekhon
+#  Date: Tue Feb 4 09:53:28 2020 +0000
+#
+#  vim:ts=2:sts=2:sw=2:et
+#
+#  https://github.com/HariSekhon/GitHub-Actions
+#
+#  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback
+#
+#  https://www.linkedin.com/in/harisekhon
+#
+
+name: Check URL Links
+
+on:
+  push:
+    branches:
+      - master
+      - main
+  pull_request:
+    branches:
+      - master
+      - main
+  workflow_call:
+    #inputs:
+    #  env:
+    #    type: string  # pass in string in export shell format eg. export MYVAR=myvalue MYVAR2=myvalue2
+    #    required: false
+  workflow_dispatch:
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron:  '0 0 * * 1'
+
+jobs:
+  validate:
+    name: Validate
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    container: harisekhon/pytools:debian
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+      - name: Check URL Links
+        #env:
+        #  DEBUG: 1
+        run: |
+          check_url_links.sh
