@@ -25,7 +25,7 @@ on:
   workflow_call:
     inputs:
       env:
-        type: string  # pass in string in export shell format eg. MYVAR=myvalue MYVAR2=myvalue2
+        type: string  # pass in string in export shell format eg. export MYVAR=myvalue MYVAR2=myvalue2
         required: false
   workflow_dispatch:
   schedule:
@@ -51,4 +51,7 @@ jobs:
         #env:
         #  DEBUG: 1
         run: |
+          for env_var_key in $(env | sed 's/=.*//' | grep -e ^NO -e ^VALIDATE); do
+            export "$env_var_key"
+          done
           check_all.sh
