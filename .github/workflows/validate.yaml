@@ -24,6 +24,11 @@ on:
       - main
   workflow_call:
     inputs:
+      docker_imagetag:
+        type: string
+        required: false
+        default: latest
+      # workflow calls only permit string/boolean/number - https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#onworkflow_callinputsinput_idtype
       env:
         type: string  # pass in string in export shell format eg. export MYVAR=myvalue MYVAR2=myvalue2
         required: false
@@ -37,7 +42,7 @@ jobs:
     name: Validate
     timeout-minutes: 10
     runs-on: ubuntu-latest
-    container: harisekhon/pytools:debian
+    container: harisekhon/pytools:${{ docker_image_tag }}
     steps:
       - uses: actions/checkout@v2
         with:
