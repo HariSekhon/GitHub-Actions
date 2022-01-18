@@ -26,7 +26,7 @@ on:
     inputs:
       env:
         type: string  # pass in string in export shell format eg. MYVAR=myvalue MYVAR2=myvalue2
-        require: false
+        required: false
   workflow_dispatch:
   schedule:
     # * is a special character in YAML so you have to quote this string
