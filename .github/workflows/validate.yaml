@@ -42,7 +42,7 @@ jobs:
     name: Validate
     timeout-minutes: 10
     runs-on: ubuntu-latest
-    container: harisekhon/pytools:${{ docker_image_tag }}
+    container: harisekhon/pytools:${{ inputs.docker_image_tag }}
     steps:
       - uses: actions/checkout@v2
         with:
