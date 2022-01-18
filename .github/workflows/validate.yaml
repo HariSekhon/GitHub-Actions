@@ -24,7 +24,7 @@ on:
       - main
   workflow_call:
     inputs:
-      docker_imagetag:
+      docker_image_tag:
         type: string
         required: false
         default: latest
