@@ -52,6 +52,7 @@ jobs:
         #  DEBUG: 1
         run: |
           for env_var_key in $(env | sed 's/=.*//' | grep -e ^NO_ -e ^VALIDATE_); do
+            echo "exporting $env_var_key"
             export "$env_var_key"
           done
           check_all.sh
