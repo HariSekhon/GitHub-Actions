@@ -44,7 +44,9 @@ jobs:
           submodules: true
       - name: Setup environment variables
         run: |
-          echo "${{ inputs.env  }}" >> $GITHUB_ENV
+          echo "${{ inputs.env }}" >> $GITHUB_ENV
+      - name: Environment
+        run: env | sort
       - name: Validate
         #env:
         #  DEBUG: 1
