@@ -4,7 +4,7 @@
 #
 #  vim:ts=2:sts=2:sw=2:et
 #
-#  https://github.com/harisekhon/templates
+#  https://github.com/HariSekhon/GitHub-Actions
 #
 #  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback
 #
@@ -12,30 +12,24 @@
 #
 
 # ============================================================================ #
-#                     T F s e c   G i t H u b   A c t i o n
+#                   T F s e c   G i t H u b   W o r k f l o w
 # ============================================================================ #
 
 # Static analysis of Terraform code - publishes report to GitHub Security tab
 
+# https://aquasecurity.github.io/tfsec/v0.63.1/getting-started/configuration/github-actions/github-action/
+
 name: tfsec
 
 on:
-  #push:
-  #  branches:
-  #    - master
-  #    - main
-  #pull_request:
-  #  branches:
-  #    - master
-  #    - main
-  schedule:
-    - cron: '30 0 * * 1'
+  workflow_call
 
 jobs:
   tfsec:
     name: tfsec sarif report
     runs-on: ubuntu-latest
     timeout-minutes: 10
+
     permissions:
       actions: read
       contents: read
