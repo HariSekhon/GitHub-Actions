@@ -17,13 +17,7 @@
 name: Pluto
 
 on:
-  push:
-    branches:
-      - master
-      - main
-      - dev
-      - staging
-      - production
+  workflow_call
 
 jobs:
   pluto:
