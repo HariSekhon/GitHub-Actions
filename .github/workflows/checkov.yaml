@@ -36,7 +36,7 @@ on:
       framework:
         type: string
         default: all
-        required: true
+        required: false
   workflow_dispatch:
   schedule:
     - cron: '0 0 * * 1'
