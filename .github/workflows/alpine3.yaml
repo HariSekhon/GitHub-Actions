@@ -34,17 +34,24 @@ jobs:
     env:
       DEBUG: ${{ inputs.debug }}
     steps:
-      - uses: actions/checkout@v2
+      - name: Install Git & Make
+        run: apk add --no-cache git make
+
+      - name: Git version
+        run: git --version
+
+      - name: Git Checkout
+        uses: actions/checkout@v2
         with:
           submodules: true
-      - name: install git & make
-        run: apk add --no-cache git make
-      - name: init
+
+      - name: Init
         run: |
           if grep -q '^init:' Makefile; then
             make init
           fi
-      - name: build
+
+      - name: Build
         run: |
           if grep -q '^ci:' Makefile; then
             make ci
@@ -53,7 +60,8 @@ jobs:
           else
             make
           fi
-      - name: test
+
+      - name: Test
         run: |
           if grep -q '^test:' Makefile; then
             make test
