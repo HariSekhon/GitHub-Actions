@@ -449,70 +449,25 @@ jobs:
 
   checkov:
     name: Checkov Scan
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    # Skip any PR created by dependabot to avoid permission issues
-    if: (github.actor != 'dependabot[bot]')
-    steps:
-      - name: Set up Python 3.8
-        uses: actions/setup-python@v1
-        with:
-          python-version: 3.8
-      - name: Test with Checkov
-        id: checkov
-        uses: bridgecrewio/checkov-action@master
-        with:
-          directory: .
-          framework: terraform
+    uses: HariSekhon/GitHub-Actions/.github/workflows/checkov.yaml@master
+    #with:
+    #  framework: terraform
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
 
   # ============================================================================ #
   #                                 S e m g r e p
   # ============================================================================ #
 
-  # https://semgrep.dev/docs/semgrep-ci/sample-ci-configs/#github-actions
-
   semgrep:
     name: Semgrep Scan
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    # Skip any PR created by dependabot to avoid permission issues
-    if: (github.actor != 'dependabot[bot]')
-    steps:
-      # Fetch project source
-      - uses: actions/checkout@v2
-        with:
-          submodules: 'true'  # requires Git 2.18+ to be installed first
-
-      - uses: returntocorp/semgrep-action@v1
-        with:
-          config: >- # more at semgrep.dev/explore
-            p/security-audit
-            p/secrets
-
-        # == Optional settings in the `with:` block
-
-        # Instead of `config:`, use rules set in Semgrep App.
-        # Get your token from semgrep.dev/manage/settings.
-        #   publishToken: ${{ secrets.SEMGREP_APP_TOKEN }}
-
-        # Never fail the build due to findings on pushes.
-        # Instead, just collect findings for semgrep.dev/manage/findings
-        #   auditOn: push
-
-        # Upload findings to GitHub Advanced Security Dashboard [step 1/2]
-        # See also the next step.
-        #   generateSarif: "1"
-
-        # Change job timeout (default is 1800 seconds; set to 0 to disable)
-        # env:
-        #   SEMGREP_TIMEOUT: 300
-
-      # Upload findings to GitHub Advanced Security Dashboard [step 2/2]
-      # - name: Upload SARIF file for GitHub Advanced Security Dashboard
-      #   uses: github/codeql-action/upload-sarif@v1
-      #   with:
-      #     sarif_file: semgrep.sarif
-      #   if: always()
+    uses: HariSekhon/GitHub-Actions/.github/workflows/semgrep.yaml@master
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
 
   # ============================================================================ #
   #                              R e v i e w   D o g
