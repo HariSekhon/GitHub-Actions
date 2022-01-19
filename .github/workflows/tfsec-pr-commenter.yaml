@@ -13,11 +13,14 @@
 
 
 # ============================================================================ #
-#                     T F s e c   G i t H u b   A c t i o n
+#                   T F s e c   G i t H u b   W o r k f l o w
 # ============================================================================ #
 
 # Comments on any PR that adds transgressions
 
+# https://aquasecurity.github.io/tfsec/v0.63.1/getting-started/configuration/github-actions/pr-commenter/
+
+---
 name: tfsec-pr-commenter
 
 on:
