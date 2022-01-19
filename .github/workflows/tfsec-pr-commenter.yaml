@@ -24,16 +24,17 @@
 name: tfsec-pr-commenter
 
 on:
-  pull_request:
+  workflow_call
 
 jobs:
   tfsec:
     name: tfsec PR commenter
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - name: Clone repo
-        uses: actions/checkout@master
+        uses: actions/checkout@v2
 
       - name: tfsec
         uses: tfsec/tfsec-pr-commenter-action@5e9f770638057da497182661aacbf640ca94f4e9
