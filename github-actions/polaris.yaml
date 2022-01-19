@@ -36,7 +36,7 @@ jobs:
         with:
           #version: 4.0.7
           #
-          # audit may fail on repos with JSON patches:
+          # audit may fail on repos with JSON patches such as https://github.com/HariSekhon/Kubernetes-configs:
           #
           #   https://github.com/FairwindsOps/polaris/issues/667
           #
@@ -44,7 +44,7 @@ jobs:
           #
           #     https://github.com/FairwindsOps/polaris/issues/670
           #
-          # see Polaris kubernetes as the better workaround in the repo:
+          # the better solution is to run in Kubernetes, see polaris*.yaml at the top level of this repo
           #
           #   https://github.com/HariSekhon/Kubernetes-configs
           #
