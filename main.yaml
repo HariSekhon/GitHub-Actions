@@ -181,7 +181,7 @@ jobs:
       # https://github.com/marketplace/actions/checkout
       - uses: actions/checkout@v2
         with:
-          submodules: 'true'
+          submodules: 'true'  # requires Git 2.18+ to be installed first
           #remote: true
           # if not https:// public, give a token to fetch the submodule
           #token: ${{ secrets.PAT_TOKEN }}
@@ -481,7 +481,7 @@ jobs:
       # Fetch project source
       - uses: actions/checkout@v2
         with:
-          submodules: true
+          submodules: 'true'  # requires Git 2.18+ to be installed first
 
       - uses: returntocorp/semgrep-action@v1
         with:
