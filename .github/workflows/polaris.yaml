@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Audit
+      - name: Polaris Audit
         uses: fairwindsops/polaris@master
         with:
           #version: 4.0.7
