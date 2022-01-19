@@ -11,6 +11,7 @@
 #  https://www.linkedin.com/in/harisekhon
 #
 
+---
 name: Check URL Links
 
 on:
@@ -29,8 +30,7 @@ on:
     #    required: false
   workflow_dispatch:
   schedule:
-    # * is a special character in YAML so you have to quote this string
-    - cron:  '0 0 * * 1'
+    - cron: '0 0 * * 1'
 
 jobs:
   check_url_links:
