@@ -114,11 +114,17 @@ on:
   push:
     branches:
       - master
+      - dev
+      - staging
+      - production
       - main
   pull_request:
     branches:
       - master
       - main
+      - dev
+      - staging
+      - production
   # https://docs.github.com/en/actions/using-workflows/reusing-workflows#creating-a-reusable-workflow
   workflow_call:
   # https://docs.github.com/en/actions/managing-workflow-runs/manually-running-a-workflow#running-a-workflow
