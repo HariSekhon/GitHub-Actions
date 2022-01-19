@@ -14,14 +14,16 @@
 #
 
 ---
-name: reviewdog
-on: [pull_request]
+name: reviewdog PR review
+
+on:
+  workflow_call
+
 jobs:
   reviewdog:
     name: reviewdog
     runs-on: ubuntu-latest
     steps:
-      # ...
       - uses: reviewdog/action-setup@v1
         with:
           reviewdog_version: latest # Optional. [latest,nightly,v.X.Y.Z]
