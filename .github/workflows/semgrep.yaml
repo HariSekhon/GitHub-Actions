@@ -40,14 +40,14 @@ on:
     - cron: '0 0 * * 1'
 
 jobs:
-  semgrep:
+  Semgrep:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     # Skip any PR created by dependabot to avoid permission issues
     if: (github.actor != 'dependabot[bot]')
     steps:
       - name: Install Git
-        run: sudo apt-get update && sudo apt-get install -y git --no-recommends
+        run: sudo apt-get update && sudo apt-get install -y git --no-install-recommends
 
       - name: Git Checkout
         uses: actions/checkout@v2
