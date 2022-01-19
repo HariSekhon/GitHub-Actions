@@ -47,7 +47,7 @@ jobs:
     if: (github.actor != 'dependabot[bot]')
     steps:
       - name: Install Git
-        run: apt-get update && apt-get install -y git --no-recommends
+        run: sudo apt-get update && sudo apt-get install -y git --no-recommends
 
       - name: Git Checkout
         uses: actions/checkout@v2
