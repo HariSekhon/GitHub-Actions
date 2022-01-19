@@ -434,6 +434,7 @@ jobs:
       contents: read
       security-events: write
 
+  # on: [pull_request]
   tfsec_pr_commenter:
     name: tfsec PR commenter
     uses: HariSekhon/GitHub-Actions/.github/workflows/tfsec-pr-commenter.yaml@master
@@ -512,6 +513,27 @@ jobs:
       #   with:
       #     sarif_file: semgrep.sarif
       #   if: always()
+
+  # ============================================================================ #
+  #                              R e v i e w   D o g
+  # ============================================================================ #
+
+  reviewdog:
+    name: reviewdog
+    uses: HariSekhon/GitHub-Actions/.github/workflows/reviewdog.yaml@master
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+  # on: [pull_request]
+  reviewdog-pr-check:
+    name: reviewdog PR
+    uses: HariSekhon/GitHub-Actions/.github/workflows/reviewdog-pr.yaml@master
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
 
     # ============================================================================ #
     #                                 C a c h e
