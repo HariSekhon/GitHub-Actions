@@ -46,8 +46,9 @@ jobs:
     # Skip any PR created by dependabot to avoid permission issues
     if: (github.actor != 'dependabot[bot]')
     steps:
-      - name: Install Git
-        run: sudo apt-get update && sudo apt-get install -y git --no-install-recommends
+      # ubuntu-latest already has this installed and a newer version
+      #- name: Install Git
+      #  run: sudo apt-get update && sudo apt-get install -y git --no-install-recommends
 
       - name: Git Checkout
         uses: actions/checkout@v2
