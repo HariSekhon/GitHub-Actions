@@ -49,7 +49,8 @@ jobs:
     runs-on: ubuntu-latest
     # evaluates to blank and fails to pull
     #container: harisekhon/pytools:${{ inputs.docker_image_tag }}
-    container: harisekhon/pytools:debian
+    #container: harisekhon/pytools:debian
+    container: harisekhon/bash-tools:latest
     env:
       DEBUG: ${{ inputs.debug }}
     steps:
