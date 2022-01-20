@@ -187,6 +187,15 @@ jobs:
           # if not https:// public, give a token to fetch the submodule
           #token: ${{ secrets.PAT_TOKEN }}
 
+      # checkout another repo
+      #- uses: actions/checkout@v2
+      #  with:
+      #    name: owner/repo
+      #    ref: master
+      #    submodules: 'true'
+      #    ssh-key: ''
+      #    path: ''  # to checkout dir under $GITHUB_WORKSPACE
+
       - uses: aws-actions/configure-aws-credentials@v1
         #name: Configure AWS credentials
         with:
