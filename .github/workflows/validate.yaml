@@ -37,6 +37,7 @@ on:
         required: false
       env:
         type: string  # pass in string in export shell format eg. export MYVAR=myvalue MYVAR2=myvalue2
+        default: ''
         required: false
   workflow_dispatch:
   schedule:
