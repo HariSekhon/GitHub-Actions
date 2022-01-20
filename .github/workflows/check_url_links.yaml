@@ -41,7 +41,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          submodules: recursive
+          submodules: recursive  # requires Git 2.18+ to be installed first
       - name: Check URL Links
         #env:
         #  DEBUG: 1
