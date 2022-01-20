@@ -48,7 +48,8 @@ jobs:
     name: Validate
     timeout-minutes: 10
     runs-on: ubuntu-latest
-    # evaluates to blank and fails to pull
+    # PyTools contains some extra tools, eg. use validate_yaml.py if check_yaml.sh yamllint dependencies aren't available
+    # inputs evaluates to blank and fails to pull - not available at this stage
     #container: harisekhon/pytools:${{ inputs.docker_image_tag }}
     container: harisekhon/pytools:debian
     #container: harisekhon/bash-tools:latest
