@@ -51,7 +51,8 @@ jobs:
     # PyTools contains some extra tools, eg. use validate_yaml.py if check_yaml.sh yamllint dependencies aren't available
     # inputs evaluates to blank and fails to pull - not available at this stage
     #container: harisekhon/pytools:${{ inputs.docker_image_tag }}
-    container: harisekhon/pytools:debian
+    #container: harisekhon/pytools:debian
+    container: harisekhon/pytools:centos
     #container: harisekhon/bash-tools:latest
     env:
       DEBUG: ${{ inputs.debug }}
