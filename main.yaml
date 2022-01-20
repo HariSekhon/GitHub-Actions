@@ -142,10 +142,11 @@ on:
 #                                D e f a u l t s
 # ============================================================================ #
 
+# doesn't affect imported actions
 defaults:
   run:
     shell: bash  # not on Alpine
-    #working-directory: /var/jenkins_home
+    #working-directory: /var/jenkins_home  # $GITHUB_WORKSPACE
 
 # ============================================================================ #
 #                                    J o b s
@@ -203,7 +204,8 @@ jobs:
       #    ref: master
       #    submodules: 'true'
       #    ssh-key: ''
-      #    path: ''  # to checkout dir under $GITHUB_WORKSPACE
+      #    path: ''  # to checkout dir under $GITHUB_WORKSPACE, if absolute dir outside or $GITHUB_WORKSPACE gets error:
+										 # 		Error: Repository path '/var/jenkins_home/jenkins' is not under '/__w/Jenkins/Jenkins'
 
       - uses: aws-actions/configure-aws-credentials@v1
         #name: Configure AWS credentials
