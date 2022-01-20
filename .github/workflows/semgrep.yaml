@@ -51,13 +51,11 @@ jobs:
       #- name: Install Git
       #  run: sudo apt-get update && sudo apt-get install -y git --no-install-recommends
 
-      - name: Git Checkout
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
         with:
           submodules: recursive  # requires Git 2.18+ to be installed first
 
-      - name: Semgrep
-        uses: returntocorp/semgrep-action@v1
+      - uses: returntocorp/semgrep-action@v1
         with:
           config: >- # more at semgrep.dev/explore
             p/security-audit
