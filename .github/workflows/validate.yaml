@@ -62,9 +62,6 @@ jobs:
       - name: Setup environment variables
         run: |
           echo "${{ inputs.env }}" >> $GITHUB_ENV
-          if [ -f tests/excluded.sh ]; then
-            echo "BASH_EXCLUDED_FILES_FUNCTION=tests/excluded.sh" >> $GITHUB_ENV
-          fi
       - name: Environment
         run: env | sort
       - name: Validate
