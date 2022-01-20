@@ -46,12 +46,12 @@ jobs:
       # can't set GITHUB_WORKSPACE to path: /var/_jenkins_home outside of it due to actions/checkout validation
       #- uses: actions/checkout@v2
       #  with:
-      #    submodules: 'true'
+      #    submodules: recursive
       #- uses: actions/checkout@v2
       #  with:
       #    name: HariSekhon/DevOps-Bash-tools
       #    #ref: master         # unset for default branch in case it changes in future
-      #    #submodules: 'true'  # don't need the submodules for just this script, save time
+      #    #submodules: recursive  # don't need the submodules for just this script, save time
       #    path: bash-tools
       - name: Environment
         run: env | sort

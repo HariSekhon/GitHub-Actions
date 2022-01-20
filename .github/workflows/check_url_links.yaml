@@ -41,7 +41,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          submodules: true
+          submodules: recursive
       - name: Check URL Links
         #env:
         #  DEBUG: 1
