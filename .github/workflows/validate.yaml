@@ -31,6 +31,10 @@ on:
       #  required: true
       #  default: latest
       # workflow calls only permit string/boolean/number - https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#onworkflow_callinputsinput_idtype
+      debug:
+        type: string
+        default: ''
+        required: false
       env:
         type: string  # pass in string in export shell format eg. export MYVAR=myvalue MYVAR2=myvalue2
         required: false
@@ -46,6 +50,8 @@ jobs:
     # evaluates to blank and fails to pull
     #container: harisekhon/pytools:${{ inputs.docker_image_tag }}
     container: harisekhon/pytools:debian
+    env:
+      DEBUG: ${{ inputs.debug }}
     steps:
       - uses: actions/checkout@v2
         with:
@@ -56,7 +62,5 @@ jobs:
       - name: Environment
         run: env | sort
       - name: Validate
-        #env:
-        #  DEBUG: 1
         run: |
           check_all.sh
