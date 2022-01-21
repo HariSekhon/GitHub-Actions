@@ -419,15 +419,16 @@ jobs:
           #no-cache: false
           #pull: true  # default: false  # use this or local cache but not both
           push: true  # default: false
-          tags:
-            - ${{env.DOCKER_IMAGE}}:latest
-            - ${{env.DOCKER_IMAGE}}:${{env.GIT_SHA}}
-            - ${{env.DOCKER_IMAGE}}:${{env.GIT_BRANCH}}
+          # tags is a CSV or List where List is a newline delimited string
+          tags: |
+            ${{env.DOCKER_IMAGE}}:latest
+            ${{env.DOCKER_IMAGE}}:${{env.GIT_SHA}}
+            ${{env.DOCKER_IMAGE}}:${{env.GIT_BRANCH}}
             # need a conditional on this one
-            #- ${{env.DOCKER_IMAGE}}:${{env.GIT_TAG}}
-            - ${{env.DOCKER_IMAGE}}:${{env.EPOCH}}
-            - ${{env.DOCKER_IMAGE}}:${{env.DATESTAMP}}
-            - ${{env.DOCKER_IMAGE}}:${{env.TIMESTAMP}}
+            #${{env.DOCKER_IMAGE}}:${{env.GIT_TAG}}
+            ${{env.DOCKER_IMAGE}}:${{env.EPOCH}}
+            ${{env.DOCKER_IMAGE}}:${{env.DATESTAMP}}
+            ${{env.DOCKER_IMAGE}}:${{env.TIMESTAMP}}
           # set GIT_AUTH_TOKEN if checkout out from another repo (uses local ${{github.token}} otherwise)
           #secrets: |
           #    GIT_AUTH_TOKEN=${{ secrets.MYTOKEN }}
