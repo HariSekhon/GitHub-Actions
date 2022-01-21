@@ -15,6 +15,8 @@
 #                        S e m g r e p   W o r k f l o w
 # ============================================================================ #
 
+# Generates code scanning alerts in GitHub's Security tab -> Code scanning alerts
+
 # https://semgrep.dev/docs/semgrep-ci/sample-ci-configs/#github-actions
 
 ---
@@ -41,11 +43,18 @@ on:
 
 jobs:
   semgrep:
-    name: Semgrep
+    name: Semgrep Scan
     runs-on: ubuntu-latest
     timeout-minutes: 30
+
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
     # Skip any PR created by dependabot to avoid permission issues
     if: (github.actor != 'dependabot[bot]')
+
     steps:
       # ubuntu-latest already has this installed and a newer version
       #- name: Install Git
