@@ -197,9 +197,9 @@ jobs:
       postgres:
         image: postgres:13
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: postgres
+          POSTGRES_USER: ${{ secret.POSTGRES_USER }}          # postgres
+          POSTGRES_PASSWORD: ${{ secret.POSTGRES_PASSWORD }}  # postgres
+          POSTGRES_DB: ${{ secret.POSTGRES_DB }}              # postgres
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
         ports:
           - 5432/tcp  # will choose a random port on the host, reference it via ${{ job.services.postgres.ports[5432] }}
