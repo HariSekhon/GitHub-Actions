@@ -31,6 +31,10 @@ on:
 #env:
 #  GITHUB_WORKSPACE: /var/jenkins_home
 
+defaults:
+  run:
+    shell: bash
+
 jobs:
   validate:
     name: Validate
@@ -80,7 +84,7 @@ jobs:
             ssh-agent:1.23 \
             timestamper:1.16 \
             workflow-aggregator:2.6 \
-            $(tr '\n' ' ' <<< "${{ inputs.plugins }})"
+            $(tr '\n' ' ' <<< "${{ inputs.plugins }}")
         timeout-minutes: 3
 
       - name: Start Jenkins
