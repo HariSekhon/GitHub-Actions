@@ -26,6 +26,9 @@ jobs:
       - name: Environment
         run: env | sort
 
+      - name: Install Groovy
+        run: sudo apt-get update && sudo apt-get install -y groovy --no-install-recommends
+
       - uses: actions/checkout@v2
         with:
           submodules: recursive  # requires Git 2.18+ to be installed first
@@ -36,9 +39,6 @@ jobs:
           #ref: master         # unset for default branch in case it changes in future
           submodules: recursive
           path: bash-tools
-
-      - name: Install Groovy
-        run: apt-get update && apt-get install -y groovy --no-install-recommends
 
       - name: Groovy Compile
         run: bash-tools/check_groovyc.sh
