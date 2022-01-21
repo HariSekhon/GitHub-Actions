@@ -33,7 +33,7 @@ on:
 
 jobs:
   semgrep:
-    name: Semgrep Scan
+    name: Semgrep Scan, Cloud report
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
