@@ -22,21 +22,9 @@ jobs:
     #name: Groovy Compile
     timeout-minutes: 30
     runs-on: ubuntu-latest
-    container: harisekhon/github:debian
     steps:
       - name: Environment
         run: env | sort
-
-      # TODO: breaks build othewise - remove after docker image is updated
-      - name: Delete obsolete SBT bintray repo
-        run: rm -fv /etc/apt/sources.list.d/sbt.list
-
-      # should already be installed, but might need a version upgrade for git submodule recursion
-      - name: Install Git & Groovy
-        run: apt-get update && apt-get install -y git groovy --no-install-recommends
-
-      - name: Git version
-        run: git --version
 
       - uses: actions/checkout@v2
         with:
