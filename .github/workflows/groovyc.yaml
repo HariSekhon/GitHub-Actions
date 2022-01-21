@@ -19,7 +19,7 @@ on:
 
 jobs:
   groovyc:
-    name: Groovy Compile
+    #name: Groovy Compile
     timeout-minutes: 30
     runs-on: ubuntu-latest
     container: harisekhon/github:debian
