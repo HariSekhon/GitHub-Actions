@@ -46,8 +46,15 @@ jobs:
     name: Checkov Scan
     runs-on: ubuntu-latest
     timeout-minutes: 10
+
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
     # Skip any PR created by dependabot to avoid permission issues
     if: (github.actor != 'dependabot[bot]')
+
     steps:
       - name: Set up Python 3.8
         uses: actions/setup-python@v1
