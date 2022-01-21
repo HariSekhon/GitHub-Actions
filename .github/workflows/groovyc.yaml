@@ -37,5 +37,8 @@ jobs:
           submodules: recursive
           path: bash-tools
 
+      - name: Install Groovy
+        run: apt-get update && apt-get install -y groovy --no-install-recommends
+
       - name: Groovy Compile
         run: bash-tools/check_groovyc.sh
