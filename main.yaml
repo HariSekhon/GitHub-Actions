@@ -200,7 +200,7 @@ jobs:
       # checkout another repo
       #- uses: actions/checkout@v2
       #  with:
-      #    name: owner/repo
+      #    repository: owner/repo
       #    ref: master
       #    submodules: 'true'
       #    ssh-key: ''
