@@ -22,14 +22,13 @@ jobs:
     #name: Groovy Compile
     timeout-minutes: 30
     runs-on: ubuntu-latest
-    container: groovy
+    #container: groovy  # doesn't contain git and no sudo access
     steps:
       - name: Environment
         run: env | sort
 
-      # on ubuntu-latest, not needed when running on groovy docker image
-      #- name: Install Groovy
-      #  run: sudo apt-get update && sudo apt-get install -y groovy --no-install-recommends
+      - name: Install Groovy
+        run: sudo apt-get update && sudo apt-get install -y groovy --no-install-recommends
 
       - uses: actions/checkout@v2
         with:
