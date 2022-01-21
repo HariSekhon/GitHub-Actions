@@ -27,6 +27,7 @@ jobs:
       - name: Environment
         run: env | sort
 
+      # TODO: breaks build othewise - remove after docker image is updated
       - name: Delete obsolete SBT bintray repo
         run: rm -fv /etc/apt/sources.list.d/sbt.list
 
