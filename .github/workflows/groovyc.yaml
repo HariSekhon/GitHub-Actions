@@ -28,8 +28,8 @@ jobs:
         run: env | sort
 
       # should already be installed
-      - name: Install Git & Groovy
-        run: apt-get update && apt-get install -y git groovy --no-install-recommends
+      #- name: Install Git & Groovy
+      #  run: apt-get update && apt-get install -y git groovy --no-install-recommends
 
       - uses: actions/checkout@v2
         with:
