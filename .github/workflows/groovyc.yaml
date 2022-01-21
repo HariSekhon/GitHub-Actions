@@ -27,9 +27,16 @@ jobs:
       - name: Environment
         run: env | sort
 
-      # should already be installed
-      #- name: Install Git & Groovy
-      #  run: apt-get update && apt-get install -y git groovy --no-install-recommends
+      # delete old bintray repo
+      - name: Delete obsolete bintray repo
+        run: rm -fv /etc/apt/sources.list.d/sbt.list
+
+      # should already be installed, but might need a version upgrade for git submodule recursion
+      - name: Install Git & Groovy
+        run: apt-get update && apt-get install -y git groovy --no-install-recommends
+
+      - name: Git version
+        run: git --version
 
       - uses: actions/checkout@v2
         with:
