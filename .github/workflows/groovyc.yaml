@@ -27,8 +27,7 @@ jobs:
       - name: Environment
         run: env | sort
 
-      # delete old bintray repo
-      - name: Delete obsolete bintray repo
+      - name: Delete obsolete SBT bintray repo
         run: rm -fv /etc/apt/sources.list.d/sbt.list
 
       # should already be installed, but might need a version upgrade for git submodule recursion
