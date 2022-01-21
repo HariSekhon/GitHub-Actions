@@ -183,7 +183,7 @@ jobs:
 #      matrix:
 #        os: [ubuntu-latest, ubuntu-18.04, ubuntu-20.04]
 #        python-version: ['2.7', '3.7', '3.8', '3.9', '3.10', 'pypy-2.7', 'pypy-3.8']
-##        node: [6, 8, 10]
+#        #node: [6, 8, 10]
     container: centos
 
 
