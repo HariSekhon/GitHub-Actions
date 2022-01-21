@@ -104,6 +104,7 @@ env:
   GIT_USERNAME: 'GitHub Actions'
   GIT_EMAIL: 'platform-engineering@MYCOMPANY.CO.UK'
 
+
 # ============================================================================ #
 #                                T r i g g e r s
 # ============================================================================ #
@@ -138,6 +139,7 @@ on:
     # * is a special character in YAML so you have to quote this string
     - cron: '0 0 * * 1'
 
+
 # ============================================================================ #
 #                                D e f a u l t s
 # ============================================================================ #
@@ -147,6 +149,7 @@ defaults:
   run:
     shell: bash  # not on Alpine
     #working-directory: /var/jenkins_home  # $GITHUB_WORKSPACE
+
 
 # ============================================================================ #
 #                                    J o b s
@@ -159,15 +162,21 @@ jobs:
     environment:
       name: production  # use Environment with approval and different Secrets - add this to Deploy stage to allow the build to progress
     timeout-minutes: 10
-    # for code scanning to create security alerts (see https://github.com/HariSekhon/Terraform/blob/master/.github/workflows/tfsec.yaml)
-    #permissions:
-    #  actions: read
+
+    permissions:
+      actions: read
     #  contents: read
-    #  security-events: write
+    #  security-events: write  # for code scanning to create security alerts (eg. https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/tfsec.yaml)
+
+    # job-specific environment variables
+    #env:
+    #  key: value
+
 
     # ============================================================================ #
     #               Chooser Runner - OS, Language, Matrix etc.
     # ============================================================================ #
+
     runs-on: ubuntu-latest
 #    runs-on: ${{ matrix.os }}
 #    strategy:
@@ -177,12 +186,32 @@ jobs:
 ##        node: [6, 8, 10]
     container: centos
 
-    # job-specific environment variables
-    #env:
-    #  key: value
 
-    # @<tag/branch/SHA>  # GitHub recommends SHA for 3rd party actions for security
+    # ============================================================================ #
+    #                                S e r v i c e s
+    # ============================================================================ #
+
+    # access this service via 'localhost:${{ job.services.postgres.ports[5432] }}'
+
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+        ports:
+          - 5432/tcp  # will choose a random port on the host, reference it via ${{ job.services.postgres.ports[5432] }}
+
+
+    # ============================================================================ #
+    #                                   S t e p s
+    # ============================================================================ #
+
+    # use: 3rdparty/repo@<tag/branch/SHA>  # XXX: GitHub recommends SHA for 3rd party actions for security
     steps:
+
       # ============================================================================ #
       #                                  S e t u p
       # ============================================================================ #
