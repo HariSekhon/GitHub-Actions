@@ -205,14 +205,25 @@ jobs:
       #    submodules: 'true'
       #    ssh-key: ''
       #    path: ''  # to checkout dir under $GITHUB_WORKSPACE, if absolute dir outside or $GITHUB_WORKSPACE gets error:
-										 # 		Error: Repository path '/var/jenkins_home/jenkins' is not under '/__w/Jenkins/Jenkins'
+                     #    Error: Repository path '/var/jenkins_home/jenkins' is not under '/__w/Jenkins/Jenkins'
 
+      # https://github.com/aws-actions/configure-aws-credentials#configure-aws-credentials-action-for-github-actions
       - uses: aws-actions/configure-aws-credentials@v1
         #name: Configure AWS credentials
         with:
+          # https://github.com/aws-actions/configure-aws-credentials/blob/master/action.yml
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_DEFAULT_REGION }}
+          #role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/my-github-actions-role
+           #role-duration-seconds: 43200 # default: 21600 (6 hours), but you could have a session valid token for 12 hours
+
+      - name: AWS CLI version
+        run: aws --version
+      - name: Docker version
+        run: docker --version
+      - name: AWS CLI whoami
+        run: aws sts get-caller-identity
 
       # https://github.com/marketplace/actions/setup-python
       - uses: actions/setup-python@v2
@@ -294,8 +305,10 @@ jobs:
     timeout-minutes: 10
     runs-on: ubuntu-latest
     steps:
-      - name: Docker Build
-        run: docker build . -f Dockerfile -t "${{env.DOCKER_IMAGE}}:latest"
+      # docker/build-push-action does the checkout for you, but if you want to dynamically generate extra tags you need this checkout first
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'true'  # requires Git 2.18+ to be installed first
 
       # workaround for GitHub Actions env not being able to reference other env
       - name: Generate environment variable AWS_ECR_REGISTRY
@@ -316,20 +329,120 @@ jobs:
       - name: Generate environment variable TIMESTAMP
         run: echo "TIMESTAMP=$(date --utc --date="@${{env.EPOCH}}" '+%F')" >> $GITHUB_ENV
 
-      # don't split Docker Login to separate job as it may happen on a separate machine, resulting in a docker push error of 'no basic auth credentials'
-      # also can't dynamically create AWS_ECR_REGISTRY env var for 2 jobs, would have to set statically in workflow env or duplicate generation in each job
-      - name: AWS CLI version
-        run: aws --version
-      - name: Docker version
-        run: docker --version
-      #- name: Configure AWS credentials
-      #  uses: aws-actions/configure-aws-credentials@v1
-      #  with:
-      #    aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #    aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #    aws-region: ${{ env.AWS_DEFAULT_REGION }}
-      - name: AWS CLI whoami
-        run: aws sts get-caller-identity
+      # ======== Docker Actions =========
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      # ===================
+      # Login to Registries
+      # https://github.com/docker/login-action#usage
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # https://github.com/docker/login-action#github-container-registry
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # https://github.com/docker/login-action#gitlab
+      - name: Login to GitLab
+        uses: docker/login-action@v1
+        with:
+          registry: registry.gitlab.com
+          username: ${{ secrets.GITLAB_USERNAME }}
+          password: ${{ secrets.GITLAB_PASSWORD }}
+
+      # https://github.com/docker/login-action#azure-container-registry-acr
+      - name: Login to ACR
+        uses: docker/login-action@v1
+        with:
+          registry: <registry-name>.azurecr.io
+          username: ${{ secrets.AZURE_CLIENT_ID }}
+          password: ${{ secrets.AZURE_CLIENT_SECRET }}
+
+      # GCR is deprecated, use GAR below instead
+      # https://github.com/docker/login-action#google-container-registry-gcr
+      - name: Login to GCR
+        uses: docker/login-action@v1
+        with:
+          registry: gcr.io
+          username: _json_key  # or _json_key_base64 if you base64 encoded the credentials file before upload
+          password: ${{ secrets.GCR_JSON_KEY }}  # upload entire downloaded credentials key to GitHub Secrets
+
+      # https://github.com/docker/login-action#google-artifact-registry-gar
+      - name: Login to GAR
+        uses: docker/login-action@v1
+        with:
+          registry: europe-docker.pkg.dev  # us-docker.pkg.dev / asia-docker.pkg.dev
+          username: _json_key  # or _json_key_base64 if you base64 encoded the credentials file before upload
+          password: ${{ secrets.GAR_JSON_KEY }}  # upload entire downloaded credentials key to GitHub Secrets
+
+      # https://github.com/docker/login-action#aws-elastic-container-registry-ecr
+      - name: Login to ECR
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_DEFAULT_REGION }}.amazonaws.com  # XXX: make sure to set these env vars
+          username: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          password: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          # if you need to log in to multiple ECR accounts
+          #env:
+          #  AWS_ACCOUNT_IDS: 012345678910,023456789012
+
+      # https://github.com/docker/login-action#aws-public-elastic-container-registry-ecr
+      - name: Login to Public ECR
+        uses: docker/login-action@v1
+        with:
+          registry: public.ecr.aws
+          username: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          password: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        env:
+          AWS_REGION: ${{ env.AWS_DEFAULT_REGION }}
+
+      # ============
+      # Build & Push
+      - name: Docker Build & Push
+        #run: bin/docker_build_push_ecr.sh
+        uses: docker/build-push-action@v2
+        with:
+          #context: .  # defaults to the git context path
+          #context: {{defaultContext}}:docker
+          #file: Dockerfile
+          #build-args:
+          #cache-from: type=local,src=path/to/dir
+          #cache-to: type=local,dest=path/to/dir
+          #no-cache: false
+          #pull: true  # default: false  # use this or local cache but not both
+          push: true  # default: false
+          tags:
+            - ${{env.DOCKER_IMAGE}}:latest
+            - ${{env.DOCKER_IMAGE}}:${{env.GIT_SHA}}
+            - ${{env.DOCKER_IMAGE}}:${{env.GIT_BRANCH}}
+            # need a conditional on this one
+            #- ${{env.DOCKER_IMAGE}}:${{env.GIT_TAG}}
+            - ${{env.DOCKER_IMAGE}}:${{env.EPOCH}}
+            - ${{env.DOCKER_IMAGE}}:${{env.DATESTAMP}}
+            - ${{env.DOCKER_IMAGE}}:${{env.TIMESTAMP}}
+          # set GIT_AUTH_TOKEN if checkout out from another repo (uses local ${{github.token}} otherwise)
+          #secrets: |
+          #    GIT_AUTH_TOKEN=${{ secrets.MYTOKEN }}
+
+      # ======== or inline Script =========
+      # or consider using an external script to do all of the below like aws_ecr_docker_build_push.sh from DevOps Bash tools repo - https://github.com/HariSekhon/DevOps-Bash-tools
+      #
+      # see Setup section above for more info
+      - uses: aws-actions/configure-aws-credentials@v1
+        #name: Configure AWS credentials
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_DEFAULT_REGION }}
+
       # doing this in 2 steps so we can differentiate AWS CLI failures from Docker CLI failures
       - name: AWS ECR password
         run: echo "AWS_ECR_PASSWORD=$(aws ecr get-login-password --region "${{env.AWS_DEFAULT_REGION}}")" >> $GITHUB_ENV
@@ -338,13 +451,14 @@ jobs:
       - name: Docker Login GHCR
         run: docker login ghcr.io -u "${{env.GITHUB_USER}}" -p "${{env.GITHUB_TOKEN}}"
 
+      # don't split Docker Login to separate job as it may happen on a separate machine, resulting in a docker push error of 'no basic auth credentials'
+      # also can't dynamically create AWS_ECR_REGISTRY env var for 2 jobs, would have to set statically in workflow env or duplicate generation in each job
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # or consider using a script to do all of the below like aws_ecr_docker_build_push.sh from DevOps Bash tools repo - https://github.com/HariSekhon/DevOps-Bash-tools
       - name: Docker Build
         run: docker build . -f Dockerfile -t "${{env.DOCKER_IMAGE}}:latest"
 
@@ -377,6 +491,7 @@ jobs:
                       docker push "${{env.DOCKER_IMAGE}}:$tag"
           done
 
+      # ======== Scan after build =========
       - name: Docker Scan
         run: docker scan "${{env.DOCKER_IMAGE}}:latest"  # requires docker-scan-cli plugin (see HariSekhon/DevOps-Bash-tools setup/install_docker_scan.sh)
 
@@ -597,7 +712,7 @@ jobs:
 #    steps:
 #    - uses: docker://harisekhon/centos-dev
 #    -  name: build & test
-#      run: make build test
+#       run: make build test
 
 # ============================================================================ #
 # Artifact Upload / Download for sharing between jobs or storing
