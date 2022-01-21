@@ -1,0 +1,46 @@
+#
+#  Author: Hari Sekhon
+#  Date: 2022-01-21 13:34:47 +0000 (Fri, 21 Jan 2022)
+#
+#  vim:ts=2:sts=2:sw=2:et
+#
+#  https://github.com/HariSekhon/GitHub-Actions
+#
+#  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback
+#
+#  https://www.linkedin.com/in/harisekhon
+#
+
+---
+name: Groovy Compile
+
+on:
+  workflow_call:
+
+jobs:
+  groovyc:
+    name: Groovy Compile
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    container: harisekhon/github:debian
+    steps:
+      - name: Environment
+        run: env | sort
+
+      # should already be installed
+      - name: Install Git & Groovy
+        run: apt-get update && apt-get install -y git groovy --no-install-recommends
+
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive  # requires Git 2.18+ to be installed first
+
+      - uses: actions/checkout@v2
+        with:
+          name: HariSekhon/DevOps-Bash-tools
+          #ref: master         # unset for default branch in case it changes in future
+          submodules: recursive
+          path: bash-tools
+
+      - name: Groovy Compile
+        run: bash-tools/check_groovyc.sh
