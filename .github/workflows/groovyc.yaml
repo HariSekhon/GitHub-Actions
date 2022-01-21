@@ -32,7 +32,7 @@ jobs:
 
       - uses: actions/checkout@v2
         with:
-          name: HariSekhon/DevOps-Bash-tools
+          repository: HariSekhon/DevOps-Bash-tools
           #ref: master         # unset for default branch in case it changes in future
           submodules: recursive
           path: bash-tools
