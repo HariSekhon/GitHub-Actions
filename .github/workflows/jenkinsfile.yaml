@@ -39,6 +39,9 @@ jobs:
     #container: harisekhon/jenkins:latest
     container: jenkins/jenkins:lts
     steps:
+      - name: Environment
+        run: env | sort
+
       # Workaround for actions/checkout now being able to checkout outside of $GITHUB_WORKSPACE and not being able to set GITHUB_WORKSPACE
       #
       #   https://github.com/actions/checkout/issues/197
@@ -55,9 +58,6 @@ jobs:
       #    #ref: master         # unset for default branch in case it changes in future
       #    #submodules: recursive  # don't need the submodules for just this script, save time
       #    path: bash-tools
-
-      - name: Environment
-        run: env | sort
 
       - name: Git Checkout
         run: |
