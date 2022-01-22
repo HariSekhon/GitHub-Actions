@@ -163,7 +163,8 @@ jobs:
       name: production  # use Environment with approval and different Secrets - add this to Deploy stage to allow the build to progress
     timeout-minutes: 10
 
-    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'  # stop this workflow running on manual workflow_dispatch on the wrong branch (eg. to stop it invalidating the Docker build cache)
+    if: github.ref_name == 'master' || github.ref_name == 'main'  # stop this workflow running on manual workflow_dispatch on the wrong branch (eg. to stop it invalidating the Docker build cache)
+    #if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
 
     permissions:
       actions: read
@@ -213,6 +214,24 @@ jobs:
 
     # use: 3rdparty/repo@<tag/branch/SHA>  # XXX: GitHub recommends SHA for 3rd party actions for security
     steps:
+
+      - name: Dump GitHub context
+        run: echo '${{ toJSON(github) }}'
+
+      - name: Dump job context
+        run: echo '${{ toJSON(job) }}'
+
+      - name: Dump steps context
+        run: echo '${{ toJSON(steps) }}'
+
+      - name: Dump runner context
+        run: echo '${{ toJSON(runner) }}'
+
+      - name: Dump strategy context
+        run: echo '${{ toJSON(strategy) }}'
+
+      - name: Dump matrix context
+        run: echo '${{ toJSON(matrix) }}'
 
       # ============================================================================ #
       #                                  S e t u p
