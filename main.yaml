@@ -518,7 +518,17 @@ jobs:
         run: docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" -p "${{ secrets.DOCKERHUB_TOKEN }}"
 
       - name: Docker Build
-        run: docker build . -f Dockerfile -t "${{env.DOCKER_IMAGE}}:latest"
+        run: |
+          export DOCKER_BUILDKIT=1
+          docker build . -f Dockerfile \
+                         -t "${{env.DOCKER_IMAGE}}:latest" \
+                         --cache-from "${{env.DOCKER_IMAGE}}:latest" \
+                         --cache-from "${{env.DOCKER_IMAGE}}:${{github.ref_name}}" \
+                         --cache-from "${{env.DOCKER_IMAGE}}:${{github.sha}}" \
+                         --cache-from "${{env.DOCKER_IMAGE}}:${{env.EPOCH}}" \
+                         --cache-from "${{env.DOCKER_IMAGE}}:${{env.DATESTAMP}}" \
+                         --cache-from "${{env.DOCKER_IMAGE}}:${{env.TIMESTAMP}}" \
+                         --build-arg BUILDKIT_INLINE_CACHE=1
 
       - name: Docker Tagging
         run: |
