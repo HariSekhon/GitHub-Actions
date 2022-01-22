@@ -163,6 +163,8 @@ jobs:
       name: production  # use Environment with approval and different Secrets - add this to Deploy stage to allow the build to progress
     timeout-minutes: 10
 
+    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'  # stop this workflow running on manual workflow_dispatch on the wrong branch (eg. to stop it invalidating the Docker build cache)
+
     permissions:
       actions: read
     #  contents: read
@@ -444,7 +446,9 @@ jobs:
           #file: Dockerfile
           #build-args:
           #cache-from: type=local,src=path/to/dir
-          #cache-to: type=local,dest=path/to/dir
+          #cache-to: type=local,dest=path/to/dir  # XXX: continues to grow, must add a move action afterwards
+          cache-from: type=registry,ref=${{env.DOCKER_IMAGE}}:buildcache
+          cache-to: type=registry,ref=${{env.DOCKER_IMAGE}}:buildcache,mode=max
           #no-cache: false
           #pull: true  # default: false  # use this or local cache but not both
           push: true  # default: false
