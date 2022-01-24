@@ -369,6 +369,7 @@ jobs:
         # XXX: setting DOCKER_IMAGE_CACHE to GHCR because ECR doesn't support pushing cache layers
       - name: Generate environment variable DOCKER_IMAGE_CACHE
         run: echo "DOCKER_IMAGE_CACHE=${{ env.GHCR_REGISTRY }}/${{ env.APP }}" >> $GITHUB_ENV
+        #run: echo "DOCKER_IMAGE_CACHE=${{ env.AWS_ECR_REGISTRY }}/${{ env.APP }}-cache" >> $GITHUB_ENV  # doesn't work, ECR simply doesn't support it
 
       # don't need this any more, just use ${{ github.sha }} instead which is more readily available
       # $GITHUB_SHA is shown in environment dump but evaluates to blank, so use our own generated env var instead
