@@ -18,7 +18,7 @@ GitHub Actions master template & GitHub Actions Shared Workflows library.
 
 See [Documentation](https://docs.github.com/en/actions/using-workflows/reusing-workflows#calling-a-reusable-workflow) for how to call these workflows directly from your own GitHub Actions workflow.
 
-Forked from [HariSekhon/Templates](https://github.com/HariSekhon/Templates), for which this is now a submodule:
+Forked from [HariSekhon/Templates](https://github.com/HariSekhon/Templates), for which this is now a submodule.
 
 ### See Also
 
