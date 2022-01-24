@@ -163,7 +163,7 @@ jobs:
       name: production  # use Environment with approval and different Secrets - add this to Deploy stage to allow the build to progress
     timeout-minutes: 10
 
-    if: github.ref_name == 'master' || github.ref_name == 'main' || github.ref_name == 'docker'  # stop this workflow running on manual workflow_dispatch on the wrong branch (eg. to stop it invalidating the Docker build cache, update: solved now because I use many tags to cache)
+    if: github.ref_name == 'master' || github.ref_name == 'main' || github.ref_name == 'docker'  # stops this workflow running on manual workflow_dispatch on the wrong branch (eg. to stop it invalidating the Docker build cache, update: solved now because I use many tags to cache)
     #if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
 
     permissions:
