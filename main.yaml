@@ -366,6 +366,7 @@ jobs:
         run: echo "GHCR_REGISTRY=ghcr.io/${{ github.repository_owner }}" >> $GITHUB_ENV
       - name: Generate environment variable DOCKER_IMAGE
         run: echo "DOCKER_IMAGE=${{ env.AWS_ECR_REGISTRY }}/${{ env.APP }}" >> $GITHUB_ENV
+        # XXX: setting DOCKER_IMAGE_CACHE to GHCR because ECR doesn't support pushing cache layers
       - name: Generate environment variable DOCKER_IMAGE_CACHE
         run: echo "DOCKER_IMAGE_CACHE=${{ env.GHCR_REGISTRY }}/${{ env.APP }}" >> $GITHUB_ENV
 
