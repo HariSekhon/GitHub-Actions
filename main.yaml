@@ -163,7 +163,7 @@ jobs:
       name: production  # use Environment with approval and different Secrets - add this to Deploy stage to allow the build to progress
     timeout-minutes: 10
 
-    if: github.ref_name == 'master' || github.ref_name == 'main'  # stop this workflow running on manual workflow_dispatch on the wrong branch (eg. to stop it invalidating the Docker build cache)
+    if: github.ref_name == 'master' || github.ref_name == 'main' || github.ref_name == 'docker'  # stop this workflow running on manual workflow_dispatch on the wrong branch (eg. to stop it invalidating the Docker build cache, update: solved now because I use many tags to cache)
     #if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
 
     permissions:
@@ -366,9 +366,11 @@ jobs:
         run: echo "GHCR_REGISTRY=ghcr.io/${{ github.repository_owner }}" >> $GITHUB_ENV
       - name: Generate environment variable DOCKER_IMAGE
         run: echo "DOCKER_IMAGE=${{ env.AWS_ECR_REGISTRY }}/${{ env.APP }}" >> $GITHUB_ENV
-        # XXX: setting DOCKER_IMAGE_CACHE to GHCR because ECR doesn't support pushing cache layers
-      - name: Generate environment variable DOCKER_IMAGE_CACHE
-        run: echo "DOCKER_IMAGE_CACHE=${{ env.GHCR_REGISTRY }}/${{ env.APP }}" >> $GITHUB_ENV
+      # XXX: if using:
+      #         type=registry,ref=${{env.DOCKER_IMAGE_CACHE}}:buildcache,mode=max
+      #       then set DOCKER_IMAGE_CACHE to GHCR because ECR doesn't support pushing external cache layers for mode=max
+      #- name: Generate environment variable DOCKER_IMAGE_CACHE
+      #  run: echo "DOCKER_IMAGE_CACHE=${{ env.GHCR_REGISTRY }}/${{ env.APP }}" >> $GITHUB_ENV
         #run: echo "DOCKER_IMAGE_CACHE=${{ env.AWS_ECR_REGISTRY }}/${{ env.APP }}-cache" >> $GITHUB_ENV  # doesn't work, ECR simply doesn't support it
 
       # don't need this any more, just use ${{ github.sha }} instead which is more readily available
@@ -476,10 +478,19 @@ jobs:
           #context: {{defaultContext}}:docker  # docker/ directory subpath under the default context
           #file: Dockerfile
           #build-args:
+          #
           #cache-from: type=local,src=path/to/dir
           #cache-to: type=local,dest=path/to/dir  # XXX: continues to grow, must add a move action afterwards
-          cache-from: type=registry,ref=${{env.DOCKER_IMAGE_CACHE}}:buildcache
-          cache-to: type=registry,ref=${{env.DOCKER_IMAGE_CACHE}}:buildcache,mode=max  # XXX: fails to push to ECR which doesn't support this, so cache is set to GHCR
+          #
+          #cache-from: type=registry,ref=${{env.DOCKER_IMAGE_CACHE}}:buildcache
+          #cache-to: type=registry,ref=${{env.DOCKER_IMAGE_CACHE}}:buildcache,mode=max  # XXX: fails to push to ECR which doesn't support this, so cache is set to GHCR
+          #
+          cache-from: |
+            type=registry,ref=${{env.DOCKER_IMAGE}}:latest
+            type=registry,ref=${{env.DOCKER_IMAGE}}:${{github.ref_name}}
+            type=registry,ref=${{env.DOCKER_IMAGE}}:${{github.sha}}
+          cache-to: type=inline  # fine for most use cases, switch to mode=max above for multi-stage builds, but requires an external image cache that ECR doesn't support
+          #
           #no-cache: false
           #pull: true  # default: false  # use this or local cache but not both
           push: true  # default: false
