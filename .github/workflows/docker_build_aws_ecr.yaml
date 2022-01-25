@@ -99,7 +99,7 @@ jobs:
         uses: docker/setup-buildx-action@v1
 
       - name: Docker Build & Push
-        if: ! ${{ inputs.max-cache }}
+        if: ${{ ! inputs.max-cache }}
         uses: docker/build-push-action@v2
         with:
           push: true
