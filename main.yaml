@@ -372,6 +372,8 @@ jobs:
   # Call reusable workflow
   docker_build_aws_ecr:
     name: Docker Build -> AWS ECR
+    # XXX: stop this workflow being manually run on other branches if workflow_dispatch is defined
+    if: github.ref_name == 'master' || github.ref_name == 'main' || contains(github.ref_name, 'docker')
     uses: HariSekhon/GitHub-Actions/.github/workflows/docker_build_aws_ecr.yaml@master
     with:
       #repo: ${{ env.APP }}  # env not accessible here
