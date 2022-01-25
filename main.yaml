@@ -381,7 +381,7 @@ jobs:
         run: echo "DOCKER_IMAGE=${{ env.AWS_ECR_REGISTRY }}/${{ env.APP }}" >> $GITHUB_ENV
       # XXX: if using:
       #         type=registry,ref=${{env.DOCKER_IMAGE_CACHE}}:buildcache,mode=max
-      #       then set DOCKER_IMAGE_CACHE to GHCR because ECR doesn't support pushing external cache layers for mode=max
+      #       then set DOCKER_IMAGE_CACHE to GHCR because ECR doesn't support external registry cache export for mode=max
       #- name: Generate environment variable DOCKER_IMAGE_CACHE
       #  run: echo "DOCKER_IMAGE_CACHE=${{ env.GHCR_REGISTRY }}/${{ env.APP }}" >> $GITHUB_ENV
         #run: echo "DOCKER_IMAGE_CACHE=${{ env.AWS_ECR_REGISTRY }}/${{ env.APP }}-cache" >> $GITHUB_ENV  # doesn't work, ECR simply doesn't support it
@@ -496,7 +496,7 @@ jobs:
           #cache-to: type=local,dest=path/to/dir  # XXX: continues to grow, must add a move action afterwards
           #
           #cache-from: type=registry,ref=${{env.DOCKER_IMAGE_CACHE}}:buildcache
-          #cache-to: type=registry,ref=${{env.DOCKER_IMAGE_CACHE}}:buildcache,mode=max  # XXX: fails to push to ECR which doesn't support this, so cache is set to GHCR
+          #cache-to: type=registry,ref=${{env.DOCKER_IMAGE_CACHE}}:buildcache,mode=max  # XXX: fails to push to ECR which doesn't support external registry cache export, so set to GHCR for cache instead
           #
           cache-from: |
             type=registry,ref=${{env.DOCKER_IMAGE}}:latest
