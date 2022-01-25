@@ -522,16 +522,17 @@ jobs:
           #cache-from: type=local,src=path/to/dir
           #cache-to: type=local,dest=path/to/dir  # XXX: continues to grow, must add a move action afterwards
           #
-          #cache-from: type=registry,ref=${{env.DOCKER_IMAGE_CACHE}}:buildcache
-          #cache-to: type=registry,ref=${{env.DOCKER_IMAGE_CACHE}}:buildcache,mode=max  # XXX: fails to push to ECR which doesn't support external registry cache export, so set to GHCR for cache instead
-          #
           cache-from: |
             type=registry,ref=${{env.DOCKER_IMAGE}}:latest
             type=registry,ref=${{env.DOCKER_IMAGE}}:${{github.ref_name}}
             type=registry,ref=${{env.DOCKER_IMAGE}}:${{github.sha}}
-          cache-to: type=inline  # fine for most use cases, switch to mode=max above for multi-stage builds, but requires an external image cache that ECR doesn't support
+          cache-to: type=inline  # fine for most use cases, switch to mode=max below for multi-stage builds, but requires an external image cache that ECR doesn't support
                   # type=gha,mode=max  # experimental at time of writing, results in this error:
                   #   Error: buildx failed with: error: failed to solve: error writing layer blob: Patch "https://artifactcache.actions.githubusercontent.com/.../_apis/artifactcache/caches/3": read tcp <ip_x.x.x.x>:43810-><ip_x.x.x.x>:443: use of closed network connection
+          #
+          #cache-from: type=registry,ref=${{env.DOCKER_IMAGE_CACHE}}:buildcache
+          #cache-to: type=registry,ref=${{env.DOCKER_IMAGE_CACHE}}:buildcache,mode=max  # XXX: fails to push to ECR which doesn't support external registry cache export, so set to GHCR for cache instead
+          #
           #
           # Can't use multiple 'cache-to' lines otherwise hit this error:
           #
