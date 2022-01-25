@@ -22,6 +22,16 @@ Forked from [HariSekhon/Templates](https://github.com/HariSekhon/Templates), for
 
 ### Examples
 
+#### Run tfsec on your Terraform repo
+
+Create `.github/workflows/tfsec.yaml` in your repo:
+```yaml
+on: [push]
+jobs:
+  tfsec:
+    uses: HariSekhon/Gi/tHub-Actions/.github/workflows/tfsec.yaml@master
+```
+
 #### Docker Build and push to AWS ECR
 
 Create `.github/workflows/docker.yaml` in your repo:
