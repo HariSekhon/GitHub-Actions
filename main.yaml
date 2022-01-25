@@ -36,6 +36,7 @@ name: My Workflow
 # RUNNER_ARCH
 #
 # XXX: can't reference other environment variable to compose larger ones, must be done as a step based workaround, see Steps section of build further down
+# XXX: not accessible in 'with' steps or called workflows
 env:
   repo: bash-tools
   APP: myapp
@@ -129,6 +130,19 @@ on:
       - production
   # https://docs.github.com/en/actions/using-workflows/reusing-workflows#creating-a-reusable-workflow
   workflow_call:
+    # XXX: don't mention ${{ env.blah }} or ${{ secrets.BLAH }} in the descriptions, as it'll try to interpolate them and fail
+    inputs:
+      repo:
+        description: The ECR repository, without the 'xxx.dkr.ecr.<region>.amazonaws.com' prefix
+        type: string
+        required: true
+    secrets:
+      aws_access_key_id:
+        required: true
+      aws_secret_access_key:
+        required: true
+      aws_default_region:
+        required: true
   # https://docs.github.com/en/actions/managing-workflow-runs/manually-running-a-workflow#running-a-workflow
   workflow_dispatch:  # needs to be in default branch before you get the UI option to manually run though
     #inputs:
@@ -303,7 +317,8 @@ jobs:
 
       # all run steps seem to operate with 'set -e'
 
-      # Create Dynamic Environment Variables by echo'ing KEY=VALUE >> $GITHUB_ENV
+      # Create Dynamic Environment Variables by echo'ing KEY=VALUE >> "$GITHUB_ENV"
+      #                                     ... jq ... | tee --append "$GITHUB_ENV"
       #
       - name: Generate env GITHUB_SHA_SHORT
         run: echo "GITHUB_SHA_SHORT=$(echo $GITHUB_SHA | cut -c 1-6)" >> $GITHUB_ENV
@@ -346,18 +361,25 @@ jobs:
           cd "/tmp/$repo" &&
           make test
 
+      - name: Job Failed
+        if: ${{ failure() }}
+        run: echo 'run a notify command or action here'
+
   # ============================================================================ #
   #                                D o c k e r
   # ============================================================================ #
 
+  # Call reusable workflow
   docker_build_aws_ecr:
-    name: Docker Build AWS ECR
+    name: Docker Build -> AWS ECR
     uses: HariSekhon/GitHub-Actions/.github/workflows/docker_build_aws_ecr.yaml@master
     with:
-      repo: ${{ env.APP }}
-      aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      aws_region: ${{ secrets.AWS_DEFAULT_REGION }}
+      #repo: ${{ env.APP }}  # env not accessible here
+      repo: MYREPO
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
     permissions:
       contents: read
 
