@@ -9,7 +9,7 @@ See [Documentation](https://docs.github.com/en/actions/using-workflows/reusing-w
 
 Docker Build and push to AWS ECR
 
-Create a GitHub Actions workflow file `.github/workflows/docker.yaml` in your repo that uses this library like so:
+Create a GitHub Actions workflow file `.github/workflows/docker.yaml` in your repo:
 ```yaml
 on: [push]
 jobs:
