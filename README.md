@@ -20,11 +20,11 @@ See [Documentation](https://docs.github.com/en/actions/using-workflows/reusing-w
 
 Forked from [HariSekhon/Templates](https://github.com/HariSekhon/Templates), for which this is now a submodule.
 
-### Examples
+## Examples
 
 In your repo, create these short files to import and run these useful workflows:
 
-#### Scan for secrets and security issues
+### Scan for secrets and security issues
 
 Alerts appear in your GitHub Security tab.
 
@@ -36,7 +36,7 @@ jobs:
     uses: HariSekhon/GitHub-Actions/.github/workflows/semgrep.yaml@master
 ```
 
-#### Analyze your Terraform code security & best practices
+### Analyze your Terraform code security & best practices
 
 Create `.github/workflows/tfsec.yaml`:
 ```yaml
@@ -46,7 +46,7 @@ jobs:
     uses: HariSekhon/Gi/tHub-Actions/.github/workflows/tfsec.yaml@master
 ```
 
-#### Docker Build and push to AWS ECR
+### Docker Build and push to AWS ECR
 
 Create `.github/workflows/docker.yaml`:
 ```yaml
