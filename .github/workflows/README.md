@@ -5,9 +5,9 @@ GitHub Actions reusable workflows library to be reused between GitHub repos.
 See [Documentation](https://docs.github.com/en/actions/using-workflows/reusing-workflows#calling-a-reusable-workflow) for how to call these workflows directly from your own GitHub Actions workflow.
 
 
-## Examples:
+### Examples
 
-### Docker Build and push to AWS ECR
+#### Docker Build and push to AWS ECR
 
 Create a GitHub Actions workflow file `.github/workflows/docker.yaml` in your repo:
 ```yaml
