@@ -22,9 +22,23 @@ Forked from [HariSekhon/Templates](https://github.com/HariSekhon/Templates), for
 
 ### Examples
 
+In your repo, create these short files to import and run these useful workflows:
+
+#### Scan for secrets and security issues
+
+Alerts appear in your GitHub Security tab.
+
+Create `.github/workflows/semgrep.yaml`:
+```yaml
+on: [push]
+jobs:
+  semgrep:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/semgrep.yaml@master
+```
+
 #### Run tfsec on your Terraform repo
 
-Create `.github/workflows/tfsec.yaml` in your repo:
+Create `.github/workflows/tfsec.yaml`:
 ```yaml
 on: [push]
 jobs:
@@ -34,7 +48,7 @@ jobs:
 
 #### Docker Build and push to AWS ECR
 
-Create `.github/workflows/docker.yaml` in your repo:
+Create `.github/workflows/docker.yaml`:
 ```yaml
 on: [push]
 jobs:
