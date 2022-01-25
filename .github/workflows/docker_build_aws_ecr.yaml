@@ -22,10 +22,10 @@ name: Docker Build -> AWS ECR
 
 on:
   workflow_call:
-    #inputs:
-      #repo:
-      #  description: The repo in ECR to push to, usually set to ${{ env.APP }}
-      #  required: true
+    inputs:
+      repo:
+        description: The ECR repository, without the 'xxx.dkr.ecr.<region>.amazonaws.com' prefix
+        required: true
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
