@@ -378,12 +378,14 @@ jobs:
     with:
       #repo: ${{ env.APP }}  # env not accessible here
       repo: MYREPO
+      max-cache: false  # true uses GHCR for registry cache with mode=max since ECR doesn't support this
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
     permissions:
       contents: read
+      packages: write  # needed for GHCR access if using max-cache: true
 
   docker_build:
     name: Docker Build
