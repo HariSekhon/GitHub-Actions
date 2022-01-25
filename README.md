@@ -37,7 +37,7 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
 ```
-Creates several useful tags, supports multi-stage build caching, see [.github/workflows/README](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/README.md) for details.
+Creates several useful tags, supports multi-stage build caching, see [README](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/README.md) for details.
 
 ### See Also
 
