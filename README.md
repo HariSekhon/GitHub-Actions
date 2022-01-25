@@ -14,11 +14,30 @@
 GitHub Actions master template & GitHub Actions Shared Workflows library.
 
 - [main.yaml](https://github.com/HariSekhon/GitHub-Actions/blob/master/github-actions.yaml) - GitHub Actions master template
-- [.github/workflows/](https://github.com/HariSekhon/GitHub-Actions/tree/master/.github/workflows) - GitHub Actions Shared Workflows Library
+- [.github/workflows/](https://github.com/HariSekhon/GitHub-Actions/tree/master/.github/workflows) - GitHub Actions Reusable Workflows Library
 
 See [Documentation](https://docs.github.com/en/actions/using-workflows/reusing-workflows#calling-a-reusable-workflow) for how to call these workflows directly from your own GitHub Actions workflow.
 
 Forked from [HariSekhon/Templates](https://github.com/HariSekhon/Templates), for which this is now a submodule.
+
+### Examples
+
+#### Docker Build and push to AWS ECR
+
+Create `.github/workflows/docker.yaml` in your repo:
+```yaml
+on: [push]
+jobs:
+  docker_build:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/docker_build_aws_ecr.yaml@master
+    with:
+      repo: MY_ECR_REPO
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+```
+Creates several useful tags, supports multi-stage build caching, see [.github/workflows/README](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/README.md) for details.
 
 ### See Also
 
