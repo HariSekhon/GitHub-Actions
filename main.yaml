@@ -119,6 +119,7 @@ on:
       - staging
       - production
       - main
+      - '*docker*'  # glob requires quoting, only run on branches with docker in the name
   pull_request:
     branches:
       - master
