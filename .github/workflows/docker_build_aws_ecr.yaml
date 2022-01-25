@@ -98,6 +98,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
+      # XXX: Normal build, use inline cache when max-cache input is not set to 'true' - fine for most purposes except for multi-stage builds
       - name: Docker Build & Push
         if: ${{ ! inputs.max-cache }}
         uses: docker/build-push-action@v2
@@ -116,6 +117,17 @@ jobs:
             ${{env.DOCKER_IMAGE}}:${{env.DATESTAMP}}
             ${{env.DOCKER_IMAGE}}:${{env.TIMESTAMP}}
 
+      # XXX: Max Cache build with separate GHCR buildcache since ECR doesn't support it - for multi-stage builds
+      #
+      # call like so:
+      #
+      #   jobs:
+      #     docker_build:
+      #       uses: HariSekhon/GitHub-Actions/.github/workflows/docker_build_aws_ecr.yaml@master
+      #       with:
+      #         max-cache: true
+      #         ...
+      #
       - name: Docker Build & Push
         if: ${{ inputs.max-cache }}
         uses: docker/build-push-action@v2
