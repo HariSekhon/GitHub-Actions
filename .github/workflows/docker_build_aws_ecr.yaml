@@ -41,7 +41,7 @@ jobs:
     name: Docker Build -> AWS ECR
     timeout-minutes: 60
     runs-on: ubuntu-latest
-    if: github.ref_name == 'master' || github.ref_name == 'main' || github.ref_name == 'docker'
+    if: github.ref_name == 'master' || github.ref_name == 'main' || contains(github.ref_name, 'docker')
     permissions:
       contents: read
     steps:
