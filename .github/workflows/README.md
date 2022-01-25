@@ -7,6 +7,14 @@ See [Documentation](https://docs.github.com/en/actions/using-workflows/reusing-w
 
 ### Examples
 
+Create `.github/workflows/tfsec.yaml` in your repo:
+```yaml
+on: [push]
+jobs:
+  tfsec:
+    uses: HariSekhon/Gi/tHub-Actions/.github/workflows/tfsec.yaml@master
+```
+
 #### Docker Build and push to AWS ECR
 
 Create a GitHub Actions workflow file `.github/workflows/docker.yaml` in your repo:
