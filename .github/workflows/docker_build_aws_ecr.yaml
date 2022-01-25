@@ -28,13 +28,10 @@ on:
       #  required: true
     secrets:
       AWS_ACCESS_KEY_ID:
-        description: The AWS_ACCESS_KEY_ID, usually set to ${{ secrets.AWS_ACCESS_KEY_ID }}
         required: true
       AWS_SECRET_ACCESS_KEY:
-        description: The AWS_SECRET_ACCESS_KEY, usually set to ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         required: true
       AWS_DEFAULT_REGION:
-        description: The AWS region of the ECR repo, usually set to ${{ secrets.AWS_DEFAULT_REGION }}
         required: true
 
 jobs:
