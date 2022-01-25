@@ -22,19 +22,20 @@ name: Docker Build -> AWS ECR
 
 on:
   workflow_call:
-    #inputs:
-    #  repo:
-    #    description: The repo in ECR to push to, usually set to ${{ env.APP }}
-    #    required: true
-    #  aws_access_key_id:
-    #    description: The AWS_ACCESS_KEY_ID, usuall set to ${{ secrets.AWS_ACCESS_KEY_ID }}
-    #    required: true
-    #  aws_secret_access_key:
-    #    description: The AWS_SECRET_ACCESS_KEY, usuall set to ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    #    required: true
-    #  aws_region:
-    #    description: The AWS region of the ECR repo, usually set to ${{ secrets.AWS_DEFAULT_REGION }}
-    #    required: true
+    inputs:
+      repo:
+        description: The repo in ECR to push to, usually set to ${{ env.APP }}
+        required: true
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        description: The AWS_ACCESS_KEY_ID, usually set to ${{ secrets.AWS_ACCESS_KEY_ID }}
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        description: The AWS_SECRET_ACCESS_KEY, usually set to ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        required: true
+      AWS_DEFAULT_REGION:
+        description: The AWS region of the ECR repo, usually set to ${{ secrets.AWS_DEFAULT_REGION }}
+        required: true
 
 jobs:
   docker_build:
@@ -46,6 +47,9 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v2
+
+      - name: Environment
+        run: env | sort
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -59,7 +63,7 @@ jobs:
       - name: Generate environment variable AWS_ECR_REGISTRY
         run: echo "AWS_ECR_REGISTRY=${{env.AWS_ACCOUNT_ID}}.dkr.ecr.${{env.AWS_DEFAULT_REGION}}.amazonaws.com" >> $GITHUB_ENV
       - name: Generate environment variable DOCKER_IMAGE
-        run: echo "DOCKER_IMAGE=${{ env.AWS_ECR_REGISTRY }}/${{ env.APP }}" >> $GITHUB_ENV
+        run: echo "DOCKER_IMAGE=${{ env.AWS_ECR_REGISTRY }}/${{ inputs.repo }}" >> $GITHUB_ENV
       - name: Generate environment variable EPOCH
         run: echo "EPOCH=$(date --utc '+%s')" >> $GITHUB_ENV
       - name: Generate environment variable DATESTAMP
