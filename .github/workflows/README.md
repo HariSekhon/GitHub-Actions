@@ -4,12 +4,25 @@ GitHub Actions reusable workflows library to be reused between GitHub repos.
 
 See [Documentation](https://docs.github.com/en/actions/using-workflows/reusing-workflows#calling-a-reusable-workflow) for how to call these workflows directly from your own GitHub Actions workflow.
 
+## Examples
 
-### Examples
+In your GitHub repo, import these workflows by droping in a small yaml file.
 
-#### Run tfsec on your Terraform repo
+### Scan for Secrets and Security issues
 
-Create `.github/workflows/tfsec.yaml` in your repo:
+Alerts appear under Security -> Code scanning alerts.
+
+Create `.github/workflows/semgrep.yaml`:
+```yaml
+on: [push]
+jobs:
+  semgrep:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/semgrep.yaml@master
+```
+
+### Analyze your Terraform code security & best practices
+
+Create `.github/workflows/tfsec.yaml`:
 ```yaml
 on: [push]
 jobs:
@@ -17,7 +30,8 @@ jobs:
     uses: HariSekhon/Gi/tHub-Actions/.github/workflows/tfsec.yaml@master
 ```
 
-#### Docker Build and push to AWS ECR
+### Docker Build and push to AWS ECR
+
 
 Create a GitHub Actions workflow file `.github/workflows/docker.yaml` in your repo:
 ```yaml
