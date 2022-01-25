@@ -22,11 +22,11 @@ Forked from [HariSekhon/Templates](https://github.com/HariSekhon/Templates), for
 
 ## Examples
 
-In your repo, create these short files to import and run these useful workflows:
+In your GitHub repo, import these workflows by droping in a small yaml file.
 
 ### Scan for secrets and security issues
 
-Alerts appear in your GitHub Security tab.
+Alerts appear under Security -> Code scanning alerts.
 
 Create `.github/workflows/semgrep.yaml`:
 ```yaml
