@@ -32,8 +32,7 @@ jobs:
 
 ### Docker Build and push to AWS ECR
 
-
-Create a GitHub Actions workflow file `.github/workflows/docker.yaml` in your repo:
+Create `.github/workflows/docker.yaml`:
 ```yaml
 on: [push]
 jobs:
