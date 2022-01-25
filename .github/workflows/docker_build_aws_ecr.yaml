@@ -138,9 +138,9 @@ jobs:
           push: true
           cache-from: |
             type=registry,ref=${{env.DOCKER_IMAGE_CACHE}}:buildcache
-            type=registry,ref=${{env.DOCKER_IMAGE_CACHE}}:latest
-            type=registry,ref=${{env.DOCKER_IMAGE_CACHE}}:${{github.ref_name}}
-            type=registry,ref=${{env.DOCKER_IMAGE_CACHE}}:${{github.sha}}
+            type=registry,ref=${{env.DOCKER_IMAGE}}:latest
+            type=registry,ref=${{env.DOCKER_IMAGE}}:${{github.ref_name}}
+            type=registry,ref=${{env.DOCKER_IMAGE}}:${{github.sha}}
           cache-to: type=registry,ref=${{env.DOCKER_IMAGE_CACHE}}:buildcache,mode=max  # XXX: fails to push to ECR which doesn't support external registry cache export, so set to GHCR for cache instead
           tags: |
             ${{env.DOCKER_IMAGE}}:latest
