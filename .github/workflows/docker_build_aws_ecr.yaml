@@ -49,6 +49,7 @@ jobs:
     #if: github.ref_name == 'master' || github.ref_name == 'main' || contains(github.ref_name, 'docker')
     permissions:
       contents: read
+      packages: write
     steps:
       - uses: actions/checkout@v2
 
