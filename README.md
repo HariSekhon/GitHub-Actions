@@ -24,7 +24,7 @@ Forked from [HariSekhon/Templates](https://github.com/HariSekhon/Templates), for
 
 In your GitHub repo, import these workflows by droping in a small yaml file.
 
-### Scan for secrets and security issues
+### Scan for Secrets and Security issues
 
 Alerts appear under Security -> Code scanning alerts.
 
