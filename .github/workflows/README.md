@@ -7,6 +7,8 @@ See [Documentation](https://docs.github.com/en/actions/using-workflows/reusing-w
 
 ### Examples
 
+#### Run tfsec on your Terraform repo
+
 Create `.github/workflows/tfsec.yaml` in your repo:
 ```yaml
 on: [push]
