@@ -492,6 +492,8 @@ jobs:
           #file: Dockerfile
           #build-args:
           #
+          # https://github.com/docker/build-push-action/blob/master/docs/advanced/cache.md
+          #
           #cache-from: type=local,src=path/to/dir
           #cache-to: type=local,dest=path/to/dir  # XXX: continues to grow, must add a move action afterwards
           #
@@ -503,6 +505,16 @@ jobs:
             type=registry,ref=${{env.DOCKER_IMAGE}}:${{github.ref_name}}
             type=registry,ref=${{env.DOCKER_IMAGE}}:${{github.sha}}
           cache-to: type=inline  # fine for most use cases, switch to mode=max above for multi-stage builds, but requires an external image cache that ECR doesn't support
+                  # type=gha,mode=max  # experimental at time of writing, results in this error:
+                  #   Error: buildx failed with: error: failed to solve: error writing layer blob: Patch "https://artifactcache.actions.githubusercontent.com/.../_apis/artifactcache/caches/3": read tcp <ip_x.x.x.x>:43810-><ip_x.x.x.x>:443: use of closed network connection
+          #
+          # Can't use multiple 'cache-to' lines otherwise hit this error:
+          #
+          #   Error: buildx failed with: error: failed to solve: specifying multiple cache exports is not supported currently
+          #cache-to: |
+          #  type=registry,ref=${{env.DOCKER_IMAGE_CACHE}}:latest
+          #  type=registry,ref=${{env.DOCKER_IMAGE_CACHE}}:${{github.ref_name}}
+          #  type=registry,ref=${{env.DOCKER_IMAGE_CACHE}}:${{github.sha}}
           #
           #no-cache: false
           #pull: true  # default: false  # use this or local cache but not both
