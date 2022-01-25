@@ -22,10 +22,10 @@ name: Docker Build -> AWS ECR
 
 on:
   workflow_call:
-    inputs:
-      repo:
-        description: The repo in ECR to push to, usually set to ${{ env.APP }}
-        required: true
+    #inputs:
+      #repo:
+      #  description: The repo in ECR to push to, usually set to ${{ env.APP }}
+      #  required: true
     secrets:
       AWS_ACCESS_KEY_ID:
         description: The AWS_ACCESS_KEY_ID, usually set to ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -63,7 +63,7 @@ jobs:
       - name: Generate environment variable AWS_ECR_REGISTRY
         run: echo "AWS_ECR_REGISTRY=${{env.AWS_ACCOUNT_ID}}.dkr.ecr.${{env.AWS_DEFAULT_REGION}}.amazonaws.com" >> $GITHUB_ENV
       - name: Generate environment variable DOCKER_IMAGE
-        run: echo "DOCKER_IMAGE=${{ env.AWS_ECR_REGISTRY }}/${{ inputs.repo }}" >> $GITHUB_ENV
+        run: echo "DOCKER_IMAGE=${{ env.AWS_ECR_REGISTRY }}/${{ env.APP }}" >> $GITHUB_ENV
       - name: Generate environment variable EPOCH
         run: echo "EPOCH=$(date --utc '+%s')" >> $GITHUB_ENV
       - name: Generate environment variable DATESTAMP
