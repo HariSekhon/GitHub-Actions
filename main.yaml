@@ -356,7 +356,7 @@ jobs:
       repo: ${{ env.APP }}
       aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
       aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      aws_default_region: ${{ secrets.AWS_DEFAULT_REGION }}
+      aws_region: ${{ secrets.AWS_DEFAULT_REGION }}
     permissions:
       contents: read
 
