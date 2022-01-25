@@ -22,7 +22,7 @@ Forked from [HariSekhon/Templates](https://github.com/HariSekhon/Templates), for
 
 ## Examples
 
-In your GitHub repo, import these workflows by droping in a small yaml file.
+In your GitHub repo, import these workflows by adding small yaml files to the `.github/workflows/` directory.
 
 ### Scan for Secrets and Security issues
 
