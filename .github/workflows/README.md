@@ -32,9 +32,9 @@ This auto-adds tags:
 
 Makes heavy use of all several possible caches including branch/tag specific caches to speed up builds / re-builds.
 
-Supports use of using GHCR as an extra max cache registry for multi-stage builds which AWS ECR doesn't support at time of writing, simply by adding:
+Supports multi-stage build caching using GHCR for intermediate layer caching since AWS ECR doesn't support this at time of writing, simply by adding:
 
-```
+```yaml
     with:
       max-cache: true
 ```
