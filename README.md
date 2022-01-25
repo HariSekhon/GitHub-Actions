@@ -36,7 +36,7 @@ jobs:
     uses: HariSekhon/GitHub-Actions/.github/workflows/semgrep.yaml@master
 ```
 
-#### Run tfsec on your Terraform repo
+#### Analyze your Terraform code security & best practices
 
 Create `.github/workflows/tfsec.yaml`:
 ```yaml
