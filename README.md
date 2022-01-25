@@ -13,7 +13,7 @@
 
 GitHub Actions master template & GitHub Actions Shared Workflows library.
 
-- [main.yaml](https://github.com/HariSekhon/GitHub-Actions/blob/master/github-actions.yaml) - GitHub Actions master template
+- [main.yaml](https://github.com/HariSekhon/GitHub-Actions/blob/master/main.yaml) - GitHub Actions master template
 - [.github/workflows/](https://github.com/HariSekhon/GitHub-Actions/tree/master/.github/workflows) - GitHub Actions Reusable Workflows Library
 
 See [Documentation](https://docs.github.com/en/actions/using-workflows/reusing-workflows#calling-a-reusable-workflow) for how to call these workflows directly from your own GitHub Actions workflow.
