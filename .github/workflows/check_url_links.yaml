@@ -52,7 +52,7 @@ jobs:
         env:
           #DEBUG: 1
           VERBOSE: 1
-          PATH: ${{env.PATH}}:${{env.PWD}}/bash-tools
         run: |
-          echo $PATH
+          # extended PATH gives option of using bash tools checkout or version from container
+          export PATH="$PWD/bash-tools:$PATH"
           check_url_links.sh
