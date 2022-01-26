@@ -79,12 +79,12 @@ jobs:
         # Never fail the build due to findings on pushes.
         # Instead, just collect findings for semgrep.dev/manage/findings
           #auditOn: push
-          auditOn: unknown
+          auditOn: push workflow_dispatch cron
           generateSarif: "1"
 
         # Change job timeout (default is 1800 seconds; set to 0 to disable)
         env:
-          SEMGREP_AUDIT_ON: push workflow_dispatch cron
+          #SEMGREP_AUDIT_ON: push workflow_dispatch cron
           #SEMGREP_AGENT_DEBUG: 1
         #  SEMGREP_TIMEOUT: 300
 
