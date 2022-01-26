@@ -28,6 +28,7 @@ on:
       url_links_ignored:
         type: string
         required: false
+        # this is just to account for the examples in the .github/workflows/README.md in this own repo
         default: |
           http://krb5server
           https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv
