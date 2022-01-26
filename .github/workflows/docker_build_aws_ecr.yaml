@@ -64,21 +64,21 @@ jobs:
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
       - name: Generate environment variable AWS_ACCOUNT_ID
-        run: echo "AWS_ACCOUNT_ID=$(aws sts get-caller-identity | jq -r .Account)" >> $GITHUB_ENV
+        run: echo "AWS_ACCOUNT_ID=$(aws sts get-caller-identity | jq -r .Account)" >> "$GITHUB_ENV"
       - name: Generate environment variable AWS_ECR_REGISTRY
-        run: echo "AWS_ECR_REGISTRY=${{env.AWS_ACCOUNT_ID}}.dkr.ecr.${{env.AWS_DEFAULT_REGION}}.amazonaws.com" >> $GITHUB_ENV
+        run: echo "AWS_ECR_REGISTRY=${{env.AWS_ACCOUNT_ID}}.dkr.ecr.${{env.AWS_DEFAULT_REGION}}.amazonaws.com" >> "$GITHUB_ENV"
       - name: Generate environment variable DOCKER_IMAGE
-        run: echo "DOCKER_IMAGE=${{ env.AWS_ECR_REGISTRY }}/${{ inputs.repo }}" >> $GITHUB_ENV
+        run: echo "DOCKER_IMAGE=${{ env.AWS_ECR_REGISTRY }}/${{ inputs.repo }}" >> "$GITHUB_ENV"
       - name: Generate environment variable EPOCH
-        run: echo "EPOCH=$(date --utc '+%s')" >> $GITHUB_ENV
+        run: echo "EPOCH=$(date --utc '+%s')" >> "$GITHUB_ENV"
       - name: Generate environment variable DATESTAMP
-        run: echo "DATESTAMP=$(date --utc --date="@${{env.EPOCH}}" '+%FT%H%M%SZ')" >> $GITHUB_ENV
+        run: echo "DATESTAMP=$(date --utc --date="@${{env.EPOCH}}" '+%FT%H%M%SZ')" >> "$GITHUB_ENV"
       - name: Generate environment variable TIMESTAMP
-        run: echo "TIMESTAMP=$(date --utc --date="@${{env.EPOCH}}" '+%F')" >> $GITHUB_ENV
+        run: echo "TIMESTAMP=$(date --utc --date="@${{env.EPOCH}}" '+%F')" >> "$GITHUB_ENV"
 
       - name: Generate environment variable DOCKER_IMAGE_CACHE
         if: ${{ inputs.max-cache }}
-        run: echo "DOCKER_IMAGE_CACHE=ghcr.io/${{ github.repository }}" >> $GITHUB_ENV
+        run: echo "DOCKER_IMAGE_CACHE=ghcr.io/${{ github.repository }}" >> "$GITHUB_ENV"
         #run: echo "DOCKER_IMAGE_CACHE=${{ env.AWS_ECR_REGISTRY }}/${{ env.APP }}-cache" >> $GITHUB_ENV  # doesn't work, ECR simply doesn't support it
 
       - name: Login to ECR

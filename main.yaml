@@ -325,9 +325,9 @@ jobs:
       #                                     ... jq ... | tee --append "$GITHUB_ENV"
       #
       - name: Generate env GITHUB_SHA_SHORT
-        run: echo "GITHUB_SHA_SHORT=$(echo $GITHUB_SHA | cut -c 1-6)" >> $GITHUB_ENV
+        run: echo "GITHUB_SHA_SHORT=$(echo $GITHUB_SHA | cut -c 1-6)" >> "$GITHUB_ENV"
       - name: Generate env GITHUB_REPO
-        run: echo "GITHUB_REPO=$(echo "${GITHUB_REPOSITORY##*/}")" >> $GITHUB_ENV
+        run: echo "GITHUB_REPO=$(echo "${GITHUB_REPOSITORY##*/}")" >> "$GITHUB_ENV"
         #
         # step-specific environment variables
         #env:
@@ -406,39 +406,39 @@ jobs:
           submodules: 'true'  # requires Git 2.18+ to be installed first
 
       - name: Generate environment variable AWS_ACCOUNT_ID
-        run: echo "AWS_ACCOUNT_ID=$(aws sts get-caller-identity | jq -r .Account)" >> $GITHUB_ENV
+        run: echo "AWS_ACCOUNT_ID=$(aws sts get-caller-identity | jq -r .Account)" >> "$GITHUB_ENV"
       - name: Generate environment variable AWS_ECR_REGISTRY
-        run: echo "AWS_ECR_REGISTRY=${{env.AWS_ACCOUNT_ID}}.dkr.ecr.${{env.AWS_DEFAULT_REGION}}.amazonaws.com" >> $GITHUB_ENV
+        run: echo "AWS_ECR_REGISTRY=${{env.AWS_ACCOUNT_ID}}.dkr.ecr.${{env.AWS_DEFAULT_REGION}}.amazonaws.com" >> "$GITHUB_ENV"
       - name: Generate environment variable GHCR_REGISTRY$
-        run: echo "GHCR_REGISTRY=ghcr.io/${{ github.repository_owner }}" >> $GITHUB_ENV
+        run: echo "GHCR_REGISTRY=ghcr.io/${{ github.repository_owner }}" >> "$GITHUB_ENV"
       - name: Generate environment variable DOCKER_IMAGE
-        run: echo "DOCKER_IMAGE=${{ env.AWS_ECR_REGISTRY }}/${{ env.APP }}" >> $GITHUB_ENV
+        run: echo "DOCKER_IMAGE=${{ env.AWS_ECR_REGISTRY }}/${{ env.APP }}" >> "$GITHUB_ENV"
       # XXX: if using:
       #         type=registry,ref=${{env.DOCKER_IMAGE_CACHE}}:buildcache,mode=max
       #       then set DOCKER_IMAGE_CACHE to GHCR because ECR doesn't support external registry cache export for mode=max
       #- name: Generate environment variable DOCKER_IMAGE_CACHE
-      #  run: echo "DOCKER_IMAGE_CACHE=${{ env.GHCR_REGISTRY }}/${{ env.APP }}" >> $GITHUB_ENV
+      #  run: echo "DOCKER_IMAGE_CACHE=${{ env.GHCR_REGISTRY }}/${{ env.APP }}" >> "$GITHUB_ENV"
         #run: echo "DOCKER_IMAGE_CACHE=${{ env.AWS_ECR_REGISTRY }}/${{ env.APP }}-cache" >> $GITHUB_ENV  # doesn't work, ECR simply doesn't support it
 
       # don't need this any more, just use ${{ github.sha }} instead which is more readily available
       # $GITHUB_SHA is shown in environment dump but evaluates to blank, so use our own generated env var instead
       #- name: Generate environment variable GIT_SHA
-      #  run: echo "GIT_SHA=$(git rev-parse HEAD)" >> $GITHUB_ENV
+      #  run: echo "GIT_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
       #  # this works too
-      #  run: echo "GIT_SHA=$GITHUB_SHA" >> $GITHUB_ENV
+      #  run: echo "GIT_SHA=$GITHUB_SHA" >> "$GITHUB_ENV"
 
       # use ${{ github.ref_name }} instead which comes out to the branch or tag (${{github.ref_type}} == 'branch' if you check the github context dump above)
       #- name: Generate environment variable GIT_BRANCH
-      #  run: echo "GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)" >> $GITHUB_ENV
+      #  run: echo "GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)" >> "$GITHUB_ENV"
       #- name: Generate environment variable GIT_TAG
-      #  run: echo "GIT_TAG=$(git tag --points-at HEAD)" >> $GITHUB_ENV
+      #  run: echo "GIT_TAG=$(git tag --points-at HEAD)" >> "$GITHUB_ENV"
 
       - name: Generate environment variable EPOCH
-        run: echo "EPOCH=$(date --utc '+%s')" >> $GITHUB_ENV
+        run: echo "EPOCH=$(date --utc '+%s')" >> "$GITHUB_ENV"
       - name: Generate environment variable DATESTAMP
-        run: echo "DATESTAMP=$(date --utc --date="@${{env.EPOCH}}" '+%FT%H%M%SZ')" >> $GITHUB_ENV
+        run: echo "DATESTAMP=$(date --utc --date="@${{env.EPOCH}}" '+%FT%H%M%SZ')" >> "$GITHUB_ENV"
       - name: Generate environment variable TIMESTAMP
-        run: echo "TIMESTAMP=$(date --utc --date="@${{env.EPOCH}}" '+%F')" >> $GITHUB_ENV
+        run: echo "TIMESTAMP=$(date --utc --date="@${{env.EPOCH}}" '+%F')" >> "$GITHUB_ENV"
 
       # ======== Docker Actions =========
       - name: Set up Docker Buildx
@@ -579,7 +579,7 @@ jobs:
 
       # doing this in 2 steps so we can differentiate AWS CLI failures from Docker CLI failures
       - name: AWS ECR password
-        run: echo "AWS_ECR_PASSWORD=$(aws ecr get-login-password --region "${{env.AWS_DEFAULT_REGION}}")" >> $GITHUB_ENV
+        run: echo "AWS_ECR_PASSWORD=$(aws ecr get-login-password --region "${{env.AWS_DEFAULT_REGION}}")" >> "$GITHUB_ENV"
       - name: Docker Login ECR
         run: docker login "${{env.AWS_ECR_REGISTRY}}" -u AWS -p "${{env.AWS_ECR_PASSWORD}}"
       - name: Docker Login GHCR
