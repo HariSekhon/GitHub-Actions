@@ -29,8 +29,8 @@ on:
     #    type: string  # pass in string in export shell format eg. export MYVAR=myvalue MYVAR2=myvalue2
     #    required: false
   workflow_dispatch:
-  #schedule:
-  #  - cron: '0 0 * * 1'
+  schedule:
+    - cron: '0 0 * * 1'
 
 jobs:
   check_url_links:
