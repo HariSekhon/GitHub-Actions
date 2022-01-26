@@ -12,7 +12,7 @@
 #
 
 ---
-name: Check URL Links
+name: URL Links
 
 on:
   push:
