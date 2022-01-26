@@ -20,7 +20,7 @@
 # https://semgrep.dev/docs/semgrep-ci/sample-ci-configs/#github-actions
 
 ---
-name: Semgrep
+name: Semgrep GitHub
 
 on:
   push:
