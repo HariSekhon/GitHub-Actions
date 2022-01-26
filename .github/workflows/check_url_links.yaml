@@ -51,7 +51,8 @@ jobs:
       - name: Check URL Links
         env:
           #DEBUG: 1
+          VERBOSE: 1
           PATH: ${{env.PATH}}:${{env.PWD}}/bash-tools
         run: |
           echo $PATH
-          bash-tools/check_url_links.sh
+          check_url_links.sh
