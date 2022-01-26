@@ -121,6 +121,8 @@ on:
       - production
       - main
       - '*docker*'  # glob requires quoting, only run on branches with docker in the name
+    paths:
+      - '*'
   pull_request:
     branches:
       - master
@@ -128,6 +130,8 @@ on:
       - dev
       - staging
       - production
+    paths:
+      - '*'
   # https://docs.github.com/en/actions/using-workflows/reusing-workflows#creating-a-reusable-workflow
   workflow_call:
     # XXX: don't mention ${{ env.blah }} or ${{ secrets.BLAH }} in the descriptions, as it'll try to interpolate them and fail
