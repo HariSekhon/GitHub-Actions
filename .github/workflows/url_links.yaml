@@ -19,14 +19,6 @@ on:
     branches:
       - master
       - main
-    inputs:
-      url_links_ignored:
-        type: string
-        required: false
-        # this is just to account for the examples in the .github/workflows/README.md in this own repo
-        default: |
-          http://krb5server
-          https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv
   pull_request:
     branches:
       - master
@@ -43,16 +35,17 @@ on:
     #    type: string  # pass in string in export shell format eg. export MYVAR=myvalue MYVAR2=myvalue2
     #    required: false
   workflow_dispatch:
-    inputs:
-      url_links_ignored:
-        type: string
-        required: false
-        # this is just to account for the examples in the .github/workflows/README.md in this own repo
-        default: |
-          http://krb5server
-          https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv
   schedule:
     - cron: '0 0 * * 1'
+
+inputs:
+  url_links_ignored:
+    type: string
+    required: false
+    # this is just to account for the examples in the .github/workflows/README.md in this own repo
+    default: |
+      http://krb5server
+      https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv
 
 jobs:
   check_url_links:
