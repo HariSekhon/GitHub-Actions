@@ -64,7 +64,7 @@ jobs:
 ```
 Creates several useful tags, supports multi-stage build caching, see [README](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/README.md) for details.
 
-### Check for broken links
+### Check for Broken Links
 
 Create `.github/workflows/url_links.yaml`:
 ```yaml
@@ -72,11 +72,8 @@ on: [push]
 jobs:
   url_links:
     uses: HariSekhon/GitHub-Actions/.github/workflows/url_links.yaml@master
-    with:
-      url_links_ignored: |
-				# ignore inaccessible / internal / partially constructed links or those containing variables
-        https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv
 ```
+See [README](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/README.md) for details on ignoring inaccessible / partially constructed links or those containing variables
 
 ### See Also
 
