@@ -78,7 +78,8 @@ jobs:
 
         # Never fail the build due to findings on pushes.
         # Instead, just collect findings for semgrep.dev/manage/findings
-          auditOn: push
+          #auditOn: push
+          auditOn: unknown
           generateSarif: "1"
 
         # Change job timeout (default is 1800 seconds; set to 0 to disable)
