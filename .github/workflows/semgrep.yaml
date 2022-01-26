@@ -83,7 +83,8 @@ jobs:
           generateSarif: "1"
 
         # Change job timeout (default is 1800 seconds; set to 0 to disable)
-        # env:
+          env:
+            SEMGREP_AUDIT_ON=unknown
         #   SEMGREP_TIMEOUT: 300
 
       # Upload findings to GitHub Advanced Security Dashboard [step 2/2]
