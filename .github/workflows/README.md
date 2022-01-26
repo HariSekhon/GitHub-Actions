@@ -71,7 +71,12 @@ jobs:
   url_links:
     uses: HariSekhon/GitHub-Actions/.github/workflows/url_links.yaml@master
     with:
+
+      # custom ignore inaccessible / internal / partially constructed links or those containing variables
+      # this is a multi-line string, one URL or partial ERE regex match per line
       url_links_ignored: |
-        # ignore inaccessible / internal / partially constructed links or those containing variables
         https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv
+
+      # ignore URLs without dots as these are usually internal inaccessible local addresses such as http://krb5server rather than public accessible links
+      #ignore_links_without_dots: 'true'  # any value enables this
 ```
