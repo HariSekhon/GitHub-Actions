@@ -78,5 +78,5 @@ jobs:
         https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv
 
       # ignore URLs without dots as these are usually internal inaccessible local addresses such as http://krb5server rather than public accessible links
-      #ignore_links_without_dots: 'true'  # any value enables this
+      #ignore_urls_without_dots: 'true'  # any value enables this
 ```
