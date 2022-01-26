@@ -61,3 +61,17 @@ Supports multi-stage build caching using GHCR for intermediate layer caching sin
     with:
       max-cache: true
 ```
+
+### Check for Broken Links
+
+Create `.github/workflows/url_links.yaml`:
+```yaml
+on: [push]
+jobs:
+  url_links:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/url_links.yaml@master
+    with:
+      url_links_ignored: |
+        # ignore inaccessible / internal / partially constructed links or those containing variables
+        https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv
+```
