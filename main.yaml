@@ -374,6 +374,9 @@ jobs:
     name: Docker Build -> AWS ECR
     # XXX: stop this workflow being manually run on other branches if workflow_dispatch is defined
     if: github.ref_name == 'master' || github.ref_name == 'main' || contains(github.ref_name, 'docker')
+    # XXX: path must include /.github/workflows/ and @<branch/tag/hashref>, otherwise you may get these errors:
+    #       invalid value workflow reference: references to workflows must be rooted in '.github/workflows'
+    #       invalid value workflow reference: no version specified
     uses: HariSekhon/GitHub-Actions/.github/workflows/docker_build_aws_ecr.yaml@master
     with:
       #repo: ${{ env.APP }}  # env not accessible here
