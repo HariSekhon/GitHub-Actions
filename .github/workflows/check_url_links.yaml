@@ -49,7 +49,9 @@ jobs:
           #submodules: recursive  # don't need the submodules for just this script, save time
           path: bash-tools
       - name: Check URL Links
-        #env:
+        env:
           #DEBUG: 1
+          PATH: ${{env.PATH}}:${{env.PWD}}/bash-tools
         run: |
+          echo $PATH
           bash-tools/check_url_links.sh
