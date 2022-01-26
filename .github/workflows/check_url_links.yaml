@@ -34,7 +34,7 @@ on:
 
 jobs:
   check_url_links:
-    name: Validate
+    name: Check URL Links
     timeout-minutes: 30
     runs-on: ubuntu-latest
     container: harisekhon/pytools:debian
