@@ -84,7 +84,7 @@ jobs:
 
         # Change job timeout (default is 1800 seconds; set to 0 to disable)
         env:
-          SEMGREP_AUDIT_ON: unknown
+          SEMGREP_AUDIT_ON: push workflow_dispatch cron
           #SEMGREP_AGENT_DEBUG: 1
         #  SEMGREP_TIMEOUT: 300
 
