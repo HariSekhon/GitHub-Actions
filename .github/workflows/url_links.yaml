@@ -24,7 +24,10 @@ on:
       - master
       - main
   workflow_call:
-    #inputs:
+    inputs:
+      url_links_ignored:
+        type: string
+        required: false
     #  env:
     #    type: string  # pass in string in export shell format eg. export MYVAR=myvalue MYVAR2=myvalue2
     #    required: false
@@ -55,4 +58,5 @@ jobs:
         run: |
           # extended PATH gives option of using bash tools checkout or version from container
           export PATH="$PWD/bash-tools:$PATH"
+          export URL_LINKS_IGNORED="${{ inputs.url_links_ignored }}
           check_url_links.sh
