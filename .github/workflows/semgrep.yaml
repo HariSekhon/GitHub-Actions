@@ -83,10 +83,9 @@ jobs:
           generateSarif: "1"
 
         # Change job timeout (default is 1800 seconds; set to 0 to disable)
-        env:
-          #SEMGREP_AUDIT_ON: push workflow_dispatch cron
+        #env:
           #SEMGREP_AGENT_DEBUG: 1
-        #  SEMGREP_TIMEOUT: 300
+          #SEMGREP_TIMEOUT: 300
 
       # Upload findings to GitHub Advanced Security Dashboard [step 2/2]
       - name: Upload SARIF file for GitHub Advanced Security Dashboard
