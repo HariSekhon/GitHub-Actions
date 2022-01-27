@@ -12,6 +12,8 @@
 #
 
 # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions
+#
+# https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions
 
 # MarketPlace:  https://github.com/marketplace?type=actions
 #               https://github.com/marketplace?query=publisher%3Aactions&type=actions
