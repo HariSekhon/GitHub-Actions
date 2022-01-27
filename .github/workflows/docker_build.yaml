@@ -36,7 +36,6 @@ on:
         default: .
       file:
         type: string
-        default: Dockerfile
       max-cache:
         type: boolean
         default: false
