@@ -23,7 +23,12 @@ jobs:
     timeout-minutes: 30
     runs-on: ubuntu-latest
     #container: groovy  # doesn't contain git and no sudo access
+    # container: harisekhon/github
     steps:
+      # allows us to use check_groovyc.sh from the harisekhon/github docker image or the local HariSekhon/DevOps-Bash-tools git checkout further down
+      - name: Setup PATH
+        run: echo "PATH=$PWD/bash-tools:$PWD" >> "$GITHUB_ENV"
+
       - name: Environment
         run: env | sort
 
@@ -42,4 +47,4 @@ jobs:
           path: bash-tools
 
       - name: Groovy Compile
-        run: bash-tools/check_groovyc.sh
+        run: check_groovyc.sh
