@@ -32,7 +32,7 @@ jobs:
       DEBUG: ${{ inputs.debug }}
     steps:
       - name: Install Git & Make
-        run: apk add --no-cache git make
+        run: apk update && add git make  # --no-cache not available until Alpine 3
 
       - name: Git version
         run: git --version
