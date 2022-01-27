@@ -31,20 +31,19 @@ on:
         description: Tags to assign, one per line
         type: string
         default: latest
-        required: true
       context:
         type: string
         default: .
-        required: true
       file:
         type: string
         default: Dockerfile
-        required: false
+      max-cache:
+        type: boolean
+        default: false
       build-cache:
         description: The build cache tag to use
         type: string
         default: buildcache
-        required: false  # or true?
     secrets:
       DOCKERHUB_USER:
         required: true
