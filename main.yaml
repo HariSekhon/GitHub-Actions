@@ -11,6 +11,8 @@
 #  https://www.linkedin.com/in/harisekhon
 #
 
+# https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions
+
 # MarketPlace:  https://github.com/marketplace?type=actions
 #               https://github.com/marketplace?query=publisher%3Aactions&type=actions
 
@@ -105,6 +107,8 @@ env:
   GIT_USERNAME: 'GitHub Actions'
   GIT_EMAIL: 'platform-engineering@MYCOMPANY.CO.UK'
 
+  # prevent script injection from inputs - https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#using-an-intermediate-environment-variable
+  SANITIZE_INPUTS: ${{ inputs.someuntrusted }}
 
 # ============================================================================ #
 #                                T r i g g e r s
