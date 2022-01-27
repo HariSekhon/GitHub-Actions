@@ -42,6 +42,8 @@ jobs:
     runs-on: ubuntu-latest
     #container: harisekhon/jenkins:latest
     container: jenkins/jenkins:lts
+    env:
+      PLUGINS_TO_INSTALL: ${{ inputs.plugins }}
     steps:
       - name: Environment
         run: env | sort
@@ -84,7 +86,7 @@ jobs:
             ssh-agent:1.23 \
             timestamper:1.16 \
             workflow-aggregator:2.6 \
-            $(tr '\n' ' ' <<< "${{ inputs.plugins }}")
+            $(tr '\n' ' ' <<< "${{ env.PLUGINS_TO_INSTALL }}")
         timeout-minutes: 3
 
       - name: Start Jenkins
