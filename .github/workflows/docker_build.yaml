@@ -83,21 +83,21 @@ jobs:
 
       - name: Generate REPO_TAGS environment variable
         run: |
-          echo "REPO_TAGS=$(
+          echo "REPO_TAGS='$(
             for tag in ${{ env.TAGS }}; do
               if ! [[ "$tag" =~ : ]]; then
                 echo "${{env.REPO}}:$tag"
               fi
             done
-          )" >> "$GITHUB_ENV"
+          )'" >> "$GITHUB_ENV"
 
       - name: Generate CACHE_FROM environment variable
         run: |
-          echo "CACHE_FROM=$(
+          echo "CACHE_FROM='$(
             for repo_tag in ${{ env.REPO_TAGS }}; do
               echo type=registry,ref=$repo_tag
             done
-          )" >> "$GITHUB_ENV"
+          )'" >> "$GITHUB_ENV"
 
       - name: Login to GHCR
         if: ${{ inputs.max-cache }}
