@@ -57,10 +57,11 @@ jobs:
         env:
           #DEBUG: 1
           VERBOSE: 1
+          URL_LINKS_IGNORED: ${{ inputs.url_links_ignored }}
+          IGNORE_URLS_WITHOUT_DOTS: ${{ inputs.ignore_urls_without_dots }}
         run: |
           # extended PATH gives option of using bash tools checkout or version from container
           export PATH="$PWD/bash-tools:$PATH"
-          export URL_LINKS_IGNORED="${{ inputs.url_links_ignored }}"
           # this is just to account for the examples in the .github/workflows/README.md in this own repo
           if [ -z "$URL_LINKS_IGNORED" ]; then
             export URL_LINKS_IGNORED="
@@ -68,5 +69,4 @@ jobs:
               https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv
             "
           fi
-          export IGNORE_URLS_WITHOUT_DOTS="${{ inputs.ignore_urls_without_dots }}"
           check_url_links.sh
