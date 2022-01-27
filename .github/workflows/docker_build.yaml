@@ -95,11 +95,11 @@ jobs:
 
       - name: Generate CACHE_FROM environment variable
         run: |
-          echo "CACHE_FROM='$(
+          echo "CACHE_FROM<<EOF" >> "$GITHUB_ENV"
             for repo_tag in ${{ env.REPO_TAGS }}; do
-              echo type=registry,ref=$repo_tag
+              echo "type=registry,ref=$repo_tag" >> "$GITHUB_ENV"
             done
-          )'" >> "$GITHUB_ENV"
+          echo "EOF" >> "$GITHUB_ENV"
 
       - name: Login to GHCR
         if: ${{ inputs.max-cache }}
