@@ -30,9 +30,10 @@ jobs:
     container: debian:6
     env:
       DEBUG: ${{ inputs.debug }}
+      DEBIAN_FRONTEND: noninteractive
     steps:
       - name: Install Git & Make
-        run: apk add --no-cache git make
+        run: apt-get update && apt-get install -y git make --no-install-recommends
 
       - name: Git version
         run: git --version
