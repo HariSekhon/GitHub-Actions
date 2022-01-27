@@ -12,7 +12,7 @@
 #
 
 ---
-name: Mac
+name: macOS
 
 on:
   workflow_call:
