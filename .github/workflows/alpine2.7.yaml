@@ -14,9 +14,6 @@
 ---
 name: Alpine 2.6
 
-#env:
-#  DEBUG: 1
-
 on:
   workflow_call:
     inputs:
