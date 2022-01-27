@@ -11,10 +11,8 @@
 #  https://www.linkedin.com/in/harisekhon
 #
 
+---
 name: Debian 7
-
-#env:
-#  DEBUG: 1
 
 on:
   workflow_call:
