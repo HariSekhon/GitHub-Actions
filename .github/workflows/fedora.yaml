@@ -32,7 +32,7 @@ jobs:
       DEBUG: ${{ inputs.debug }}
     steps:
       - name: Install Git & Make
-        run: apk add --no-cache git make
+        run: dnf install -y git make
 
       - name: Git version
         run: git --version
