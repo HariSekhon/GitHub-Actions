@@ -98,7 +98,7 @@ jobs:
         run: |
           set -x
           echo "CACHE_FROM<<EOF" >> "$GITHUB_ENV"
-            for repo_tag in ${{ env.REPO_TAGS }}; do
+            for repo_tag in $(tr '\n' <<< "${{ env.REPO_TAGS }}"); do
               echo "type=registry,ref=$repo_tag" >> "$GITHUB_ENV"
             done
           echo "EOF" >> "$GITHUB_ENV"
