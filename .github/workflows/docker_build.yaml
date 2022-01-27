@@ -83,13 +83,15 @@ jobs:
 
       - name: Generate REPO_TAGS environment variable
         run: |
-          echo "REPO_TAGS='$(
+          echo "REPO_TAGS<<EOF" >> "$GITHUB_ENV"
             for tag in ${{ env.TAGS }}; do
               if ! [[ "$tag" =~ : ]]; then
-                echo "${{env.REPO}}:$tag"
+                echo "${{env.REPO}}:$tag" >> "$GITHUB_ENV"
+              else
+                echo "$tag" >> "$GITHUB_ENV"
               fi
             done
-          )'" >> "$GITHUB_ENV"
+          echo EOF >> "$GITHUB_ENV"
 
       - name: Generate CACHE_FROM environment variable
         run: |
