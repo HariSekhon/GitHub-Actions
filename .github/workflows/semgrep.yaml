@@ -32,11 +32,6 @@ on:
       - master
       - main
   workflow_call:
-    inputs:
-      framework:
-        type: string
-        default: all
-        required: false
   workflow_dispatch:
   schedule:
     - cron: '0 0 * * 1'
