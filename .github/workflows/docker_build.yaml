@@ -32,6 +32,14 @@ on:
         type: string
         default: latest
         required: true
+      context:
+        type: string
+        default: .
+        required: true
+      file:
+        type: string
+        default: Dockerfile
+        required: false
       build-cache:
         description: The build cache tag to use
         type: string
@@ -74,12 +82,22 @@ jobs:
         #run: echo "DOCKER_IMAGE_CACHE=ghcr.io/${{ github.repository }}" >> "$GITHUB_ENV"
         run: echo "DOCKER_IMAGE_CACHE=${{ env.REPO }}" >> "$GITHUB_ENV"
 
-      - name: Generate registry-cache string
+      - name: Generate REPO_TAGS environment variable
+        run: |
+          echo "REPO_TAGS=$(
+            for tag in ${{ env.TAGS }}; do
+              if ! [[ "$tag" =~ : ]]; then
+                echo "${{env.REPO}}:$tag"
+              fi
+            done
+          )" >> "$GITHUB_ENV"
+
+      - name: Generate CACHE_FROM environment variable
         run: |
           echo "CACHE_FROM=$(
-          for tag in ${{ env.TAGS }}; do
-            echo type=registry,ref=${{env.REPO}}:$tag
-          done
+            for repo_tag in ${{ env.REPO_TAGS }}; do
+              echo type=registry,ref=$repo_tag
+            done
           )" >> "$GITHUB_ENV"
 
       - name: Login to GHCR
@@ -98,10 +116,12 @@ jobs:
         if: ${{ ! inputs.max-cache }}
         uses: docker/build-push-action@v2
         with:
+          context: ${{ inputs.context }}
+          file: ${{ inputs.file }}
+          tags: ${{ env.REPO_TAGS }}
           push: true
           cache-from: ${{ env.CACHE_FROM }}
           cache-to: type=inline
-          tags: ${{ env.TAGS }}
 
       # XXX: Max Cache build with separate GHCR buildcache since ECR doesn't support it - for multi-stage builds
       #
@@ -118,9 +138,11 @@ jobs:
         if: ${{ inputs.max-cache }}
         uses: docker/build-push-action@v2
         with:
+          context: ${{ inputs.context }}
+          file: ${{ inputs.file }}
+          tags: ${{ env.REPO_TAGS }}
           push: true
           cache-from: |
             type=registry,ref=${{env.DOCKER_IMAGE_CACHE}}:buildcache
             ${{ env.CACHE_FROM }}
           cache-to: type=registry,ref=${{env.DOCKER_IMAGE_CACHE}}:${{env.BUILDCACHE}},mode=max
-          tags: ${{ env.TAGS }}
