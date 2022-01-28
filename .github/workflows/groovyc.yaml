@@ -38,7 +38,7 @@ jobs:
         run: |
           set -eux
           sudo=
-          if [ "${EUID:-${UID:-}}" != 0 ]; then
+          if [ "${EUID:-${UID:-$(whoami)}}" != 0 ]; then
             sudo=sudo
           fi
           $sudo apt-get update
