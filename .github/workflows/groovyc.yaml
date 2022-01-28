@@ -35,7 +35,14 @@ jobs:
       - name: Install Groovy
         # on ubuntu latest we have to sudo, but not in bash-tools
         #run: sudo apt-get update && sudo apt-get install -y groovy --no-install-recommends
-        run: apt-get update && apt-get install -y groovy --no-install-recommends
+        run: |
+          set -euox pipefail
+          sudo=
+          if [ "${EUID:-${UID:-}}" != 0 ]; then
+            sudo=sudo
+          fi
+          $sudo apt-get update
+          $sudo apt-get install -y groovy --no-install-recommends
 
       - uses: actions/checkout@v2
         with:
