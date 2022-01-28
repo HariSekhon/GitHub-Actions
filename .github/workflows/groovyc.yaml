@@ -27,7 +27,7 @@ jobs:
     steps:
       # allows us to use check_groovyc.sh from the harisekhon/github docker image or the local HariSekhon/DevOps-Bash-tools git checkout further down
       - name: Setup PATH
-        run: echo "PATH=$PWD/bash-tools:$PWD" >> "$GITHUB_ENV"
+        run: echo "PATH=$PWD/bash-tools:$PATH" >> "$GITHUB_ENV"
 
       - name: Environment
         run: env | sort
