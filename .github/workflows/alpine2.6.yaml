@@ -34,7 +34,8 @@ jobs:
       DEBUG: ${{ inputs.debug }}
     steps:
       - name: Install Git & Make
-        run: apk update && add git make
+        # apk add --no-cache switch isn't available until Alpine 3
+        run: apk update && apk add git make
 
       - name: Git version
         run: git --version
