@@ -42,17 +42,19 @@ jobs:
     name: Check URL Links
     timeout-minutes: 30
     runs-on: ubuntu-latest
-    container: harisekhon/pytools:debian
+    container: harisekhon/bash-tools
     steps:
       - uses: actions/checkout@v2
         with:
           submodules: recursive  # requires Git 2.18+ to be installed first
-      - uses: actions/checkout@v2
-        with:
-          repository: HariSekhon/DevOps-Bash-tools
-          #ref: master            # unset for default branch in case it changes in future
-          #submodules: recursive  # don't need the submodules for just this script, save time
-          path: bash-tools
+
+      #- uses: actions/checkout@v2
+      #  with:
+      #    repository: HariSekhon/DevOps-Bash-tools
+      #    #ref: master            # unset for default branch in case it changes in future
+      #    #submodules: recursive  # don't need the submodules for just this script, save time
+      #    path: bash-tools
+
       - name: Check URL Links
         env:
           #DEBUG: 1
@@ -62,6 +64,7 @@ jobs:
         run: |
           # extended PATH gives option of using bash tools checkout or version from container
           export PATH="$PWD/bash-tools:$PATH"
+
           # this is just to account for the examples in the .github/workflows/README.md in this own repo
           if [ -z "$URL_LINKS_IGNORED" ]; then
             export URL_LINKS_IGNORED="
@@ -69,4 +72,5 @@ jobs:
               https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv
             "
           fi
+
           check_url_links.sh
