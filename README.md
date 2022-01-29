@@ -19,6 +19,8 @@ GitHub Actions master template & GitHub Actions Shared Workflows library.
 
 See [Documentation](https://docs.github.com/en/actions/using-workflows/reusing-workflows#calling-a-reusable-workflow) for how to call these workflows directly from your own GitHub Actions workflow.
 
+You can fork this repo and create environment branches to have full control over all updates via pull requests all the way through to production.
+
 Forked from [HariSekhon/Templates](https://github.com/HariSekhon/Templates), for which this is now a submodule.
 
 ## Examples
