@@ -1,0 +1,85 @@
+#
+#  Author: Hari Sekhon
+#  Date: 2022-01-31 16:49:05 +0000 (Mon, 31 Jan 2022)
+#
+#  vim:ts=2:sts=2:sw=2:et
+#
+#  https://github.com/HariSekhon/GitHub-Actions
+#
+#  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback
+#
+#  https://www.linkedin.com/in/harisekhon
+#
+
+---
+name: Trivy
+
+on:
+  push:
+    branches:
+      - master
+      - main
+  pull_request:
+    branches:
+      - master
+      - main
+  workflow_call:
+    inputs:
+      repo:
+        description: The ECR repository, without the 'xxx.dkr.ecr.<region>.amazonaws.com' prefix
+        type: string
+        required: true
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+      AWS_DEFAULT_REGION:
+        required: true
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * 1'
+
+jobs:
+  trivy:
+    name: Trivy
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    container: aquasec/trivy:latest
+    permissions:
+      contents: read
+    env:
+      REPO: ${{ inputs.repo }}
+    steps:
+      - name: Environment
+        run: env | sort
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      - name: Generate environment variable AWS_ACCOUNT_ID
+        run: echo "AWS_ACCOUNT_ID=$(aws sts get-caller-identity | jq -r .Account)" >> "$GITHUB_ENV"
+      - name: Generate environment variable AWS_ECR_REGISTRY
+        run: echo "AWS_ECR_REGISTRY=${{env.AWS_ACCOUNT_ID}}.dkr.ecr.${{env.AWS_DEFAULT_REGION}}.amazonaws.com" >> "$GITHUB_ENV"
+      - name: Generate environment variable DOCKER_IMAGE
+        run: echo "DOCKER_IMAGE=${{ env.AWS_ECR_REGISTRY }}/${{ env.REPO }}" >> "$GITHUB_ENV"
+
+      - name: Login to ECR
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.AWS_ECR_REGISTRY }}
+          username: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          password: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Trivy (Full Informational)
+        run: |
+          # informational to see all issues
+          trivy image --no-progress "$DOCKER_IMAGE:${{github.sha}}"
+      - name: Trivy
+        run: |
+          # fail the pipeline if any of the issues are High / Critical
+          trivy image --no-progress --exit-code 1 --severity HIGH,CRITICAL "$DOCKER_IMAGE:${{github.sha}}"
