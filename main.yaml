@@ -128,7 +128,8 @@ on:
       - main
       - '*docker*'  # glob requires quoting, only run on branches with docker in the name
     paths:
-      - '*'  # prevents triggering on hidden directory changes such as .github/workflows
+      - '*'  # only run when changes have happened on matching paths, this glob misses hidden directories though such as .github/workflows
+
   pull_request:
     branches:
       - master
@@ -137,7 +138,8 @@ on:
       - staging
       - production
     paths:
-      - '*'  # prevents triggering on hidden directory changes such as .github/workflows
+      - '*'  # only run when changes have happened on matching paths, this glob misses hidden directories though such as .github/workflows
+
   # https://docs.github.com/en/actions/using-workflows/reusing-workflows#creating-a-reusable-workflow
   workflow_call:
     # XXX: don't mention ${{ env.blah }} or ${{ secrets.BLAH }} in the descriptions, as it'll try to interpolate them and fail
@@ -153,6 +155,7 @@ on:
         required: true
       aws_default_region:
         required: true
+
   # https://docs.github.com/en/actions/managing-workflow-runs/manually-running-a-workflow#running-a-workflow
   workflow_dispatch:  # needs to be in default branch before you get the UI option to manually run though
     #inputs:
@@ -160,6 +163,7 @@ on:
     #    description: Some description of this input
     #    default: My Default Description
     #    required: true  # or false
+
   schedule:
     # * is a special character in YAML so you have to quote this string
     - cron: '0 0 * * 1'
