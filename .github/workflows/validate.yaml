@@ -54,6 +54,8 @@ jobs:
     #container: harisekhon/pytools:debian
     container: harisekhon/pytools:centos
     #container: harisekhon/bash-tools:latest
+    permissions:
+      contents: read
     env:
       DEBUG: ${{ inputs.debug }}
       INPUTS: ${{ inputs.env }}
