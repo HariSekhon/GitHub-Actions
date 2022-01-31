@@ -23,6 +23,9 @@ jobs:
   reviewdog:
     name: reviewdog
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      #pull-requests: write
     steps:
       - uses: reviewdog/action-setup@v1
         with:
