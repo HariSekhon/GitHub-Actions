@@ -23,28 +23,37 @@ jobs:
     timeout-minutes: 30
     runs-on: ubuntu-latest
     #container: groovy  # doesn't contain git and no sudo access
-    # container: harisekhon/github
+    container: harisekhon/bash-tools:ubuntu
     steps:
       # allows us to use check_groovyc.sh from the harisekhon/github docker image or the local HariSekhon/DevOps-Bash-tools git checkout further down
       - name: Setup PATH
-        run: echo "PATH=$PWD/bash-tools:$PWD" >> "$GITHUB_ENV"
+        run: echo "PATH=$PWD/bash-tools:$PATH" >> "$GITHUB_ENV"
 
       - name: Environment
         run: env | sort
 
       - name: Install Groovy
-        run: sudo apt-get update && sudo apt-get install -y groovy --no-install-recommends
+        # on ubuntu latest we have to sudo, but not in bash-tools
+        #run: sudo apt-get update && sudo apt-get install -y groovy --no-install-recommends
+        run: |
+          set -eux
+          sudo=
+          if [ "${EUID:-${UID:-$(id -u)}}" != 0 ]; then
+            sudo=sudo
+          fi
+          $sudo apt-get update
+          $sudo apt-get install -y groovy --no-install-recommends
 
       - uses: actions/checkout@v2
         with:
           submodules: recursive  # requires Git 2.18+ to be installed first
 
-      - uses: actions/checkout@v2
-        with:
-          repository: HariSekhon/DevOps-Bash-tools
-          #ref: master         # unset for default branch in case it changes in future
-          submodules: recursive
-          path: bash-tools
+      #- uses: actions/checkout@v2
+      #  with:
+      #    repository: HariSekhon/DevOps-Bash-tools
+      #    #ref: master         # unset for default branch in case it changes in future
+      #    submodules: recursive
+      #    path: bash-tools
 
       - name: Groovy Compile
         run: check_groovyc.sh
