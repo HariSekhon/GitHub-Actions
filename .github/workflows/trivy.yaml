@@ -1,0 +1,58 @@
+#
+#  Author: Hari Sekhon
+#  Date: 2022-01-31 16:49:05 +0000 (Mon, 31 Jan 2022)
+#
+#  vim:ts=2:sts=2:sw=2:et
+#
+#  https://github.com/HariSekhon/GitHub-Actions
+#
+#  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback
+#
+#  https://www.linkedin.com/in/harisekhon
+#
+
+---
+name: Trivy
+
+on:
+  push:
+    branches:
+      - master
+      - main
+  pull_request:
+    branches:
+      - master
+      - main
+  workflow_call:
+    inputs:
+      target:
+        description: The Trivy target to analyze, usually a docker image:tag
+        type: string
+        default: ''
+        required: true
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * 1'
+
+jobs:
+  trivy:
+    name: Trivy
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    container: aquasec/trivy:latest
+    env:
+      TARGET: ${{ inputs.target }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive  # requires Git 2.18+ to be installed first
+      - name: Environment
+        run: env | sort
+      - name: Trivy (Full Informational)
+        run: |
+          # informational to see all issues
+          trivy image --no-progress "$TARGET"
+      - name: Trivy
+        run: |
+          # fail the pipeline if any of the issues are High / Critical
+          trivy image --no-progress --exit-code 1 --severity HIGH,CRITICAL "$TARGET"
