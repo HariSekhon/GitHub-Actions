@@ -23,6 +23,8 @@ jobs:
   pluto:
     timeout-minutes: 5
     runs-on: ubuntu-latest
+    permissions:
+      - contents: read
     steps:
       - name: Download Pluto
         uses: FairwindsOps/pluto/github-action@master

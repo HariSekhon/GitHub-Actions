@@ -27,6 +27,8 @@ jobs:
     name: Build
     timeout-minutes: 60
     runs-on: macos-10.15
+    permissions:
+      - contents: read
     env:
       DEBUG: ${{ inputs.debug }}
     steps:

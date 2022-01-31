@@ -30,6 +30,8 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     container: centos:6
+    permissions:
+      - contents: read
     env:
       DEBUG: ${{ inputs.debug }}
     steps:

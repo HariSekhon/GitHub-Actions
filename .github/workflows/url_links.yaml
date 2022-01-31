@@ -43,6 +43,8 @@ jobs:
     timeout-minutes: 30
     runs-on: ubuntu-latest
     container: harisekhon/bash-tools
+    permissions:
+      - contents: read
     steps:
       - uses: actions/checkout@v2
         with:

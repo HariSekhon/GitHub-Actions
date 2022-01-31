@@ -23,6 +23,8 @@ jobs:
   polaris:
     timeout-minutes: 5
     runs-on: ubuntu-latest
+    permissions:
+      - contents: read
     steps:
       - uses: actions/checkout@v2
       - name: Polaris Audit

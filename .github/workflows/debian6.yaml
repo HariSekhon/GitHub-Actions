@@ -28,6 +28,8 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     container: debian:6
+    permissions:
+      - contents: read
     env:
       DEBUG: ${{ inputs.debug }}
       DEBIAN_FRONTEND: noninteractive
