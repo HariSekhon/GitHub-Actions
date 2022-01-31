@@ -709,6 +709,26 @@ jobs:
       security-events: write
 
   # ============================================================================ #
+  #                                   T r i v y
+  # ============================================================================ #
+
+  trivy:
+    name: Trivy AWS ECR
+    if: github.ref_name == 'main' || contains(github.ref_name, 'docker')
+    needs:
+      - docker_build
+    uses: HariSekhon/GitHub-Actions/.github/workflows/trivy_aws_ecr.yaml@master
+    with:
+      repo: myapp  # will figure out the ECR path from the secrets below
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+    permissions:
+      contents: read
+      security-events: write
+
+  # ============================================================================ #
   #                                 C h e c k o v
   # ============================================================================ #
 
