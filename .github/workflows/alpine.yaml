@@ -28,6 +28,8 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     container: alpine:latest
+    permissions:
+      contents: read
     env:
       DEBUG: ${{ inputs.debug }}
     steps:
