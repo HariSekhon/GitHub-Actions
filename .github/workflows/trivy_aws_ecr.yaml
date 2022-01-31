@@ -57,6 +57,13 @@ jobs:
       - name: Environment
         run: env | sort
 
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
       - name: Generate environment variable AWS_ACCOUNT_ID
         run: echo "AWS_ACCOUNT_ID=$(aws sts get-caller-identity | jq -r .Account)" >> "$GITHUB_ENV"
       - name: Generate environment variable AWS_ECR_REGISTRY
