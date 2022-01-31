@@ -40,6 +40,8 @@ jobs:
     timeout-minutes: 10
     runs-on: ubuntu-latest
     container: aquasec/trivy:latest
+    permissions:
+      contents: read
     env:
       TARGET: ${{ inputs.target }}
     steps:
