@@ -43,7 +43,6 @@ jobs:
     timeout-minutes: 30
 
     permissions:
-      actions: read
       contents: read
       security-events: write
 
