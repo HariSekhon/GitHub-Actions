@@ -195,9 +195,9 @@ jobs:
     if: github.ref_name == 'master' || github.ref_name == 'main' || github.ref_name == 'docker'  # stops this workflow running on manual workflow_dispatch on the wrong branch (eg. to stop it invalidating the Docker build cache, update: solved now because I use many tags to cache)
     #if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
 
+    # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#permissions
     permissions:
-      actions: read
-    #  contents: read
+      contents: read
     #  security-events: write  # for code scanning to create security alerts (eg. https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/tfsec.yaml)
 
     # job-specific environment variables
