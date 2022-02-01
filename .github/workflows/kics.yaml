@@ -82,6 +82,7 @@ jobs:
         uses: checkmarx/kics-action@master
         with:
           #path: ${{ inputs.path }}
+          path: .
           fail_on: ${{ inputs.fail_on }}
           ignore_on_exit: ${{ inputs.ignore_on_exit }}
           output_path: results-dir
