@@ -75,7 +75,7 @@ jobs:
           fi >> "$GITHUB_ENV"
 
       - name: Make results-dir
-        run: mkdir -pv results-dir
+        run: mkdir -pv results
 
       - name: Create Config file
         if: ${{ env.CONFIG }}
@@ -92,7 +92,7 @@ jobs:
           path: ${{ env.SCAN_PATH }}
           fail_on: ${{ inputs.fail_on }}
           ignore_on_exit: ${{ inputs.ignore_on_exit }}
-          output_path: results-dir
+          output_path: results
           output_formats: 'json,sarif'
           #config_path: ${{ env.CONFIG_FILE }}
           queries: ${{ inputs.queries }}
@@ -100,8 +100,8 @@ jobs:
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@v1
         with:
-          sarif_file: results-dir/results.sarif
+          sarif_file: results/results.sarif
 
       # summary stats, available in the Scan output already, use this only for post-processing
       #- name: Display Results
-      #  run: jq . < results-dir/results.json
+      #  run: jq . < results/results.json
