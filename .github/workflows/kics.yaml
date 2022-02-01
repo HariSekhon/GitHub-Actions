@@ -81,8 +81,7 @@ jobs:
       - name: Kics Scan
         uses: checkmarx/kics-action@master
         with:
-          #path: ${{ inputs.path }}
-          path: .
+          path: ${{ inputs.path }}
           fail_on: ${{ inputs.fail_on }}
           ignore_on_exit: ${{ inputs.ignore_on_exit }}
           output_path: results-dir
@@ -95,6 +94,6 @@ jobs:
         with:
           sarif_file: results-dir/results.sarif
 
-      # viewable anonymously, whereas Security Tab is only viewable to repo Writers
-      - name: Display Results
-        run: jq . < results-dir/results.json
+      # summary stats, available in the Scan output already, use this only for post-processing
+      #- name: Display Results
+      #  run: jq . < results-dir/results.json
