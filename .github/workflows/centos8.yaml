@@ -31,7 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     container: centos:8
     permissions:
-      - contents: read
+      contents: read
     env:
       DEBUG: ${{ inputs.debug }}
     steps:

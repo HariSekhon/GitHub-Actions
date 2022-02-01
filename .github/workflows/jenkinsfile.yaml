@@ -43,7 +43,7 @@ jobs:
     #container: harisekhon/jenkins:latest
     container: jenkins/jenkins:lts
     permissions:
-      - contents: read
+      contents: read
     env:
       PLUGINS_TO_INSTALL: ${{ inputs.plugins }}
     steps:

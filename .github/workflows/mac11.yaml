@@ -28,7 +28,7 @@ jobs:
     timeout-minutes: 60
     runs-on: macos-11
     permissions:
-      - contents: read
+      contents: read
     env:
       DEBUG: ${{ inputs.debug }}
     steps:
