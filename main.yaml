@@ -198,7 +198,7 @@ jobs:
     # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#permissions
     permissions:
       contents: read
-      # bothn eeded for code scanning tools to write GitHub Security tab alerts (eg. https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/tfsec.yaml)
+      # both needed for code scanning tools to write GitHub Security tab alerts (eg. https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/tfsec.yaml)
       #actions: read
       #security-events: write
 
