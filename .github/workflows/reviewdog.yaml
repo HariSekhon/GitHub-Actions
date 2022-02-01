@@ -23,6 +23,8 @@ jobs:
   reviewdog:
     name: reviewdog
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Run reviewdog
         env:

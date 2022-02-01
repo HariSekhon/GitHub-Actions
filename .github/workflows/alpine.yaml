@@ -22,12 +22,18 @@ on:
         default: ''
         required: false
 
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: true
+
 jobs:
   build:
     name: Build
     timeout-minutes: 60
     runs-on: ubuntu-latest
     container: alpine:latest
+    permissions:
+      contents: read
     env:
       DEBUG: ${{ inputs.debug }}
     steps:

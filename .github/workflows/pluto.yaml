@@ -19,10 +19,16 @@ name: Pluto
 on:
   workflow_call
 
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: true
+
 jobs:
   pluto:
     timeout-minutes: 5
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Download Pluto
         uses: FairwindsOps/pluto/github-action@master

@@ -35,6 +35,10 @@ defaults:
   run:
     shell: bash
 
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: true
+
 jobs:
   validate:
     name: Validate
@@ -42,6 +46,8 @@ jobs:
     runs-on: ubuntu-latest
     #container: harisekhon/jenkins:latest
     container: jenkins/jenkins:lts
+    permissions:
+      contents: read
     env:
       PLUGINS_TO_INSTALL: ${{ inputs.plugins }}
     steps:

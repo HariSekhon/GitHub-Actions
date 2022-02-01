@@ -17,6 +17,10 @@ name: Groovy Compile
 on:
   workflow_call:
 
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: true
+
 jobs:
   groovyc:
     #name: Groovy Compile
@@ -24,6 +28,8 @@ jobs:
     runs-on: ubuntu-latest
     #container: groovy  # doesn't contain git and no sudo access
     container: harisekhon/bash-tools:ubuntu
+    permissions:
+      contents: read
     steps:
       # allows us to use check_groovyc.sh from the harisekhon/github docker image or the local HariSekhon/DevOps-Bash-tools git checkout further down
       - name: Setup PATH
@@ -48,6 +54,7 @@ jobs:
         with:
           submodules: recursive  # requires Git 2.18+ to be installed first
 
+      # Uncomment if you need latest version from master before it is built into docker image harisekhon/bash-tools
       #- uses: actions/checkout@v2
       #  with:
       #    repository: HariSekhon/DevOps-Bash-tools

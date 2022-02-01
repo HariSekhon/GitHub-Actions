@@ -19,10 +19,16 @@ name: Polaris
 on:
   workflow_call
 
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: true
+
 jobs:
   polaris:
     timeout-minutes: 5
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v2
       - name: Polaris Audit
