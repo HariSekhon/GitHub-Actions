@@ -85,7 +85,7 @@ jobs:
           ignore_on_exit: ${{ inputs.ignore_on_exit }}
           output_path: results-dir
           output_formats: 'json,sarif'
-          config_path: ${{ env.CONFIG_FILE }}
+          #config_path: ${{ env.CONFIG_FILE }}
           queries: ${{ inputs.queries }}
 
       - name: Upload SARIF file
