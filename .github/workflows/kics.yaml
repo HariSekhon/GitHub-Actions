@@ -1,0 +1,59 @@
+#
+#  Author: Hari Sekhon
+#  Date: 2022-02-01 13:56:31 +0000 (Tue, 01 Feb 2022)
+#
+#  vim:ts=2:sts=2:sw=2:et
+#
+#  https://github.com/HariSekhon/GitHub-Actions
+#
+#  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback
+#
+#  https://www.linkedin.com/in/harisekhon
+#
+
+---
+name: Kics
+
+on:
+  push:
+    branches:
+      - master
+      - main
+  pull_request:
+    branches:
+      - master
+      - main
+  workflow_call:
+    inputs:
+      path:
+        type: string
+        required: false
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * 1'
+
+jobs:
+  kics:
+    name: Kics Scan
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      secrutiy-events: write
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Make results-dir
+        run: mkdir -pv results-dir
+
+      - name: Kics Scan
+        uses: checkmarx/kics-action@latest
+        with:
+          path: ${{ inputs.path }}
+          output_path: results-dir
+
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: results-dir/results.sarif
