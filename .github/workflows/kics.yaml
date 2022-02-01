@@ -66,6 +66,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Set environment variable SCAN_PATH
+        run: |
+          if [ -n "${{inputs.path}}" ]; then
+            echo "SCAN_PATH=${{ inputs.path }}"
+          else
+            echo "SCAN_PATH=."
+          fi >> "$GITHUB_ENV"
+
       - name: Make results-dir
         run: mkdir -pv results-dir
 
@@ -81,7 +89,7 @@ jobs:
       - name: Kics Scan
         uses: checkmarx/kics-action@master
         with:
-          path: ${{ inputs.path }}
+          path: ${{ env.SCAN_PATH }}
           fail_on: ${{ inputs.fail_on }}
           ignore_on_exit: ${{ inputs.ignore_on_exit }}
           output_path: results-dir
