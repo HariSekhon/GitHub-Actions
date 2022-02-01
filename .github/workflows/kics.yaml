@@ -11,6 +11,8 @@
 #  https://www.linkedin.com/in/harisekhon
 #
 
+# https://github.com/Checkmarx/kics/blob/master/docs/integrations_ghactions.md
+
 ---
 name: Kics
 
@@ -28,6 +30,7 @@ on:
       path:
         type: string
         required: false
+      # https://github.com/Checkmarx/kics/blob/master/docs/configuration-file.md
       config:
         type: string
         required: false
@@ -73,7 +76,7 @@ jobs:
           echo "CONFIG_FILE=kics.config" >> "$GITHUB_ENV"
 
       - name: Kics Scan
-        uses: checkmarx/kics-action@latest
+        uses: checkmarx/kics-action@master
         with:
           path: ${{ inputs.path }}
           fail_on: ${{ inputs.fail_on }}
