@@ -30,6 +30,7 @@ on:
       path:
         type: string
         required: false
+        default: .
       # https://github.com/Checkmarx/kics/blob/master/docs/configuration-file.md
       config:
         type: string
@@ -75,6 +76,7 @@ jobs:
           EOF
           echo "CONFIG_FILE=kics.config" >> "$GITHUB_ENV"
 
+      # https://github.com/Checkmarx/kics-github-action
       - name: Kics Scan
         uses: checkmarx/kics-action@master
         with:
