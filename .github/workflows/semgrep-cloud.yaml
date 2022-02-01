@@ -31,6 +31,10 @@ on:
   schedule:
     - cron: '0 0 * * 0'
 
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: true
+
 jobs:
   semgrep:
     name: Semgrep Scan, Cloud report

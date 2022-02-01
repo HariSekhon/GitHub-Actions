@@ -43,6 +43,10 @@ on:
   schedule:
     - cron: '0 0 * * 1'
 
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: true
+
 jobs:
   validate:
     name: Validate

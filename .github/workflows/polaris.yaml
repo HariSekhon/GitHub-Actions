@@ -19,6 +19,10 @@ name: Polaris
 on:
   workflow_call
 
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: true
+
 jobs:
   polaris:
     timeout-minutes: 5
