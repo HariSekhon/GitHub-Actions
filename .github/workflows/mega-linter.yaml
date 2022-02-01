@@ -65,8 +65,7 @@ jobs:
           # ADD YOUR CUSTOM ENV VARIABLES HERE OR DEFINE THEM IN A FILE .mega-linter.yml AT THE ROOT OF YOUR REPOSITORY
           # DISABLE: COPYPASTE,SPELL # Uncomment to disable copy-paste and spell checks
 
-      # Upload MegaLinter artifacts
-      - name: Archive production artifacts
+      - name: Archive report artifacts
         if: ${{ success() }} || ${{ failure() }}
         uses: actions/upload-artifact@v2
         with:
