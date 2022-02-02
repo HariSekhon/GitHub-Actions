@@ -12,17 +12,17 @@
 #
 
 ---
-name: Trivy
+name: Trivy AWS ECR
 
 on:
-  push:
-    branches:
-      - master
-      - main
-  pull_request:
-    branches:
-      - master
-      - main
+  #push:
+  #  branches:
+  #    - master
+  #    - main
+  #pull_request:
+  #  branches:
+  #    - master
+  #    - main
   workflow_call:
     inputs:
       repo:
@@ -37,6 +37,18 @@ on:
       AWS_DEFAULT_REGION:
         required: true
   workflow_dispatch:
+    inputs:
+      repo:
+        description: The ECR repository, without the 'xxx.dkr.ecr.<region>.amazonaws.com' prefix
+        type: string
+        required: true
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+      AWS_DEFAULT_REGION:
+        required: true
   schedule:
     - cron: '0 0 * * 1'
 
@@ -46,7 +58,7 @@ concurrency:
 
 jobs:
   trivy:
-    name: Trivy
+    name: Trivy AWS ECR
     timeout-minutes: 10
     runs-on: ubuntu-latest
     permissions:
