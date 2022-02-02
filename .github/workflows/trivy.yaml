@@ -15,14 +15,6 @@
 name: Trivy
 
 on:
-  #push:
-  #  branches:
-  #    - master
-  #    - main
-  #pull_request:
-  #  branches:
-  #    - master
-  #    - main
   workflow_call:
     inputs:
       target:
@@ -35,8 +27,6 @@ on:
         description: The Trivy target to analyze, usually a docker image:tag
         type: string
         required: true
-  schedule:
-    - cron: '0 0 * * 1'
 
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
@@ -49,20 +39,36 @@ jobs:
     runs-on: ubuntu-latest
     container: aquasec/trivy:latest
     permissions:
+      actions: read
       contents: read
+      security-events: write
     env:
       TARGET: ${{ inputs.target }}
     steps:
       - uses: actions/checkout@v2
-        with:
-          submodules: recursive  # requires Git 2.18+ to be installed first
+
       - name: Environment
         run: env | sort
+
       - name: Trivy (Full Informational)
         run: |
           # informational to see all issues
           trivy image --no-progress "$TARGET"
+
       - name: Trivy
         run: |
           # fail the pipeline if any of the issues are High / Critical
           trivy image --no-progress --exit-code 1 --severity HIGH,CRITICAL "$TARGET"
+
+      #- name: Run Trivy vulnerability scanner
+      #  uses: aquasecurity/trivy-action@master
+      #  with:
+      #    image-ref: ${{ env.TARGET }}
+      #    format: template
+      #    template: '@/contrib/sarif.tpl'
+      #    output: trivy-results.sarif
+      #
+      #- name: Upload Trivy scan results to GitHub Security tab
+      #  uses: github/codeql-action/upload-sarif@v1
+      #  with:
+      #    sarif_file: trivy-results.sarif
