@@ -27,7 +27,7 @@ Create `.github/workflows/tfsec.yaml`:
 on: [push]
 jobs:
   tfsec:
-    uses: HariSekhon/Gi/tHub-Actions/.github/workflows/tfsec.yaml@master
+    uses: HariSekhon/GitHub-Actions/.github/workflows/tfsec.yaml@master
 ```
 
 ### Docker Build and push to AWS ECR
@@ -87,6 +87,7 @@ These workflows are locked down to the minimal required permissions, usually jus
 ```yaml
 jobs:
   myjob:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/tfsec.yaml@master
     permissions:
       actions: read
       contents: read
