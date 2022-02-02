@@ -28,6 +28,10 @@ on:
       url_links_ignored:
         type: string
         required: false
+        default: |
+          https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv
+          http://krb5server
+          https://megalinter.github.io
       ignore_urls_without_dots:
         type: string
         required: false
