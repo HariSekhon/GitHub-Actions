@@ -21,12 +21,32 @@ on:
         description: The Trivy target to analyze, usually a docker image:tag
         type: string
         required: true
+      severity:
+        description: Set a severity to trigger CI workflow failure
+        type: string
+        default: HIGH,CRITICAL
+        required: false
+      no_sarif:
+        description: Enable to avoid spamming your GitHub Security tab with tonnes of OS CVEs in docker images
+        type: boolean
+        default: false
+        required: false
   workflow_dispatch:
     inputs:
       target:
         description: The Trivy target to analyze, usually a docker image:tag
         type: string
         required: true
+      severity:
+        description: Set a severity to trigger CI workflow failure
+        type: string
+        default: HIGH,CRITICAL
+        required: false
+      no_sarif:
+        description: Enable to avoid spamming your GitHub Security tab with tonnes of OS CVEs in docker images
+        type: boolean
+        default: false
+        required: false
 
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
@@ -50,17 +70,21 @@ jobs:
       - name: Environment
         run: env | sort
 
-      #- name: Trivy (Full Informational)
-      #  run: |
-      #    # informational to see all issues
-      #    trivy image --no-progress "$TARGET"
-      #
-      #- name: Trivy
-      #  run: |
-      #    # fail the pipeline if any of the issues are High / Critical
-      #    trivy image --no-progress --exit-code 1 --severity HIGH,CRITICAL "$TARGET"
+      - name: Trivy (Full Informational)
+        run: |
+          # informational to see all issues
+          trivy image --no-progress "$TARGET"
+
+      - name: Trivy (with Severity Error Out)
+        if: ${{ inputs.severity }}
+        env:
+          SEVERITY: ${{ inputs.severity }}
+        run: |
+          # fail the pipeline if any of the issues are in $SEVERITY eg. HIGH,CRITICAL
+          trivy image --no-progress --exit-code 1 --severity "$SEVERITY" "$TARGET"
 
       - name: Run Trivy vulnerability scanner
+        if: ${{ ! inputs.no_sarif }}
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: ${{ env.TARGET }}
@@ -69,6 +93,7 @@ jobs:
           output: trivy-results.sarif
 
       - name: Upload Trivy scan results to GitHub Security tab
+        if: ${{ ! inputs.no_sarif }}
         uses: github/codeql-action/upload-sarif@v1
         with:
           sarif_file: trivy-results.sarif
