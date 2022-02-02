@@ -34,6 +34,25 @@ jobs:
     uses: HariSekhon/GitHub-Actions/.github/workflows/tfsec.yaml@master
 ```
 
+### Docker Build and push to DockerHub
+
+[![Docker Build DevOps Bash Tools (Alpine)](https://github.com/HariSekhon/Dockerfiles/actions/workflows/docker_build_devops_bash_tools_alpine.yaml/badge.svg)](https://github.com/HariSekhon/Dockerfiles/actions/workflows/docker_build_devops_bash_tools_alpine.yaml)
+
+Create `.github/workflows/docker_build.yaml`:
+```yaml
+on: [push]
+jobs:
+  docker_build:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/docker_build.yaml@master
+    with:
+      repo: harisekhon/bash-tools
+      tags: alpine
+      context: devops-bash-tools-alpine
+    secrets:
+      DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+```
+
 ### Docker Build and push to AWS ECR
 
 Create `.github/workflows/docker_build_aws_ecr.yaml`:
