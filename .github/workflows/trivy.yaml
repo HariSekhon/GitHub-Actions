@@ -77,14 +77,6 @@ jobs:
           # informational to see all issues
           trivy image --no-progress "$TARGET"
 
-      - name: Trivy (with Severity Error Out)
-        if: ${{ inputs.severity || github.event.inputs.severity }}
-        env:
-          SEVERITY: ${{ inputs.severity | github.event.inputs.severity }}
-        run: |
-          # fail the pipeline if any of the issues are in $SEVERITY eg. HIGH,CRITICAL
-          trivy image --no-progress --exit-code 1 --severity "$SEVERITY" "$TARGET"
-
       - name: Run Trivy vulnerability scanner to generate sarif
         if: ${{ ! ( inputs.no_sarif || github.event.inputs.sarif ) }}
         uses: aquasecurity/trivy-action@master
@@ -99,3 +91,11 @@ jobs:
         uses: github/codeql-action/upload-sarif@v1
         with:
           sarif_file: trivy-results.sarif
+
+      - name: Trivy (with Severity Error Out)
+        if: ${{ inputs.severity || github.event.inputs.severity }}
+        env:
+          SEVERITY: ${{ inputs.severity | github.event.inputs.severity }}
+        run: |
+          # fail the pipeline if any of the issues are in $SEVERITY eg. HIGH,CRITICAL
+          trivy image --no-progress --exit-code 1 --severity "$SEVERITY" "$TARGET"
