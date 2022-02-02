@@ -29,7 +29,6 @@ In your GitHub repo, import these workflows by adding small yaml files to the `.
 ### Scan for Secrets and Security issues
 
 [![Semgrep](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/semgrep.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/semgrep.yaml)
-
 Alerts appear under Security -> Code scanning alerts.
 
 Create `.github/workflows/semgrep.yaml`:
@@ -43,7 +42,6 @@ jobs:
 ### Analyze your Terraform code security & best practices
 
 [![tfsec](https://github.com/HariSekhon/Terraform/actions/workflows/tfsec.yaml/badge.svg)](https://github.com/HariSekhon/Terraform/actions/workflows/tfsec.yaml)
-
 Alerts appear under Security -> Code scanning alerts.
 
 Create `.github/workflows/tfsec.yaml`:
