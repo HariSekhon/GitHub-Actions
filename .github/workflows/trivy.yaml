@@ -15,22 +15,26 @@
 name: Trivy
 
 on:
-  push:
-    branches:
-      - master
-      - main
-  pull_request:
-    branches:
-      - master
-      - main
+  #push:
+  #  branches:
+  #    - master
+  #    - main
+  #pull_request:
+  #  branches:
+  #    - master
+  #    - main
   workflow_call:
     inputs:
       target:
         description: The Trivy target to analyze, usually a docker image:tag
         type: string
-        default: ''
         required: true
   workflow_dispatch:
+    inputs:
+      target:
+        description: The Trivy target to analyze, usually a docker image:tag
+        type: string
+        required: true
   schedule:
     - cron: '0 0 * * 1'
 
