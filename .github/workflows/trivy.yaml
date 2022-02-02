@@ -32,22 +32,22 @@ on:
         default: false
         required: false
   # can't alternate ${{ inputs.target || github.event.inputs.target }} so workflow won't support both
-  #workflow_dispatch:
-  #  inputs:
-  #    target:
-  #      description: The Trivy target to analyze, usually a docker image:tag
-  #      type: string
-  #      required: true
-  #    severity:
-  #      description: Set a severity to trigger CI workflow failure
-  #      type: string
-  #      default: HIGH,CRITICAL
-  #      required: false
-  #    no_sarif:
-  #      description: Disable GitHub Security tab integration to avoid spamming it with tonnes of OS CVEs in docker images
-  #      type: boolean
-  #      default: false
-  #      required: false
+  workflow_dispatch:
+    inputs:
+      target:
+        description: The Trivy target to analyze, usually a docker image:tag
+        type: string
+        required: true
+      severity:
+        description: Set a severity to trigger CI workflow failure
+        type: string
+        default: HIGH,CRITICAL
+        required: false
+      no_sarif:
+        description: Disable GitHub Security tab integration to avoid spamming it with tonnes of OS CVEs in docker images
+        type: boolean
+        default: false
+        required: false
 
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
@@ -67,8 +67,8 @@ jobs:
       # ${{ inputs.* }}               is set by workflow_call
       # ${{ github.events.inputs.* }} is set by workflow_dispatch
       # doesn't work
-      #TARGET: ${{ inputs.target || github.event.inputs.target }}
-      TARGET: ${{ inputs.target }}
+      TARGET: ${{ inputs.target || github.event.inputs.target }}
+      #TARGET: ${{ inputs.target }}
     steps:
       - uses: actions/checkout@v2
 
