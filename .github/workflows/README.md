@@ -10,6 +10,7 @@ In your GitHub repo, import these workflows by adding small yaml files to the `.
 
 ### Scan for Secrets and Security issues
 
+[![Semgrep](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/semgrep.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/semgrep.yaml)
 Alerts appear under Security -> Code scanning alerts.
 
 Create `.github/workflows/semgrep.yaml`:
@@ -22,17 +23,39 @@ jobs:
 
 ### Analyze your Terraform code security & best practices
 
+[![tfsec](https://github.com/HariSekhon/Terraform/actions/workflows/tfsec.yaml/badge.svg)](https://github.com/HariSekhon/Terraform/actions/workflows/tfsec.yaml)
+Alerts appear under Security -> Code scanning alerts.
+
 Create `.github/workflows/tfsec.yaml`:
 ```yaml
 on: [push]
 jobs:
   tfsec:
-    uses: HariSekhon/Gi/tHub-Actions/.github/workflows/tfsec.yaml@master
+    uses: HariSekhon/GitHub-Actions/.github/workflows/tfsec.yaml@master
+```
+
+### Docker Build and push to DockerHub
+
+[![Docker Build DevOps Bash Tools (Alpine)](https://github.com/HariSekhon/Dockerfiles/actions/workflows/docker_build_devops_bash_tools_alpine.yaml/badge.svg)](https://github.com/HariSekhon/Dockerfiles/actions/workflows/docker_build_devops_bash_tools_alpine.yaml)
+
+Create `.github/workflows/docker_build.yaml`:
+```yaml
+on: [push]
+jobs:
+  docker_build:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/docker_build.yaml@master
+    with:
+      repo: harisekhon/bash-tools
+      tags: alpine
+      context: devops-bash-tools-alpine
+    secrets:
+      DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 ```
 
 ### Docker Build and push to AWS ECR
 
-Create `.github/workflows/docker.yaml`:
+Create `.github/workflows/docker_build_aws_ecr.yaml`:
 ```yaml
 on: [push]
 jobs:
@@ -53,7 +76,7 @@ This auto-adds tags:
 - Date
 - Date & Timestamp
 
-Makes heavy use of all several possible caches including branch/tag specific caches to speed up builds / re-builds.
+Makes heavy use of all several possible caches including branch/tag specific caches to speed up builds / re-builds and avoid cache invalidation between environments.
 
 Supports multi-stage build caching using GHCR for intermediate layer caching since AWS ECR doesn't support this at time of writing, simply by adding:
 
@@ -63,6 +86,8 @@ Supports multi-stage build caching using GHCR for intermediate layer caching sin
 ```
 
 ### Check for Broken Links
+
+[![URL Links](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/url_links.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/url_links.yaml)
 
 Create `.github/workflows/url_links.yaml`:
 ```yaml
@@ -80,3 +105,22 @@ jobs:
       # ignore URLs without dots as these are usually internal inaccessible local addresses such as http://krb5server rather than public accessible links
       #ignore_urls_without_dots: 'true'  # any value enables this
 ```
+
+## Permissions
+
+These workflows are locked down to the minimal required permissions, usually just `contents: read`, but for some which write Security Alerts to the GitHub Security tab, if you've locked down your GitHub Organizations permissions, then you may want to copy the permissions key out of the workflow to your calling workflow to grant them the needed permissions, such as:
+```yaml
+jobs:
+  myjob:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/tfsec.yaml@master
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+```
+These 3 permissions are needed for workflows that report to GitHub Security tab, including:
+- [checkov.yaml](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/checkov.yaml)
+- [kics.yaml](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/kics.yaml)
+- [semgrep.yaml](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/semgrep.yaml)
+- [tfsec.yaml](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/tfsec.yaml)
+- [trivy_github.yaml](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/trivy_github.yaml)

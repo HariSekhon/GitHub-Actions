@@ -1,0 +1,31 @@
+#
+#  Author: Hari Sekhon
+#  Date: 2022-02-02 10:44:47 +0000 (Wed, 02 Feb 2022)
+#
+#  vim:ts=2:sts=2:sw=2:et
+#
+#  https://github.com/HariSekhon/GitHub-Actions
+#
+#  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback
+#
+#  https://www.linkedin.com/in/harisekhon
+#
+
+---
+# Configuration file for MegaLinter
+# See all available variables at https://megalinter.github.io/configuration/ and in linters documentation
+
+APPLY_FIXES: none # all, none, or list of linter keys
+
+# ENABLE: # If you use ENABLE variable, all other languages/formats/tooling-formats will be disabled by default
+# ENABLE_LINTERS: # If you use ENABLE_LINTERS variable, all other linters will be disabled by default
+
+DISABLE:
+  - SPELL_CSPELL  # too many false positives on yaml files like GitHub Actions
+  #- COPYPASTE # Uncomment to disable checks of excessive copy-pastes
+  #- SPELL # Uncomment to disable checks of spelling mistakes
+
+SHOW_ELAPSED_TIME: true
+FILEIO_REPORTER: false
+
+DISABLE_ERRORS: true # Uncomment if you want MegaLinter to detect errors but not block CI to pass

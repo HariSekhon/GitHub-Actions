@@ -33,7 +33,7 @@ jobs:
     timeout-minutes: 10
     permissions:
       contents: read
-      security-events: write
+      pull-requests: write
 
     steps:
       - name: Clone repo

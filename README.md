@@ -30,6 +30,7 @@ In your GitHub repo, import these workflows by adding small yaml files to the `.
 
 ### Scan for Secrets and Security issues
 
+[![Semgrep](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/semgrep.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/semgrep.yaml)
 Alerts appear under Security -> Code scanning alerts.
 
 Create `.github/workflows/semgrep.yaml`:
@@ -42,6 +43,9 @@ jobs:
 
 ### Analyze your Terraform code security & best practices
 
+[![tfsec](https://github.com/HariSekhon/Terraform/actions/workflows/tfsec.yaml/badge.svg)](https://github.com/HariSekhon/Terraform/actions/workflows/tfsec.yaml)
+Alerts appear under Security -> Code scanning alerts.
+
 Create `.github/workflows/tfsec.yaml`:
 ```yaml
 on: [push]
@@ -50,9 +54,28 @@ jobs:
     uses: HariSekhon/Gi/tHub-Actions/.github/workflows/tfsec.yaml@master
 ```
 
+### Docker Build and push to DockerHub
+
+[![Docker Build DevOps Bash Tools (Alpine)](https://github.com/HariSekhon/Dockerfiles/actions/workflows/docker_build_devops_bash_tools_alpine.yaml/badge.svg)](https://github.com/HariSekhon/Dockerfiles/actions/workflows/docker_build_devops_bash_tools_alpine.yaml)
+
+Create `.github/workflows/docker_build.yaml`:
+```yaml
+on: [push]
+jobs:
+  docker_build:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/docker_build.yaml@master
+    with:
+      repo: harisekhon/bash-tools
+      tags: alpine
+      context: devops-bash-tools-alpine
+    secrets:
+      DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+```
+
 ### Docker Build and push to AWS ECR
 
-Create `.github/workflows/docker.yaml`:
+Create `.github/workflows/docker_build_aws_ecr.yaml`:
 ```yaml
 on: [push]
 jobs:
@@ -68,6 +91,8 @@ jobs:
 Creates several useful tags, supports multi-stage build caching, see [README](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/README.md) for details.
 
 ### Check for Broken Links
+
+[![URL Links](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/url_links.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/url_links.yaml)
 
 Create `.github/workflows/url_links.yaml`:
 ```yaml
