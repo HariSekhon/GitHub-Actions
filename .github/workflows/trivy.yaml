@@ -63,7 +63,7 @@ jobs:
       contents: read
       security-events: write
     env:
-      TARGET: ${{ inputs.target }}
+      TARGET: ${{ github.event.inputs.target }}
     steps:
       - uses: actions/checkout@v2
 
