@@ -26,6 +26,8 @@ jobs:
 
 [![tfsec](https://github.com/HariSekhon/Terraform/actions/workflows/tfsec.yaml/badge.svg)](https://github.com/HariSekhon/Terraform/actions/workflows/tfsec.yaml)
 
+Alerts appear under Security -> Code scanning alerts.
+
 Create `.github/workflows/tfsec.yaml`:
 ```yaml
 on: [push]
