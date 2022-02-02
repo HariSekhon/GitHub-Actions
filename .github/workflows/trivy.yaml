@@ -82,7 +82,7 @@ jobs:
       - name: Trivy (with Severity Error Out)
         if: ${{ inputs.severity || github.event.inputs.severity }}
         env:
-          SEVERITY: ${{ inputs.severity || github.event.inputs.severity }}
+          SEVERITY: ${{ inputs.severity || github.event.inputs.severity || 'HIGH,CRITICAL' }}
         run: |
           # fail the pipeline if any of the issues are in $SEVERITY eg. HIGH,CRITICAL
           trivy image --no-progress --exit-code 1 --severity "$SEVERITY" "$TARGET"
