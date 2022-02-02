@@ -31,7 +31,6 @@ on:
         type: boolean
         default: false
         required: false
-  # can't alternate ${{ inputs.target || github.event.inputs.target }} so workflow won't support both
   workflow_dispatch:
     inputs:
       target:
@@ -66,9 +65,7 @@ jobs:
     env:
       # ${{ inputs.* }}               is set by workflow_call
       # ${{ github.events.inputs.* }} is set by workflow_dispatch
-      # doesn't work
       TARGET: ${{ inputs.target || github.event.inputs.target }}
-      #TARGET: ${{ inputs.target }}
     steps:
       - uses: actions/checkout@v2
 
@@ -81,15 +78,15 @@ jobs:
           trivy image --no-progress "$TARGET"
 
       - name: Trivy (with Severity Error Out)
-        if: ${{ inputs.severity }}
+        if: ${{ inputs.severity || github.event.inputs.severity }}
         env:
-          SEVERITY: ${{ inputs.severity }}
+          SEVERITY: ${{ inputs.severity | github.event.inputs.severity }}
         run: |
           # fail the pipeline if any of the issues are in $SEVERITY eg. HIGH,CRITICAL
           trivy image --no-progress --exit-code 1 --severity "$SEVERITY" "$TARGET"
 
-      - name: Run Trivy vulnerability scanner
-        if: ${{ ! inputs.no_sarif }}
+      - name: Run Trivy vulnerability scanner to generate sarif
+        if: ${{ ! ( inputs.no_sarif || github.event.inputs.sarif ) }}
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: ${{ env.TARGET }}
@@ -97,8 +94,8 @@ jobs:
           template: '@/contrib/sarif.tpl'
           output: trivy-results.sarif
 
-      - name: Upload Trivy scan results to GitHub Security tab
-        if: ${{ ! inputs.no_sarif }}
+      - name: Upload Trivy sarif scan results to GitHub Security tab
+        if: ${{ ! ( inputs.no_sarif || github.event.inputs.sarif ) }}
         uses: github/codeql-action/upload-sarif@v1
         with:
           sarif_file: trivy-results.sarif
