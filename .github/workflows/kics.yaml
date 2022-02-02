@@ -78,7 +78,7 @@ jobs:
             echo "SCAN_PATH=."
           fi >> "$GITHUB_ENV"
 
-      - name: Make results-dir
+      - name: Make results dir
         run: mkdir -pv results
 
       - name: Create Config file
