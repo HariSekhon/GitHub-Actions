@@ -10,6 +10,8 @@ In your GitHub repo, import these workflows by adding small yaml files to the `.
 
 ### Scan for Secrets and Security issues
 
+[![Semgrep](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/semgrep.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/semgrep.yaml)
+
 Alerts appear under Security -> Code scanning alerts.
 
 Create `.github/workflows/semgrep.yaml`:
