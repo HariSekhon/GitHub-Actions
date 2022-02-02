@@ -29,7 +29,7 @@ on:
       - .github/workflows/trivy.yaml
   workflow_call:
     inputs:
-      target:
+      docker_image:
         description: The docker image:tag for Trivy to analyze
         type: string
         required: true
@@ -40,7 +40,7 @@ on:
         required: false
   workflow_dispatch:
     inputs:
-      target:
+      docker_image:
         description: The docker image:tag for Trivy to analyze
         type: string
         required: true
@@ -65,7 +65,7 @@ jobs:
     env:
       # ${{ inputs.* }}               is set by workflow_call
       # ${{ github.events.inputs.* }} is set by workflow_dispatch
-      TARGET: ${{ inputs.target || github.event.inputs.target || 'harisekhon/bash-tools' }}
+      DOCKER_IMAGE: ${{ inputs.docker_image || github.event.inputs.docker_image || 'harisekhon/bash-tools' }}
     steps:
       - uses: actions/checkout@v2
 
@@ -75,7 +75,7 @@ jobs:
       - name: Trivy (Full Informational)
         run: |
           # informational to see all issues
-          trivy image --no-progress "$TARGET"
+          trivy image --no-progress "$DOCKER_IMAGE"
 
       - name: Trivy (with Severity Error Out)
         if: ${{ inputs.severity || github.event.inputs.severity }}
@@ -83,4 +83,4 @@ jobs:
           SEVERITY: ${{ inputs.severity || github.event.inputs.severity }}
         run: |
           # fail the pipeline if any of the issues are in $SEVERITY eg. HIGH,CRITICAL
-          trivy image --no-progress --exit-code 1 --severity "$SEVERITY" "$TARGET"
+          trivy image --no-progress --exit-code 1 --severity "$SEVERITY" "$DOCKER_IMAGE"
