@@ -22,6 +22,8 @@ jobs:
 
 ### Analyze your Terraform code security & best practices
 
+[![tfsec](https://github.com/HariSekhon/Terraform/actions/workflows/tfsec.yaml/badge.svg)](https://github.com/HariSekhon/Terraform/actions/workflows/tfsec.yaml)
+
 Create `.github/workflows/tfsec.yaml`:
 ```yaml
 on: [push]
@@ -32,7 +34,7 @@ jobs:
 
 ### Docker Build and push to AWS ECR
 
-Create `.github/workflows/docker.yaml`:
+Create `.github/workflows/docker_build_aws_ecr.yaml`:
 ```yaml
 on: [push]
 jobs:
@@ -53,7 +55,7 @@ This auto-adds tags:
 - Date
 - Date & Timestamp
 
-Makes heavy use of all several possible caches including branch/tag specific caches to speed up builds / re-builds.
+Makes heavy use of all several possible caches including branch/tag specific caches to speed up builds / re-builds and avoid cache invalidation between environments.
 
 Supports multi-stage build caching using GHCR for intermediate layer caching since AWS ECR doesn't support this at time of writing, simply by adding:
 
@@ -63,6 +65,8 @@ Supports multi-stage build caching using GHCR for intermediate layer caching sin
 ```
 
 ### Check for Broken Links
+
+[![URL Links](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/url_links.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/url_links.yaml)
 
 Create `.github/workflows/url_links.yaml`:
 ```yaml
