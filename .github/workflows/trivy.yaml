@@ -28,8 +28,9 @@ on:
   workflow_call:
     inputs:
       target:
-        description: The Trivy target to analyze, usually a docker image:tag
+        description: The Trivy target to analyze, usually a docker image:tag or fs <path>
         type: string
+        default: fs .
         required: true
       severity:
         description: Set a severity to trigger CI workflow failure
@@ -39,8 +40,9 @@ on:
   workflow_dispatch:
     inputs:
       target:
-        description: The Trivy target to analyze, usually a docker image:tag
+        description: The Trivy target to analyze, usually a docker image:tag or fs <path>
         type: string
+        default: fs .
         required: true
       severity:
         description: Set a severity to trigger CI workflow failure
@@ -63,7 +65,7 @@ jobs:
     env:
       # ${{ inputs.* }}               is set by workflow_call
       # ${{ github.events.inputs.* }} is set by workflow_dispatch
-      TARGET: ${{ inputs.target || github.event.inputs.target }}
+      TARGET: ${{ inputs.target || github.event.inputs.target || "fs ." }}
     steps:
       - uses: actions/checkout@v2
 
