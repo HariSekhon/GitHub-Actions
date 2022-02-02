@@ -110,7 +110,7 @@ env:
   GIT_EMAIL: 'platform-engineering@MYCOMPANY.CO.UK'
 
   # prevent script injection from inputs - https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#using-an-intermediate-environment-variable
-  SANITIZED_INPUT: ${{ inputs.someuntrusted }}
+  SANITIZED_INPUT: ${{ inputs.someuntrusted || github.event.inputs.someuntrusted }}
 
 # ============================================================================ #
 #                                T r i g g e r s
@@ -142,6 +142,7 @@ on:
 
   # https://docs.github.com/en/actions/using-workflows/reusing-workflows#creating-a-reusable-workflow
   workflow_call:
+    # accessible as ${{ inputs.* }}
     # XXX: don't mention ${{ env.blah }} or ${{ secrets.BLAH }} in the descriptions, as it'll try to interpolate them and fail
     inputs:
       repo:
@@ -158,6 +159,7 @@ on:
 
   # https://docs.github.com/en/actions/managing-workflow-runs/manually-running-a-workflow#running-a-workflow
   workflow_dispatch:  # needs to be in default branch before you get the UI option to manually run though
+    # accessible as ${{ github.events.inputs.* }}
     #inputs:
     #  description:
     #    description: Some description of this input
