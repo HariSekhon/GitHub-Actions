@@ -110,7 +110,8 @@ env:
   GIT_EMAIL: 'platform-engineering@MYCOMPANY.CO.UK'
 
   # prevent script injection from inputs - https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#using-an-intermediate-environment-variable
-  SANITIZED_INPUT: ${{ inputs.someuntrusted || github.event.inputs.someuntrusted }}
+  SANITIZED_INPUT: ${{ inputs.someuntrusted }}
+  #SANITIZED_INPUT: ${{ inputs.someuntrusted || github.event.inputs.someuntrusted }}  # doesn't seem to work for both workflow_call and workflow_dispatch on same shared workflow
 
 # ============================================================================ #
 #                                T r i g g e r s
