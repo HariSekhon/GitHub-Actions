@@ -27,7 +27,7 @@ on:
         default: HIGH,CRITICAL
         required: false
       no_sarif:
-        description: Enable to avoid spamming your GitHub Security tab with tonnes of OS CVEs in docker images
+        description: Disable GitHub Security tab integration to avoid spamming it with tonnes of OS CVEs in docker images
         type: boolean
         default: false
         required: false
@@ -43,7 +43,7 @@ on:
         default: HIGH,CRITICAL
         required: false
       no_sarif:
-        description: Enable to avoid spamming your GitHub Security tab with tonnes of OS CVEs in docker images
+        description: Disable GitHub Security tab integration to avoid spamming it with tonnes of OS CVEs in docker images
         type: boolean
         default: false
         required: false
