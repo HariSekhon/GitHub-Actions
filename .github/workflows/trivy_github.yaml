@@ -17,7 +17,7 @@
 #   2022-02-02T11:58:59.840Z  FATAL DB error: database error: the version of DB schema doesn't match. Local DB: 2, Expected: 1
 
 ---
-name: Trivy GitHub
+name: Trivy GitHub Security Alerts
 
 on:
   workflow_call:
@@ -49,7 +49,7 @@ concurrency:
 
 jobs:
   trivy:
-    name: Trivy
+    name: Trivy GitHub Security Alerts
     timeout-minutes: 10
     runs-on: ubuntu-latest
     container: aquasec/trivy:latest
