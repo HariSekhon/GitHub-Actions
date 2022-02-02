@@ -12,7 +12,7 @@
 #
 
 ---
-name: Trivy
+name: Trivy Docker Image Scan
 
 on:
   push:
@@ -30,9 +30,8 @@ on:
   workflow_call:
     inputs:
       target:
-        description: The Trivy target to analyze, usually a docker image:tag or fs <path>
+        description: The docker image:tag for Trivy to analyze
         type: string
-        default: fs .
         required: true
       severity:
         description: Set a severity to trigger CI workflow failure
@@ -42,9 +41,8 @@ on:
   workflow_dispatch:
     inputs:
       target:
-        description: The Trivy target to analyze, usually a docker image:tag or fs <path>
+        description: The docker image:tag for Trivy to analyze
         type: string
-        default: fs .
         required: true
       severity:
         description: Set a severity to trigger CI workflow failure
@@ -58,7 +56,7 @@ concurrency:
 
 jobs:
   trivy:
-    name: Trivy
+    name: Trivy Docker Image Scan
     timeout-minutes: 10
     runs-on: ubuntu-latest
     container: aquasec/trivy:latest
@@ -67,7 +65,7 @@ jobs:
     env:
       # ${{ inputs.* }}               is set by workflow_call
       # ${{ github.events.inputs.* }} is set by workflow_dispatch
-      TARGET: ${{ inputs.target || github.event.inputs.target || 'fs .' }}
+      TARGET: ${{ inputs.target || github.event.inputs.target || 'harisekhon/bash-tools' }}
     steps:
       - uses: actions/checkout@v2
 
@@ -82,7 +80,7 @@ jobs:
       - name: Trivy (with Severity Error Out)
         if: ${{ inputs.severity || github.event.inputs.severity }}
         env:
-          SEVERITY: ${{ inputs.severity || github.event.inputs.severity || 'HIGH,CRITICAL' }}
+          SEVERITY: ${{ inputs.severity || github.event.inputs.severity }}
         run: |
           # fail the pipeline if any of the issues are in $SEVERITY eg. HIGH,CRITICAL
           trivy image --no-progress --exit-code 1 --severity "$SEVERITY" "$TARGET"
