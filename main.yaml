@@ -187,7 +187,11 @@ concurrency:
 # doesn't affect imported actions
 defaults:
   run:
-    shell: bash  # not on Alpine
+    # Bash not available on Alpine
+    # catch subshell failures in short steps such as 'Generating env vars'
+    shell: bash -euxo pipefail {0}
+    #shell: perl {0}
+    #shell: python {0}
     #working-directory: /var/jenkins_home  # $GITHUB_WORKSPACE
 
 
