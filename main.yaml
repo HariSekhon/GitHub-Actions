@@ -355,10 +355,11 @@ jobs:
       # Create Dynamic Environment Variables by echo'ing KEY=VALUE >> "$GITHUB_ENV"
       #                                     ... jq ... | tee --append "$GITHUB_ENV"
       #
+      # XXX: WARNING: echo/printf suppress subshell failures even with -o pipefail
       - name: Generate env GITHUB_SHA_SHORT
-        run: echo "GITHUB_SHA_SHORT=$(echo $GITHUB_SHA | cut -c 1-6)" >> "$GITHUB_ENV"
+        run: echo "GITHUB_SHA_SHORT=${GITHUB_SHA:0:6}" >> "$GITHUB_ENV"
       - name: Generate env GITHUB_REPO
-        run: echo "GITHUB_REPO=$(echo "${GITHUB_REPOSITORY##*/}")" >> "$GITHUB_ENV"
+        run: echo "GITHUB_REPO=${GITHUB_REPOSITORY##*/}" >> "$GITHUB_ENV"
         #
         # step-specific environment variables
         #env:
@@ -438,8 +439,9 @@ jobs:
         with:
           submodules: 'true'  # requires Git 2.18+ to be installed first
 
+      # XXX: WARNING: echo/printf suppress subshell failures even with -o pipefail
       - name: Generate environment variable AWS_ACCOUNT_ID
-        run: echo "AWS_ACCOUNT_ID=$(aws sts get-caller-identity | jq -r .Account)" >> "$GITHUB_ENV"
+        run: AWS_ACCOUNT_ID="$(aws sts get-caller-identity | jq -r .Account)"; echo "AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID" >> "$GITHUB_ENV"
       - name: Generate environment variable AWS_ECR_REGISTRY
         run: echo "AWS_ECR_REGISTRY=${{env.AWS_ACCOUNT_ID}}.dkr.ecr.${{env.AWS_DEFAULT_REGION}}.amazonaws.com" >> "$GITHUB_ENV"
       - name: Generate environment variable GHCR_REGISTRY$
