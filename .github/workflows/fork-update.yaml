@@ -1,0 +1,136 @@
+#
+#  Author: Hari Sekhon
+#  Date: Tue Feb 4 09:53:28 2020 +0000
+#
+#  vim:ts=2:sts=2:sw=2:et
+#
+#  https://github.com/HariSekhon/GitHub-Actions
+#
+#  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback
+#
+#  https://www.linkedin.com/in/harisekhon
+#
+
+---
+name: Fork Update
+
+on:
+  workflow_call:
+    inputs:
+      branches_pr:
+        type: string
+        required: false
+        default: |
+          master
+          main
+          develop
+          dev
+          staging
+          production
+      branches_automerge:
+        type: string
+        required: false
+        default: |
+          master
+          main
+          develop
+          dev
+          staging
+  workflow_dispatch:
+  schedule:
+    - cron: '0 10 * * 2'
+
+env:
+  DEFAULT_BRANCHES_TO_PR: |
+    master
+    main
+    develop
+    dev
+    staging
+    production
+  DEFAULT_BRANCHES_TO_AUTOMERGE: |
+    master
+    main
+    develop
+    dev
+    staging
+  BRANCHES_TO_PR: ${{ inputs.branches_pr || github.event.inputs.branches_pr }}
+  BRANCHES_TO_AUTOMERGE: ${{ inputs.branches_automerge || github.event.inputs.branches_automerge }}
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash -euxo pipefail {0}
+
+jobs:
+  create_pr:
+    name: Create Fork Update PRs
+    timeout-minutes: 10
+    if: github.ref_type == 'branch' && ( github.ref_name == 'master' || github.ref_name == 'main' )
+    permissions:
+      contents: read
+      pull-requests: write
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Environment
+        run: env | sort
+
+      - name: GH CLI auth login
+        run: gh auth login --with-token <<< "${{ github.token }}"
+
+      # gh: Resource not accessible by integration (HTTP 403)
+      # {"message":"Resource not accessible by integration","documentation_url":"https://docs.github.com/rest/reference/users#get-the-authenticated-user"}
+      #- name: GH API User
+      #  run: gh api /user
+
+      - name: Generate environment variable IS_FORK
+        run: |
+          IS_FORK="$(gh api /repos/{owner}/{repo} -q .fork)"
+          echo "IS_FORK=$IS_FORK" >> "$GITHUB_ENV"
+
+      - name: Generate environment variable FORK_SOURCE_OWNER
+        if: ${{ env.IS_FORK == 'true' }}
+        run: |
+          FORK_SOURCE_OWNER="$(gh api /repos/{owner}/{repo} -q .source.owner.login)"
+          echo "FORK_SOURCE_OWNER=$FORK_SOURCE_OWNER" >> "$GITHUB_ENV"
+
+      - name: Generate environment variable FORK_SOURCE_DEFAULT_BRANCH
+        if: ${{ env.IS_FORK == 'true' }}
+        run: |
+          FORK_SOURCE_DEFAULT_BRANCH="$(gh api /repos/{owner}/{repo} -q .source.default_branch )"
+          echo "FORK_SOURCE_DEFAULT_BRANCH=$FORK_SOURCE_DEFAULT_BRANCH" >> "$GITHUB_ENV"
+
+      - name: Generate environment variable FORK_SOURCE_REPO
+        if: ${{ env.IS_FORK == 'true' }}
+        run: |
+          FORK_SOURCE_REPO="$(gh api /repos/{owner}/{repo} -q .source.full_name )"
+          echo "FORK_SOURCE_REPO=$FORK_SOURCE_REPO">> "$GITHUB_ENV"
+
+      - name: Environment
+        run: env | sort
+
+      - name: Create PRs & Automerge
+        if: ${{ env.IS_FORK == 'true' }}
+        run: |
+          BRANCHES_TO_PR="${BRANCHES_TO_PR:-$DEFAULT_BRANCHES_TO_PR}"
+          BRANCHES_TO_AUTOMERGE="${BRANCHES_TO_AUTOMERGE:-$DEFAULT_BRANCHES_TO_AUTOMERGE}"
+
+          for branch in ${{ env.BRANCHES_TO_PR }}; do
+            if gh api "/repos/$FORK_SOURCE_REPO/branches" -q '.[].name' | grep -Fxq "$branch"; then
+              fork_source_branch="$branch"
+            else
+              fork_source_branch="FORK_SOURCE_DEFAULT_BRANCH"
+            fi
+            echo "Creating Pull Request from upstream repo"
+            output="$(gh pr create -R "$GITHUB_REPOSITORY" --base "$branch" --head "$FORK_SOURCE_OWNER":"$fork_source_branch" --title "Merge upstream source branch '$fork_source_branch'" --body "Created automatically by GitHub Workflow: $GITHUB_WORKFLOW")"
+            pr_url="$(grep '/pull' <<< "$output")"
+            if grep -Fxq "$branch" <<< "${{ env.BRANCHES_TO_AUTOMERGE }}"; then
+              gh pr merge --merge "$pr_url"
+            fi
+          done
