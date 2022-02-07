@@ -39,11 +39,13 @@ on:
       debug:
         type: string
         required: false
+        default: '1'
   workflow_dispatch:
     inputs:
       debug:
         type: string
         required: false
+        default: '1'
   schedule:
     - cron: '0 10 * * 2'
 
