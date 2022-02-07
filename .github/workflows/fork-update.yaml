@@ -71,7 +71,7 @@ jobs:
     timeout-minutes: 10
     if: github.ref_type == 'branch' && ( github.ref_name == 'master' || github.ref_name == 'main' )
     permissions:
-      contents: read
+      contents: write
       pull-requests: write
     runs-on: ubuntu-latest
 
