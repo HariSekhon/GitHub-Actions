@@ -85,7 +85,7 @@ Supports multi-stage build caching using GHCR for intermediate layer caching sin
       max-cache: true
 ```
 
-### Check for Broken Links
+### Check for Broken URL Links
 
 [![URL Links](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/url_links.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/url_links.yaml)
 
