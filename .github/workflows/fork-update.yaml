@@ -127,9 +127,11 @@ jobs:
             else
               fork_source_branch="FORK_SOURCE_DEFAULT_BRANCH"
             fi
+            # TODO: check for any diffs before trying to raise a Pull Request
+            echo
             echo "Creating Pull Request from upstream repo"
-            output="$(gh pr create -R "$GITHUB_REPOSITORY" --base "$branch" --head "$FORK_SOURCE_OWNER":"$fork_source_branch" --title "Merge upstream source branch '$fork_source_branch'" --body "Created automatically by GitHub Workflow: $GITHUB_WORKFLOW")"
-            pr_url="$(grep '/pull' <<< "$output")"
+            output="$(gh pr create -R "$GITHUB_REPOSITORY" --base "$branch" --head "$FORK_SOURCE_OWNER":"$fork_source_branch" --title "Merge upstream source branch '$fork_source_branch'" --body "Created automatically by GitHub Workflow: $GITHUB_WORKFLOW")" || continue
+            pr_url="$(grep '/pull/' <<< "$output")"
             if grep -Fxq "$branch" <<< "$BRANCHES_TO_AUTOMERGE"; then
               gh pr merge --merge "$pr_url"
             fi
