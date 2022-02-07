@@ -15,7 +15,7 @@
 
 GitHub Actions master template & GitHub Actions Shared Workflows library.
 
-- [main.yaml](https://github.com/HariSekhon/GitHub-Actions/blob/master/main.yaml) - GitHub Actions master template
+- [main.yaml](https://github.com/HariSekhon/GitHub-Actions/blob/master/main.yaml) - GitHub Actions master workflow template
 - [.github/workflows/](https://github.com/HariSekhon/GitHub-Actions/tree/master/.github/workflows) - GitHub Actions Reusable Workflows Library
 
 See [Documentation](https://docs.github.com/en/actions/using-workflows/reusing-workflows#calling-a-reusable-workflow) for how to call these workflows directly from your own GitHub Actions workflow.
@@ -90,7 +90,7 @@ jobs:
 ```
 Creates several useful tags, supports multi-stage build caching, see [README](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/README.md) for details.
 
-### Check for Broken Links
+### Check for Broken URL Links
 
 [![URL Links](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/url_links.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/url_links.yaml)
 
