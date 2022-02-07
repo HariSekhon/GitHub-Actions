@@ -124,6 +124,7 @@ jobs:
           for branch in $BRANCHES_TO_PR; do
             if ! gh api "/repos/{owner}/{repo}/branches" -q '.[].name' | grep -Fxq "$branch"; then
               echo "No local branch '$branch' found, skipping PR"
+              continue
             fi
             if gh api "/repos/$FORK_SOURCE_REPO/branches" -q '.[].name' | grep -Fxq "$branch"; then
               fork_source_branch="$branch"
