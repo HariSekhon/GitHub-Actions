@@ -296,6 +296,10 @@ jobs:
           #
           #fetch-depth: 0  # fetch all history & branches, instead of just the ref/SHA for this build
 
+      # for OS with Git < 2.18, actions/checkout uses an API download tarball which will screw up your git commands such as 'git submodule init'
+      # in these cases, you can emulate the correct checkout behaviour on older versions of Git like so:
+      - name: Git Checkout
+        run: git clone "https://$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY" "$GITHUB_WORKSPACE"
 
       # checkout another repo
       #- uses: actions/checkout@v2
@@ -382,20 +386,19 @@ jobs:
       - name: Install git & make
         run: yum install -y git make
 
-      - name: Git Clone
-        run: |
-          cd /tmp &&
-          git clone "https://github.com/harisekhon/$repo"
+      - name: Git Checkout
+        run: git clone "https://$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY" "$GITHUB_WORKSPACE"
+
+      # 'cd' in one step, is ignored in the next step, which ends up back in $GITHUB_WORKSPACE, regardless of whether you inject a new value for $GITHUB_WORKSPACE
+
+      - name: Init
+        run: make init
 
       - name: Build
-        run: |
-          cd "/tmp/$repo" &&
-          make
+        run: make build
 
       - name: Test
-        run: |
-          cd "/tmp/$repo" &&
-          make test
+        run: make test
 
       - name: Job Failed
         if: ${{ failure() }}
