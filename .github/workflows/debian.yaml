@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     container: debian:latest
     permissions:
-      §contents: read
+      contents: read
     env:
       DEBUG: ${{ inputs.debug }}
       DEBIAN_FRONTEND: noninteractive
