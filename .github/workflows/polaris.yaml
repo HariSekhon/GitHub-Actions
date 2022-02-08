@@ -30,7 +30,11 @@ jobs:
     permissions:
       contents: read
     steps:
+      - name: Environment
+        run: env | sort
+
       - uses: actions/checkout@v2
+
       - name: Polaris Audit
         uses: fairwindsops/polaris@master
         with:

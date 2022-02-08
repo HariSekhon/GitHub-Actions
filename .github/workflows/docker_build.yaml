@@ -69,10 +69,10 @@ jobs:
       TAGS: ${{ inputs.tags }}
       BUILDCACHE: ${{ inputs.build-cache }}
     steps:
-      - uses: actions/checkout@v2
-
       - name: Environment
         run: env | sort
+
+      - uses: actions/checkout@v2
 
       - name: Login to DockerHub
         uses: docker/login-action@v1

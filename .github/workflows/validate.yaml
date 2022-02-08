@@ -64,14 +64,23 @@ jobs:
       DEBUG: ${{ inputs.debug }}
       INPUTS: ${{ inputs.env }}
     steps:
+      - name: Environment
+        run: env | sort
+
+      - name: Git version
+        run: git --version
+
       - uses: actions/checkout@v2
         with:
           submodules: recursive  # requires Git 2.18+ to be installed first
+
       - name: Setup environment variables
         run: |
           echo "${{ env.INPUTS }}" >> "$GITHUB_ENV"
+
       - name: Environment
         run: env | sort
+
       - name: Validate
         run: |
           check_all.sh

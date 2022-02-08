@@ -30,8 +30,12 @@ jobs:
     permissions:
       contents: read
     steps:
+      - name: Environment
+        run: env | sort
+
       - name: Download Pluto
         uses: FairwindsOps/pluto/github-action@master
+
       - name: Pluto detect-files
         run: |
           pluto detect-files -d .

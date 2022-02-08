@@ -47,6 +47,9 @@ jobs:
       contents: read
       #pull_requests: write
     steps:
+      - name: Environment
+        run: env | sort
+
       - uses: actions/checkout@v2
         with:
           token: ${{ secrets.PAT || secrets.GITHUB_TOKEN }}

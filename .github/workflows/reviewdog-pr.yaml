@@ -27,9 +27,13 @@ jobs:
       contents: read
       #pull-requests: write
     steps:
+      - name: Environment
+        run: env | sort
+
       - uses: reviewdog/action-setup@v1
         with:
           reviewdog_version: latest # Optional. [latest,nightly,v.X.Y.Z]
+
       - name: Run reviewdog
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}

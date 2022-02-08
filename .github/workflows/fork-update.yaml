@@ -85,10 +85,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-
       - name: Environment
         run: env | sort
+
+      - uses: actions/checkout@v2
 
       - name: GH CLI auth login
         run: gh auth login --with-token <<< "${{ github.token }}"

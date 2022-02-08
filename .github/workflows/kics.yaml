@@ -68,6 +68,9 @@ jobs:
       CONFIG: ${{ inputs.config }}
       CONFIG_FILE: ''
     steps:
+      - name: Environment
+        run: env | sort
+
       - uses: actions/checkout@v2
 
       - name: Set environment variable SCAN_PATH

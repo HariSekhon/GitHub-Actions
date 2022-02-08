@@ -67,10 +67,10 @@ jobs:
       # ${{ github.events.inputs.* }} is set by workflow_dispatch
       DOCKER_IMAGE: ${{ inputs.docker_image || github.event.inputs.docker_image || 'harisekhon/bash-tools' }}
     steps:
-      - uses: actions/checkout@v2
-
       - name: Environment
         run: env | sort
+
+      - uses: actions/checkout@v2
 
       - name: Trivy (Full Informational)
         run: |

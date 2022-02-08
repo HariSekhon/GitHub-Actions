@@ -37,6 +37,9 @@ jobs:
       DEBUG: ${{ inputs.debug }}
       DEBIAN_FRONTEND: noninteractive
     steps:
+      - name: Environment
+        run: env | sort
+
       - name: Install Git & Make
         run: apt-get update && apt-get install -y git make
 

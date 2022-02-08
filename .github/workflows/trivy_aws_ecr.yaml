@@ -89,11 +89,10 @@ jobs:
       REPO: ${{ inputs.repo || github.events.inputs.repo }}
       AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
       - name: Environment
         run: env | sort
+
+      - uses: actions/checkout@v2
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1

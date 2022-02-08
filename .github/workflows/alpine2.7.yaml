@@ -39,6 +39,9 @@ jobs:
     env:
       DEBUG: ${{ inputs.debug }}
     steps:
+      - name: Environment
+        run: env | sort
+
       - name: Install Git & Make
         # apk add --no-cache switch isn't available until Alpine 3
         run: apk update && add git make

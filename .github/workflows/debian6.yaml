@@ -38,6 +38,9 @@ jobs:
       DEBUG: ${{ inputs.debug }}
       DEBIAN_FRONTEND: noninteractive
     steps:
+      - name: Environment
+        run: env | sort
+
       - name: Install Git & Make
         run: |
           sed -i 's/deb.debian.org/archive.debian.org/' /etc/apt/sources.list

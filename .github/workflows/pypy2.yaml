@@ -34,6 +34,9 @@ jobs:
     permissions:
       contents: read
     steps:
+      - name: Environment
+        run: env | sort
+
       - name: Git version
         run: git --version
 

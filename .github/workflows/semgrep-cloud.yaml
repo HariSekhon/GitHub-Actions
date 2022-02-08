@@ -40,11 +40,15 @@ jobs:
     name: Semgrep Scan, Cloud report
     runs-on: ubuntu-latest
     timeout-minutes: 30
-
     permissions:
       contents: read
-
     steps:
+      - name: Environment
+        run: env | sort
+
+      - name: Git version
+        run: git --version
+
       - uses: actions/checkout@v2
         with:
           submodules: recursive  # requires Git 2.18+ to be installed first

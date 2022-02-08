@@ -69,10 +69,10 @@ jobs:
       # ${{ github.events.inputs.* }} is set by workflow_dispatch
       SCAN_PATH: ${{ inputs.path || github.event.inputs.path || '.' }}
     steps:
-      - uses: actions/checkout@v2
-
       - name: Environment
         run: env | sort
+
+      - uses: actions/checkout@v2
 
       - name: Trivy (Full Informational)
         run: |

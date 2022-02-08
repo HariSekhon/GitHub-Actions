@@ -60,6 +60,9 @@ jobs:
     if: (github.actor != 'dependabot[bot]')
 
     steps:
+      - name: Environment
+        run: env | sort
+
       - name: Set up Python 3.8
         uses: actions/setup-python@v1
         with:

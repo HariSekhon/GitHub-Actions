@@ -40,8 +40,10 @@ jobs:
       security-events: write
 
     steps:
-      - name: Clone repo
-        uses: actions/checkout@v2
+      - name: Environment
+        run: env | sort
+
+      - uses: actions/checkout@v2
 
       - name: tfsec
         #uses: tfsec/tfsec-sarif-action@main

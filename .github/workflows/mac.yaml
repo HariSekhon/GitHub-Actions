@@ -36,6 +36,9 @@ jobs:
     env:
       DEBUG: ${{ inputs.debug }}
     steps:
+      - name: Environment
+        run: env | sort
+
       - name: Git version
         run: git --version
 

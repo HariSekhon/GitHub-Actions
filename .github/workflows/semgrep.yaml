@@ -55,9 +55,15 @@ jobs:
     if: (github.actor != 'dependabot[bot]')
 
     steps:
+      - name: Environment
+        run: env | sort
+
       # ubuntu-latest already has this installed and a newer version
       #- name: Install Git
       #  run: sudo apt-get update && sudo apt-get install -y git --no-install-recommends
+
+      - name: Git version
+        run: git --version
 
       - uses: actions/checkout@v2
         with:

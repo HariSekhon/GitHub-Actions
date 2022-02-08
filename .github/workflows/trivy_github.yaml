@@ -62,10 +62,10 @@ jobs:
       # ${{ github.events.inputs.* }} is set by workflow_dispatch
       TARGET: ${{ inputs.target || github.event.inputs.target }}
     steps:
-      - uses: actions/checkout@v2
-
       - name: Environment
         run: env | sort
+
+      - uses: actions/checkout@v2
 
       - name: Run Trivy vulnerability scanner to generate sarif
         if: ${{ ! ( inputs.no_sarif || github.event.inputs.sarif ) }}
