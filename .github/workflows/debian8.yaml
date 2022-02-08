@@ -55,7 +55,7 @@ jobs:
         run: |
           set -x
           url="$GITHUB_SERVER_URL"
-          url="${url/:/:$GITHUB_TOKEN@}"
+          url="${url/:/:${GITHUB_TOKEN}@}"
           git clone "$url/$GITHUB_REPOSITORY" "$GITHUB_WORKSPACE"
 
       - name: Init
