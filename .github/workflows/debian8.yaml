@@ -56,15 +56,12 @@ jobs:
 
       - name: Init
         run: |
-          pwd
           if grep -q '^init:' Makefile; then
             make init
           fi
-          echo "GITHUB_WORKSPACE=/tmp" >> "$GITHUB_ENV"
 
       - name: Build
         run: |
-          pwd
           if grep -q '^ci:' Makefile; then
             make ci
           elif grep -q '^build:' Makefile; then
