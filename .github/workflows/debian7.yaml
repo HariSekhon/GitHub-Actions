@@ -49,8 +49,9 @@ jobs:
 
       - name: Git Checkout
         uses: actions/checkout@v2
-        with:
-          submodules: recursive  # requires Git 2.18+ to be installed first
+        # git version too old on this version of debian
+        #with:
+        #  submodules: recursive  # requires Git 2.18+ to be installed first
 
       - name: Init
         run: |
