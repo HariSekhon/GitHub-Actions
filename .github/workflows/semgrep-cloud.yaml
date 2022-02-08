@@ -28,6 +28,9 @@ on:
       - main
     paths: []
   workflow_call:
+    secrets:
+      SEMGREP_APP_TOKEN:
+        required: true
   schedule:
     - cron: '0 0 * * 0'
 
