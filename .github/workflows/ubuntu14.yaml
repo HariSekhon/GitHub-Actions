@@ -52,8 +52,7 @@ jobs:
         # git version too old on this version of ubuntu
         #with:
         #  submodules: recursive  # requires Git 2.18+ to be installed first
-        run: |
-          git checkout https://github.com/"$GITHUB_REPOSITORY" "${GITHUB_REPOSITORY##*/}"
+        run: git clone "https://$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY" "$GITHUB_WORKSPACE"
 
       - name: Init
         run: |
