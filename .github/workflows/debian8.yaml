@@ -60,7 +60,7 @@ jobs:
           if grep -q '^init:' Makefile; then
             make init
           fi
-          cd /tmp
+          echo "GITHUB_WORKSPACE=/tmp" >> "$GITHUB_ENV"
 
       - name: Build
         run: |
