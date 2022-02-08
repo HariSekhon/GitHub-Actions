@@ -39,7 +39,7 @@ jobs:
       DEBIAN_FRONTEND: noninteractive
     steps:
       - name: Install Git & Make
-        run: apt-get update && apt-get install -y git make --no-install-recommends
+        run: apt-get update && apt-get install -y git make
 
       - name: Git version
         run: git --version
