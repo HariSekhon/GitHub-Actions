@@ -41,7 +41,10 @@ jobs:
       DEBUG: ${{ inputs.debug }}
     steps:
       - name: Install Git & Make
-        run: apk add --no-cache git make
+        run: |
+          sed -i 's/^[[:space:]]*mirrorlist/#mirrorlist/' /etc/yum.repos.d/CentOS-Linux-*
+          sed -i 's|^#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|' /etc/yum.repos.d/CentOS-Linux-*
+          yum install -y git make
 
       - name: Git version
         run: git --version
