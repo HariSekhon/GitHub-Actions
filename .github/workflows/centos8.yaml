@@ -14,9 +14,6 @@
 ---
 name: CentOS 8
 
-#env:
-#  DEBUG: 1
-
 on:
   workflow_call:
     inputs:
