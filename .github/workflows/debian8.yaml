@@ -47,17 +47,6 @@ jobs:
       - name: Git version
         run: git --version
 
-      - name: Environment
-        run: env | sort > /tmp/tmp
-
-      - name: Git Checkout
-        uses: actions/checkout@v2
-
-      - name: Environment
-        run: |
-          env | sort > /tmp/tmp2
-          diff /tmp/tmp /tmp/tmp2
-
       - name: Git Checkout
         #uses: actions/checkout@v2
         # git version too old on this version of debian
@@ -65,7 +54,6 @@ jobs:
         #  submodules: recursive  # requires Git 2.18+ to be installed first
         run: |
           pwd
-          env | sort
           git clone "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" "${GITHUB_REPOSITORY##*/}"
 
       - name: Init
