@@ -53,7 +53,7 @@ jobs:
         #with:
         #  submodules: recursive  # requires Git 2.18+ to be installed first
         run: |
-          git checkout git@github.com:"$GITHUB_REPOSITORY" "${GITHUB_REPOSITORY##*/}"
+          git checkout https://github.com/"$GITHUB_REPOSITORY" "${GITHUB_REPOSITORY##*/}"
 
       - name: Init
         run: |
