@@ -52,10 +52,7 @@ jobs:
         # git version too old on this version of debian
         #with:
         #  submodules: recursive  # requires Git 2.18+ to be installed first
-        run: |
-          set -x
-          #URL="${GITHUB_SERVER_URL/\/\////${{github.token}}@}"  # authenticated clone to support private repos
-          git clone "https://$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY" "$GITHUB_WORKSPACE"
+        run: git clone "https://$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY" "$GITHUB_WORKSPACE"
 
       - name: Init
         run: |
@@ -63,9 +60,11 @@ jobs:
           if grep -q '^init:' Makefile; then
             make init
           fi
+          cd /tmp
 
       - name: Build
         run: |
+          pwd
           if grep -q '^ci:' Makefile; then
             make ci
           elif grep -q '^build:' Makefile; then
