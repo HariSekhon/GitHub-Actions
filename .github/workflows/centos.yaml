@@ -14,9 +14,6 @@
 ---
 name: CentOS
 
-#env:
-#  DEBUG: 1
-
 on:
   workflow_call:
     inputs:
