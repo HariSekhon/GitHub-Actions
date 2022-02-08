@@ -54,7 +54,8 @@ jobs:
         #  submodules: recursive  # requires Git 2.18+ to be installed first
         run: |
           pwd
-          git clone "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" "${GITHUB_REPOSITORY##*/}"
+          ls -l
+          git clone "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" "$GITHUB_WORKSPACE"
 
       - name: Init
         run: |
