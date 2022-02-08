@@ -25,10 +25,6 @@ name: tfsec
 on:
   workflow_call
 
-concurrency:
-  group: ${{ github.ref }}-${{ github.workflow }}
-  cancel-in-progress: true
-
 jobs:
   tfsec:
     name: tfsec scan & sarif report

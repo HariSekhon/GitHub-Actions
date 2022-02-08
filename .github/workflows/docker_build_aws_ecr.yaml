@@ -40,10 +40,6 @@ on:
       AWS_DEFAULT_REGION:
         required: true
 
-concurrency:
-  group: ${{ github.ref }}-${{ github.workflow }}
-  cancel-in-progress: true
-
 jobs:
   docker_build:
     name: Docker Build -> AWS ECR

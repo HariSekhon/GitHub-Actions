@@ -19,10 +19,6 @@ name: Pluto
 on:
   workflow_call
 
-concurrency:
-  group: ${{ github.ref }}-${{ github.workflow }}
-  cancel-in-progress: true
-
 jobs:
   pluto:
     timeout-minutes: 5

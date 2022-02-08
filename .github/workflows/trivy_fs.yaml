@@ -52,10 +52,6 @@ on:
         default: HIGH,CRITICAL
         required: false
 
-concurrency:
-  group: ${{ github.ref }}-${{ github.workflow }}
-  cancel-in-progress: true
-
 jobs:
   trivy:
     name: Trivy Filesystem Scan
