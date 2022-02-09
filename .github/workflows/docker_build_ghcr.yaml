@@ -102,7 +102,7 @@ jobs:
       - name: Generate DOCKER_IMAGE environment variable
         run: |
           owner="$(tr '[:upper:]' '[:lower:]' <<< "$GITHUB_REPOSITORY_OWNER")"
-          echo "DOCKER_IMAGE=ghcr.io/$owner/${{env.IMAGE}}" >> "$GITHUB_ENV"
+          echo "DOCKER_IMAGE=ghcr.io/$owner/$IMAGE" >> "$GITHUB_ENV"
 
       - name: Generate REPO_TAGS environment variable
         run: |
