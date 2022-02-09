@@ -44,6 +44,10 @@ on:
         description: The build cache tag to use
         type: string
         default: buildcache
+      dockerfile-repo:
+        description: A separate repo where the Dockerfile for the build can be found. Will be checked out first to a directory of the same name
+        type: string
+        required: false
     secrets:
       DOCKERHUB_USER:
         required: true
@@ -72,6 +76,15 @@ jobs:
         run: env | sort
 
       - uses: actions/checkout@v2
+        with:
+          submodules: 'true'  # requires Git 2.18+ to be installed first
+
+      - name: Git Checkout Dockerfile repo
+        if: ${{ inputs.dockerfile-repo || github.event.inputs.dockerfile-repo }}
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ inputs.dockerfile-repo || github.event.inputs.dockerfile-repo }}
+          submodules: 'true'  # requires Git 2.18+ to be installed first
 
       - name: Login to DockerHub
         uses: docker/login-action@v1
