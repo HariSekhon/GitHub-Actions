@@ -68,10 +68,9 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY }}
 
-  AWS_ACCOUNT_ID: 123456789012
   AWS_DEFAULT_REGION: eu-west-2  # London
   # use secrets from Environments as dynamic variables to share workflow across environments
-  #AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+  #AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}  # or generate this from aws access keys (see Generate steps further down)
   #AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
   #
   # must generate in Steps in order to compose like this
@@ -177,7 +176,7 @@ on:
 
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
-  cancel-in-progress: true  # build auto-cancellation
+  cancel-in-progress: false  # build auto-cancellation - enabling this causes false-positive badge failure statuses
 
 
 # ============================================================================ #
@@ -779,12 +778,18 @@ jobs:
   # ============================================================================ #
 
   semgrep:
-    name: Semgrep Scan
+    name: Semgrep GitHub Security Tab
     uses: HariSekhon/GitHub-Actions/.github/workflows/semgrep.yaml@master
     permissions:
       actions: read
       contents: read
       security-events: write
+
+  semgrep:
+    name: Semgrep Cloud
+    uses: HariSekhon/GitHub-Actions/.github/workflows/semgrep-cloud.yaml@master
+    secrets:
+      SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
 
   # ============================================================================ #
   #                              R e v i e w   D o g
