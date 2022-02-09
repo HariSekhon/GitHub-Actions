@@ -87,7 +87,7 @@ jobs:
           submodules: 'true'  # requires Git 2.18+ to be installed first
 
       - name: Docker Login GHCR
-        run: docker login ghcr.io -u "${{env.GITHUB_USER}}" -p "${{env.GITHUB_TOKEN}}"
+        run: docker login ghcr.io -u "${{env.GITHUB_REPOSITORY_OWNER}}" -p "${{github.token}}"
 
       - name: Generate DOCKER_IMAGE environment variable
         run: echo "ghcr.io/$GITHUB_REPOSITORY/${{env.IMAGE}}" >> "$GITHUB_ENV"
