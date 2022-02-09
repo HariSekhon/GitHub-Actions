@@ -43,7 +43,6 @@ on:
 jobs:
   docker_build:
     name: Docker Build -> AWS ECR
-    timeout-minutes: 60
     runs-on: ubuntu-latest
     # better done in the calling workflow to prevent manual docker builds on the wrong branches
     #if: github.ref_name == 'master' || github.ref_name == 'main' || contains(github.ref_name, 'docker')

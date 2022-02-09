@@ -40,7 +40,6 @@ jobs:
   semgrep:
     name: Semgrep Scan, GitHub security report
     runs-on: ubuntu-latest
-    timeout-minutes: 30
 
     permissions:
       actions: read

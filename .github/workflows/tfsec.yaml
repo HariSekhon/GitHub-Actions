@@ -29,7 +29,6 @@ jobs:
   tfsec:
     name: tfsec scan & sarif report
     runs-on: ubuntu-latest
-    timeout-minutes: 10
     permissions:
       actions: read
       contents: read

@@ -54,7 +54,6 @@ on:
 jobs:
   kics:
     name: Kics Scan
-    timeout-minutes: 10
     runs-on: ubuntu-latest
     permissions:
       actions: read

@@ -40,7 +40,6 @@ on:
 jobs:
   check_url_links:
     name: Check URL Links
-    timeout-minutes: 30
     runs-on: ubuntu-latest
     container: harisekhon/bash-tools
     permissions:

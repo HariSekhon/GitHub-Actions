@@ -77,7 +77,6 @@ defaults:
 jobs:
   create_pr:
     name: Create Fork Update PRs
-    timeout-minutes: 10
     if: github.ref_type == 'branch' && ( github.ref_name == 'master' || github.ref_name == 'main' )
     permissions:
       contents: write

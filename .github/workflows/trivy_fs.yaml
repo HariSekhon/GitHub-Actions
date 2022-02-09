@@ -55,7 +55,6 @@ on:
 jobs:
   trivy:
     name: Trivy Filesystem Scan
-    timeout-minutes: 10
     runs-on: ubuntu-latest
     container: aquasec/trivy:latest
     permissions:

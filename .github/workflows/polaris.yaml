@@ -21,7 +21,6 @@ on:
 
 jobs:
   polaris:
-    timeout-minutes: 5
     runs-on: ubuntu-latest
     permissions:
       contents: read

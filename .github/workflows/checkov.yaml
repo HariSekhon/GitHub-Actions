@@ -45,7 +45,6 @@ jobs:
   checkov:
     name: Checkov Scan
     runs-on: ubuntu-latest
-    timeout-minutes: 10
 
     permissions:
       actions: read

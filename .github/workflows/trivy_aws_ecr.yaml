@@ -75,7 +75,6 @@ on:
 jobs:
   trivy:
     name: Trivy AWS ECR
-    timeout-minutes: 10
     runs-on: ubuntu-latest
     permissions:
       actions: read

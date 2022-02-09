@@ -46,7 +46,6 @@ on:
 jobs:
   trivy:
     name: Trivy GitHub Security Alerts
-    timeout-minutes: 10
     runs-on: ubuntu-latest
     container: aquasec/trivy:latest
     permissions:
