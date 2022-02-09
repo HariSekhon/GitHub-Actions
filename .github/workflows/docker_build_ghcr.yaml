@@ -97,7 +97,7 @@ jobs:
           path: ${{ env.DOCKERFILE_CHECKOUT_PATH }}
 
       - name: Docker Login GHCR
-        run: docker login ghcr.io -u "${{env.GITHUB_REPOSITORY_OWNER}}" -p "${{github.token}}"
+        run: docker login ghcr.io -u "${{env.GITHUB_REPOSITORY_OWNER}}" --password-stdin <<< "${{github.token}}"
 
       - name: Generate DOCKER_IMAGE environment variable
         run: echo "ghcr.io/$GITHUB_REPOSITORY/${{env.IMAGE}}" >> "$GITHUB_ENV"
