@@ -27,7 +27,6 @@ on:
 jobs:
   build:
     name: Build
-    timeout-minutes: 60
     runs-on: ubuntu-latest
     container: alpine:2.7
     permissions:

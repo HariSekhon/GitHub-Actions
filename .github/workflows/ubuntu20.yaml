@@ -25,7 +25,6 @@ on:
 jobs:
   build:
     name: Build
-    timeout-minutes: 60
     runs-on: ubuntu-latest
     container: ubuntu:20.04
     permissions:

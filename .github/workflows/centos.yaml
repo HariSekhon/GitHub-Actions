@@ -25,7 +25,6 @@ on:
 jobs:
   build:
     name: Build
-    timeout-minutes: 60
     runs-on: ubuntu-latest
     container: centos:latest
     permissions:
