@@ -99,6 +99,7 @@ jobs:
           repository: ${{ inputs.dockerfile-repo }}
           ref: ${{ inputs.dockerfile-ref }}
           submodules: 'true'  # requires Git 2.18+ to be installed first
+          path: ${{ env.DOCKERFILE_CHECKOUT_PATH }}
 
       - name: Login to DockerHub
         uses: docker/login-action@v1
