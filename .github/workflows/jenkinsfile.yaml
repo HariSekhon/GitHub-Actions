@@ -38,7 +38,6 @@ defaults:
 jobs:
   validate:
     name: Validate
-    timeout-minutes: 20
     runs-on: ubuntu-latest
     #container: harisekhon/jenkins:latest
     container: jenkins/jenkins:lts
@@ -89,7 +88,7 @@ jobs:
             timestamper:1.16 \
             workflow-aggregator:2.6 \
             $(tr '\n' ' ' <<< "${{ env.PLUGINS_TO_INSTALL }}")
-        timeout-minutes: 3
+        timeout-minutes: 10
 
       - name: Start Jenkins
         run: /usr/local/bin/jenkins.sh &
@@ -97,14 +96,13 @@ jobs:
 
       - name: Wait for Jenkins Initial Password
         run: while ! [ -f "$JENKINS_HOME/secrets/initialAdminPassword" ]; do sleep 1; done
-        timeout-minutes: 5
+        timeout-minutes: 10
 
       - name: Wait for Jenkins to initialize
         run: while ! curl -sSf http://localhost:8080/login | grep -qi jenkins; do sleep 1; done
-        timeout-minutes: 5
+        timeout-minutes: 10
 
       - name: Validate Jenkinsfiles
         run: |
           cd "$JENKINS_HOME/repo"
           ../bash-tools/check_jenkinsfiles.sh
-        timeout-minutes: 5
