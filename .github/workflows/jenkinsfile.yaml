@@ -33,7 +33,7 @@ on:
 
 defaults:
   run:
-    shell: bash
+    shell: bash -euxo pipefail {0}
 
 jobs:
   validate:

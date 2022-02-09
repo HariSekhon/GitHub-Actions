@@ -19,6 +19,10 @@ name: reviewdog PR review
 on:
   workflow_call
 
+defaults:
+  run:
+    shell: bash -euxo pipefail {0}
+
 jobs:
   reviewdog:
     name: reviewdog

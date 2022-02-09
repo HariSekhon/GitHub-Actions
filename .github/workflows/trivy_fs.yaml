@@ -52,6 +52,10 @@ on:
         default: HIGH,CRITICAL
         required: false
 
+defaults:
+  run:
+    shell: bash -euxo pipefail {0}
+
 jobs:
   trivy:
     name: Trivy Filesystem Scan

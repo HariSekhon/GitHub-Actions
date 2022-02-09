@@ -72,6 +72,10 @@ on:
   schedule:
     - cron: '0 0 * * 1'
 
+defaults:
+  run:
+    shell: bash -euxo pipefail {0}
+
 jobs:
   trivy:
     name: Trivy AWS ECR

@@ -50,6 +50,10 @@ on:
       DOCKERHUB_TOKEN:
         required: true
 
+defaults:
+  run:
+    shell: bash -euxo pipefail {0}
+
 jobs:
   docker_build:
     name: Docker Build -> DockerHub

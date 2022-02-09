@@ -22,6 +22,10 @@ on:
         default: ''
         required: false
 
+defaults:
+  run:
+    shell: bash -euxo pipefail {0}
+
 jobs:
   build:
     name: Build

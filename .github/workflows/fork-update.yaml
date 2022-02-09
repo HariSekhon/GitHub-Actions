@@ -72,7 +72,7 @@ concurrency:
 
 defaults:
   run:
-    shell: bash -euo pipefail {0}
+    shell: bash -euxo pipefail {0}
 
 jobs:
   create_pr:
