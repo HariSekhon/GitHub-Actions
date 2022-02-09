@@ -785,7 +785,7 @@ jobs:
       contents: read
       security-events: write
 
-  semgrep:
+  semgrep_cloud:
     name: Semgrep Cloud
     uses: HariSekhon/GitHub-Actions/.github/workflows/semgrep-cloud.yaml@master
     secrets:
