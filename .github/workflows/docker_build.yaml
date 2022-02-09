@@ -28,7 +28,7 @@ on:
         type: string
         required: true
       tags:
-        description: Tags to assign, one per line
+        description: Tags to assign, space or line separated
         type: string
         default: latest
       context:
