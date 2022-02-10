@@ -11,12 +11,18 @@
 #  https://www.linkedin.com/in/harisekhon
 #
 
+# Alpine 2.x is defunct - the upstream package repos are no longer there - gets 404
+
 ---
 name: Alpine
 
 on:
   workflow_call:
     inputs:
+      version:
+        description: The Alpine version docker tag
+        type: string
+        required: true
       debug:
         type: string
         default: ''
@@ -26,7 +32,7 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    container: alpine:latest
+    container: alpine:${{ inputs.version }}
     permissions:
       contents: read
     env:
@@ -36,7 +42,9 @@ jobs:
         run: env | sort
 
       - name: Install Git & Make
-        run: apk add --no-cache git make
+        # apk add --no-cache switch isn't available until Alpine 3
+        #run: apk add --no-cache git make
+        run: apk update && apk add git make
 
       - name: Git version
         run: git --version
