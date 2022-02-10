@@ -17,6 +17,10 @@ name: CentOS
 on:
   workflow_call:
     inputs:
+      version:
+        description: The CentOS version docker tag
+        type: string
+        required: true
       debug:
         type: string
         default: ''
@@ -30,7 +34,7 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    container: centos:latest
+    container: centos:${{ inputs.version }}
     permissions:
       contents: read
     env:
