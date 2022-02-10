@@ -12,11 +12,15 @@
 #
 
 ---
-name: Python 3.7
+name: Python
 
 on:
   workflow_call:
     inputs:
+      version:
+        description: Python version for actions/setup-python
+        type: string
+        required: true
       debug:
         type: string
         default: ''
@@ -45,7 +49,7 @@ jobs:
 
       - uses: actions/setup-python@v1
         with:
-          python-version: 3.7
+          python-version: ${{ inputs.version }}
 
       - uses: actions/cache@v1
         with:
