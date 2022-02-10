@@ -17,6 +17,10 @@ name: macOS
 on:
   workflow_call:
     inputs:
+      versions:
+        description: The macOS version eg. latest, 10.15, 11
+        type: string
+        required: true
       debug:
         type: string
         default: ''
@@ -29,7 +33,7 @@ defaults:
 jobs:
   build:
     name: Build
-    runs-on: macos-latest
+    runs-on: macos-${{ inputs.version }}
     permissions:
       contents: read
     env:
