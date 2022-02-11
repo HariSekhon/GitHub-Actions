@@ -57,7 +57,9 @@ jobs:
         run: terraform fmt -diff -write -recursive
 
       - name: Git Commit
-        run: git commit --author "GitHub Actions Workflow: $GITHUB_WORKFLOW <>" --message "fmt fixes" .
+        # must use | otherwise the semi-colon triggers a yaml parsing error even within quotes
+        run: |
+          git commit --author "GitHub Actions Workflow: $GITHUB_WORKFLOW <>" --message "fmt fixes" .
 
       - name: Git Push
         run: git push
