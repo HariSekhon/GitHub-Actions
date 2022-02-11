@@ -56,8 +56,8 @@ jobs:
       - name: Terraform Fmt
         run: terraform fmt -diff -write -recursive
 
-      - name: Commit
-        run: git commit -A -m "fmt fixes" .
+      - name: Git Commit
+        run: git commit -m "fmt fixes" .
 
-      - name: Push
+      - name: Git Push
         run: git push
