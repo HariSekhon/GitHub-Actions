@@ -59,7 +59,7 @@ jobs:
       - name: Git Commit
         # must use | otherwise the semi-colon triggers a yaml parsing error even within quotes
         run: |
-          git commit --author "$(git log -n 1 --format=%an)" --message "Terraform Fmt fixes - GitHub Actions Workflow: $GITHUB_WORKFLOW" .
+          git commit --author "$(git log -n 1 --format='%an <%ae>')" --message "Terraform Fmt fixes - GitHub Actions Workflow: $GITHUB_WORKFLOW" .
 
       - name: Git Push
         run: git push
