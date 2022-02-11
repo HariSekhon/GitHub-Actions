@@ -69,6 +69,11 @@ jobs:
           # fatal: unable to auto-detect email address (got 'root@39c481e28c3c.(none)'
           # Error: Process completed with exit code 128.'
 
+          if git diff-index --quiet HEAD --; then
+            echo "No changes to commit"
+            exit 0
+          fi
+
           git config user.name "$(git log -n 1 --format='%an')"
           git config user.email "$(git log -n 1 --format='%ae')"
 
