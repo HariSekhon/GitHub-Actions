@@ -1,0 +1,57 @@
+#
+#  Author: Hari Sekhon
+#  Date: 2022-02-11 15:50:21 +0000 (Fri, 11 Feb 2022)
+#
+#  vim:ts=2:sts=2:sw=2:et
+#
+#  https://github.com/HariSekhon/GitHub-Actions
+#
+#  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback
+#
+#  https://www.linkedin.com/in/harisekhon
+#
+
+---
+name: Terraform Fmt
+
+on:
+  push:
+    branches:
+      - master
+      - main
+  pull_request:
+    branches:
+      - master
+      - main
+  workflow_call:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * 1'
+
+defaults:
+  run:
+    # hashicorp/terraform doesn't have bash
+    #shell: bash -euxo pipefail {0}
+    shell: sh -eux {0}
+
+jobs:
+  format:
+    name: Terraform Fmt
+    runs-on: ubuntu-latest
+    container: hashicorp/terraform:latest
+    permissions:
+      contents: read
+    steps:
+      - name: Environment
+        run: env | sort
+
+      # hashicorp/terraform does have git
+      - name: Git version
+        run: git --version
+
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive  # requires Git 2.18+ to be installed first
+
+      - name: Terraform Fmt
+        run: terraform fmt
