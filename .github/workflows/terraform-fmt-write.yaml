@@ -59,7 +59,20 @@ jobs:
       - name: Git Commit
         # must use | otherwise the semi-colon triggers a yaml parsing error even within quotes
         run: |
-          git commit --author "$(git log -n 1 --format='%an <%ae>')" --message "Terraform Fmt fixes - GitHub Actions Workflow: $GITHUB_WORKFLOW" .
+          #git commit --author "$(git log -n 1 --format='%an <%ae>')" --message "Terraform Fmt fixes - GitHub Actions Workflow: $GITHUB_WORKFLOW" .
+          # --author override doesn't work, still gets:
+          #
+          # Committer identity unknown
+          #
+          # ...
+          #
+          # fatal: unable to auto-detect email address (got 'root@39c481e28c3c.(none)'
+          # Error: Process completed with exit code 128.'
+
+          git config user.name "$(git log -n 1 --format='%an')"
+          git config user.email "$(git log -n 1 --format='%ae')"
+
+          git commit --message "Terraform Fmt fixes - GitHub Actions Workflow: $GITHUB_WORKFLOW" .
 
       - name: Git Push
         run: git push
