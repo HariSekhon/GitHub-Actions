@@ -30,6 +30,8 @@ on:
 
 defaults:
   run:
+    # hashicorp/terraform doesn't have bash
+    #shell: bash -euxo pipefail {0}
     shell: sh -eux {0}
 
 jobs:
@@ -43,6 +45,7 @@ jobs:
       - name: Environment
         run: env | sort
 
+      # hashicorp/terraform does have git
       - name: Git version
         run: git --version
 
