@@ -57,7 +57,7 @@ jobs:
         run: terraform fmt -diff -write -recursive
 
       - name: Git Commit
-        run: git commit --author "GitHub Actions Workflow: $GITHUB_WORKFLOW <>" -m "fmt fixes" .
+        run: git commit --author "GitHub Actions Workflow: $GITHUB_WORKFLOW <>" --message "fmt fixes" .
 
       - name: Git Push
         run: git push
