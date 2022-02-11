@@ -40,7 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     container: hashicorp/terraform:latest
     permissions:
-      contents: read
+      contents: write
     steps:
       - name: Environment
         run: env | sort
