@@ -30,7 +30,7 @@ on:
 
 defaults:
   run:
-    shell: bash -euxo pipefail {0}
+    shell: sh -eux {0}
 
 jobs:
   validate:
