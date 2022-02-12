@@ -1,0 +1,83 @@
+#
+#  Author: Hari Sekhon
+#  Date: 2022-02-11 15:50:21 +0000 (Fri, 11 Feb 2022)
+#
+#  vim:ts=2:sts=2:sw=2:et
+#
+#  https://github.com/HariSekhon/GitHub-Actions
+#
+#  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback
+#
+#  https://www.linkedin.com/in/harisekhon
+#
+
+---
+name: Terraform Fmt Write
+
+on:
+  push:
+    branches:
+      - master
+      - main
+  pull_request:
+    branches:
+      - master
+      - main
+  workflow_call:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * 1'
+
+defaults:
+  run:
+    # hashicorp/terraform doesn't have bash
+    #shell: bash -euxo pipefail {0}
+    shell: sh -eux {0}
+
+jobs:
+  format-write:
+    name: Terraform Fmt Write
+    runs-on: ubuntu-latest
+    container: hashicorp/terraform:latest
+    permissions:
+      contents: write
+    steps:
+      - name: Environment
+        run: env | sort
+
+      # hashicorp/terraform does have git
+      - name: Git version
+        run: git --version
+
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive  # requires Git 2.18+ to be installed first
+
+      - name: Terraform Fmt
+        run: terraform fmt -diff -write -recursive
+
+      - name: Git Commit
+        # must use | otherwise the semi-colon triggers a yaml parsing error even within quotes
+        run: |
+          #git commit --author "$(git log -n 1 --format='%an <%ae>')" --message "Terraform Fmt fixes - GitHub Actions Workflow: $GITHUB_WORKFLOW" .
+          # --author override doesn't work, still gets:
+          #
+          # Committer identity unknown
+          #
+          # ...
+          #
+          # fatal: unable to auto-detect email address (got 'root@39c481e28c3c.(none)'
+          # Error: Process completed with exit code 128.'
+
+          if git diff-index --quiet HEAD --; then
+            echo "No changes to commit"
+            exit 0
+          fi
+
+          git config user.name "$(git log -n 1 --format='%an')"
+          git config user.email "$(git log -n 1 --format='%ae')"
+
+          git commit --message "Terraform Fmt fixes - GitHub Actions Workflow: $GITHUB_WORKFLOW" .
+
+      - name: Git Push
+        run: git push

@@ -77,7 +77,7 @@ defaults:
 jobs:
   create_pr:
     name: Create Fork Update PRs
-    if: github.ref_type == 'branch' && ( github.ref_name == 'master' || github.ref_name == 'main' )
+    if: ( github.ref_type == 'branch' && ( github.ref_name == 'master' || github.ref_name == 'main' ) ) && ${{ secrets.PAT_FORK_UPDATE }}
     permissions:
       contents: write
       pull-requests: write
