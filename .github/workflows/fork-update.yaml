@@ -19,7 +19,6 @@ on:
     secrets:
       PAT_FORK_UPDATE:
         description: PAT token with permissions to create Pull Requests (forked repo tokens are read only)
-        type: string
         required: true
     inputs:
       branches_pr:
