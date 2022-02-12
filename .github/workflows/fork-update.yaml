@@ -90,7 +90,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: GH CLI auth login
-        run: gh auth login --with-token <<< "${{ github.token }}"
+        run: gh auth login --with-token <<< "${{ secrets.PAT_FORK_UPDATE }}"
 
       # gh: Resource not accessible by integration (HTTP 403)
       # {"message":"Resource not accessible by integration","documentation_url":"https://docs.github.com/rest/reference/users#get-the-authenticated-user"}
