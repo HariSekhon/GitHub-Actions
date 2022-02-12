@@ -98,6 +98,8 @@ jobs:
         run: |
           gh config set prompt disabled
           gh auth login --with-token <<< "${{ secrets.PAT_FORK_UPDATE || github.token }}"
+          gh auth status
+          gh api /user
 
       # gh: Resource not accessible by integration (HTTP 403)
       # {"message":"Resource not accessible by integration","documentation_url":"https://docs.github.com/rest/reference/users#get-the-authenticated-user"}
