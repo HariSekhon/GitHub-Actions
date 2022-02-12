@@ -99,7 +99,7 @@ jobs:
           gh config set prompt disabled
           gh auth login --with-token <<< "${{ secrets.PAT_FORK_UPDATE || github.token }}"
           gh auth status
-          gh api /user
+          gh api /user | jq  # implicit pipe collapses format, force through jq to avoid this
 
       # gh: Resource not accessible by integration (HTTP 403)
       # {"message":"Resource not accessible by integration","documentation_url":"https://docs.github.com/rest/reference/users#get-the-authenticated-user"}
