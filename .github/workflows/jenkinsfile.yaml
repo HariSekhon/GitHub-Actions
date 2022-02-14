@@ -81,16 +81,17 @@ jobs:
 
       # Whatever constructs you want to validate in Jenkinsfile must have the corresponding plugins installed
       - name: Jenkins Install Plugins
-        run: /bin/jenkins-plugin-cli --plugins \
-              $(cat <<EOF
+        run: |
+          /bin/jenkins-plugin-cli --plugins \
+            $(cat <<-EOF
                 ansicolor:1.0.1
                 lockable-resources:2.13
                 ssh-agent:1.23
                 timestamper:1.16
                 workflow-aggregator:2.6
                 $(tr '\n' ' ' <<< "${{ env.PLUGINS_TO_INSTALL }}")
-EOF
-              )
+          EOF
+            )
         timeout-minutes: 10
 
       - name: Start Jenkins
