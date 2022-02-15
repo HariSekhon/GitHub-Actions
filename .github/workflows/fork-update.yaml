@@ -117,6 +117,4 @@ jobs:
       - name: Create PRs & Automerge
         if: ${{ env.IS_FORK == 'true' }}
         run: |
-          gh auth status
-          gh api /user
           github_repo_fork_update.sh
