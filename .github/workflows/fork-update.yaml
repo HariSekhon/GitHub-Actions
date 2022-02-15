@@ -55,7 +55,8 @@ on:
 
 env:
   # XXX: default GitHub Actions token is neutered to read-only in forks - must use a Personal Access Token (PAT) with repo:write and org:read permissions assigned to it
-  GITHUB_TOKEN: ${{ secrets.PAT_FORK_UPDATE || github.token }}
+  GH_TOKEN: ${{ secrets.PAT_FORK_UPDATE || github.token }}  # higher precedence than GITHUB_TOKEN
+  #GITHUB_TOKEN: ${{ secrets.PAT_FORK_UPDATE || github.token }}
   BRANCHES_TO_PR: ${{ inputs.branches-to-pr || github.event.inputs.branches-to-pr }}
   BRANCHES_TO_AUTOMERGE: ${{ inputs.branches-to-automerge || github.event.inputs.branches-to-automerge }}
   GH_NO_UPDATE_NOTIFIER: 1
@@ -87,9 +88,17 @@ jobs:
       - name: GH CLI auth status
         run: |
           gh config set prompt disabled
-          GITHUB_TOKEN="${{ github.token }}" gh auth status
-          #gh auth login  # errors out if GITHUB_TOKEN is set
+
+          #gh auth login --with-token <<< "${{github.token}" # errors out if GITHUB_TOKEN is set and refused to write local credential because it wouldn't take effect on subsequent commands with GITHUB_TOKEN overriding it
+
+          # what you get by default
+          #GITHUB_TOKEN="${{ github.token }}" gh auth status
+          # Logged in to github.com as github-actions[bot] (GITHUB_TOKEN)
+
+          # what you need - a PAT with the right permissions
           gh auth status
+          # Logged in to github.com as myorg-ci-user (GITHUB_TOKEN)
+
           #gh api /user | jq  # implicit pipe collapses format, force through jq to avoid this
 
       # default actions token is pretty useless in forks
