@@ -90,7 +90,7 @@ jobs:
         run: |
           gh config set prompt disabled
 
-          #gh auth login --with-token <<< "${{github.token}" # errors out if GITHUB_TOKEN is set and refused to write local credential because it wouldn't take effect on subsequent commands with GITHUB_TOKEN overriding it
+          #gh auth login --with-token <<< "${{github.token}}" # errors out if GITHUB_TOKEN is set and refused to write local credential because it wouldn't take effect on subsequent commands with GITHUB_TOKEN overriding it
 
           # what you get by default
           #GITHUB_TOKEN="${{ github.token }}" gh auth status
