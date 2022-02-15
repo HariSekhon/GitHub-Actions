@@ -43,13 +43,13 @@ on:
       debug:
         type: string
         required: false
-        default: '1'
+        #default: '1'
   workflow_dispatch:
     inputs:
       debug:
         type: string
         required: false
-        default: '1'
+        #default: '1'
   schedule:
     - cron: '0 10 * * 2'
 
@@ -87,6 +87,7 @@ jobs:
       - name: GH CLI auth status
         run: |
           gh config set prompt disabled
+          GITHUB_TOKEN="${{ github.token }}" gh auth status
           #gh auth login  # errors out if GITHUB_TOKEN is set
           gh auth status
           #gh api /user | jq  # implicit pipe collapses format, force through jq to avoid this
