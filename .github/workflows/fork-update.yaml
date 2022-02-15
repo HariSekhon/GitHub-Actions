@@ -87,7 +87,9 @@ jobs:
       contents: write
       pull-requests: write
     runs-on: ubuntu-latest
-
+    #container: HariSekhon/DevOps-Bash-tools
+    env:
+      GITHUB_TOKEN: ${{ secrets.PAT_FORK_UPDATE || github.token }}
     steps:
       - name: Environment
         run: env | sort
@@ -97,7 +99,7 @@ jobs:
       - name: GH CLI auth login
         run: |
           gh config set prompt disabled
-          gh auth login --with-token <<< "${{ secrets.PAT_FORK_UPDATE || github.token }}"
+          gh auth login
           gh auth status
           #gh api /user | jq  # implicit pipe collapses format, force through jq to avoid this
 
@@ -145,7 +147,7 @@ jobs:
 
           for branch in $BRANCHES_TO_PR; do
             if ! gh api "/repos/{owner}/{repo}/branches" -q '.[].name' | grep -Fxq "$branch"; then
-              echo "No local branch '$branch' found, skipping PR"
+              echo "No local fork branch '$branch' found, skipping PR"
               echo
               continue
             fi
