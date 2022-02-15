@@ -21,7 +21,7 @@ on:
         description: PAT token with permissions to create Pull Requests (forked repo tokens are read only)
         required: true
     inputs:
-      branches_pr:
+      branches-to-pr:
         type: string
         required: false
         default: |
@@ -31,7 +31,7 @@ on:
           dev
           staging
           production
-      branches_automerge:
+      branches-to-automerge:
         type: string
         required: false
         default: |
@@ -54,26 +54,16 @@ on:
     - cron: '0 10 * * 2'
 
 env:
-  DEFAULT_BRANCHES_TO_PR: |
-    master
-    main
-    develop
-    dev
-    staging
-    production
-  DEFAULT_BRANCHES_TO_AUTOMERGE: |
-    master
-    main
-    develop
-    dev
-    staging
-  BRANCHES_TO_PR: ${{ inputs.branches_pr || github.event.inputs.branches_pr }}
-  BRANCHES_TO_AUTOMERGE: ${{ inputs.branches_automerge || github.event.inputs.branches_automerge }}
+  # XXX: default GitHub Actions token is neutered to read-only in forks - must use a Personal Access Token (PAT) with repo:write and org:read permissions assigned to it
+  GITHUB_TOKEN: ${{ secrets.PAT_FORK_UPDATE || github.token }}
+  BRANCHES_TO_PR: ${{ inputs.branches-to-pr || github.event.inputs.branches-to-pr }}
+  BRANCHES_TO_AUTOMERGE: ${{ inputs.branches-to-automerge || github.event.inputs.branches-to-automerge }}
   GH_NO_UPDATE_NOTIFIER: 1
+  DEBUG: ${{ inputs.debug || github.event.inputs.debug }}
 
 concurrency:
   group: ${{ github.workflow }}
-  cancel-in-progress: true
+  cancel-in-progress: false  # killing this part way through may leave PRs without auto-merging
 
 defaults:
   run:
@@ -88,8 +78,6 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-latest
     #container: HariSekhon/DevOps-Bash-tools
-    env:
-      GITHUB_TOKEN: ${{ secrets.PAT_FORK_UPDATE || github.token }}
     steps:
       - name: Environment
         run: env | sort
@@ -103,6 +91,8 @@ jobs:
           gh auth status
           #gh api /user | jq  # implicit pipe collapses format, force through jq to avoid this
 
+      # default actions token is pretty useless in forks
+      #
       # gh: Resource not accessible by integration (HTTP 403)
       # {"message":"Resource not accessible by integration","documentation_url":"https://docs.github.com/rest/reference/users#get-the-authenticated-user"}
       #- name: GH API User
@@ -113,55 +103,7 @@ jobs:
           IS_FORK="$(gh api /repos/{owner}/{repo} -q .fork)"
           echo "IS_FORK=$IS_FORK" >> "$GITHUB_ENV"
 
-      - name: Generate environment variable FORK_SOURCE_OWNER
-        if: ${{ env.IS_FORK == 'true' }}
-        run: |
-          FORK_SOURCE_OWNER="$(gh api /repos/{owner}/{repo} -q .source.owner.login)"
-          echo "FORK_SOURCE_OWNER=$FORK_SOURCE_OWNER" >> "$GITHUB_ENV"
-
-      - name: Generate environment variable FORK_SOURCE_DEFAULT_BRANCH
-        if: ${{ env.IS_FORK == 'true' }}
-        run: |
-          FORK_SOURCE_DEFAULT_BRANCH="$(gh api /repos/{owner}/{repo} -q .source.default_branch)"
-          echo "FORK_SOURCE_DEFAULT_BRANCH=$FORK_SOURCE_DEFAULT_BRANCH" >> "$GITHUB_ENV"
-
-      - name: Generate environment variable FORK_SOURCE_REPO
-        if: ${{ env.IS_FORK == 'true' }}
-        run: |
-          FORK_SOURCE_REPO="$(gh api /repos/{owner}/{repo} -q .source.full_name)"
-          echo "FORK_SOURCE_REPO=$FORK_SOURCE_REPO">> "$GITHUB_ENV"
-
-      - name: Environment
-        run: env | sort
-
       - name: Create PRs & Automerge
         if: ${{ env.IS_FORK == 'true' }}
-        env:
-          DEBUG: ${{ inputs.debug || github.event.inputs.debug }}
         run: |
-          if [ -n "${DEBUG:-}" ]; then
-            set -x
-          fi
-          BRANCHES_TO_PR="${BRANCHES_TO_PR:-$DEFAULT_BRANCHES_TO_PR}"
-          BRANCHES_TO_AUTOMERGE="${BRANCHES_TO_AUTOMERGE:-$DEFAULT_BRANCHES_TO_AUTOMERGE}"
-
-          for branch in $BRANCHES_TO_PR; do
-            if ! gh api "/repos/{owner}/{repo}/branches" -q '.[].name' | grep -Fxq "$branch"; then
-              echo "No local fork branch '$branch' found, skipping PR"
-              echo
-              continue
-            fi
-            if gh api "/repos/$FORK_SOURCE_REPO/branches" -q '.[].name' | grep -Fxq "$branch"; then
-              fork_source_branch="$branch"
-            else
-              fork_source_branch="$FORK_SOURCE_DEFAULT_BRANCH"
-            fi
-            # TODO: check for any diffs before trying to raise a Pull Request
-            echo
-            echo "Creating Pull Request from upstream repo for branch '$branch'"
-            output="$(gh pr create -R "$GITHUB_REPOSITORY" --base "$branch" --head "$FORK_SOURCE_OWNER":"$fork_source_branch" --title "Merge upstream $fork_source_branch branch to $branch" --body "Created automatically by GitHub Workflow: $GITHUB_WORKFLOW")" || continue
-            pr_url="$(grep '/pull/' <<< "$output")"
-            if grep -Fxq "$branch" <<< "$BRANCHES_TO_AUTOMERGE"; then
-              gh pr merge --merge "$pr_url"
-            fi
-          done
+          github_repo_fork_update.sh
