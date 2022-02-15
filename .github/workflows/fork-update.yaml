@@ -77,7 +77,7 @@ jobs:
       contents: write
       pull-requests: write
     runs-on: ubuntu-latest
-    #container: HariSekhon/DevOps-Bash-tools
+    container: harisekhon/bash-tools
     steps:
       - name: Environment
         run: env | sort
