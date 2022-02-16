@@ -1,0 +1,33 @@
+#
+#  Author: Hari Sekhon
+#  Date: 2022-02-16 12:36:04 +0000 (Wed, 16 Feb 2022)
+#
+#  vim:ts=2:sts=2:sw=2:et
+#
+#  https://github.com/HariSekhon
+#
+#  License: see accompanying Hari Sekhon LICENSE file
+#
+#  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback to help steer this or other code I publish
+#
+#  https://www.linkedin.com/in/HariSekhon
+#
+
+---
+name: Close Stale Issues and PRs
+on:
+  workflow_call:
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v4
+        with:
+          exempt-issue-labels: pinned
+          stale-pr-label: stale
+          stale-issue-label: stale
