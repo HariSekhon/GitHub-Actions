@@ -56,8 +56,8 @@ on:
 env:
   # XXX: default GitHub Actions token is neutered to read-only in forks - must use a Personal Access Token (PAT) with full repo and read:org permissions assigned to it
   # GH_TOKEN has higher precedence than GITHUB_TOKEN
-  GH_TOKEN: ${{ secrets.TOKEN_FORK_UPDATE || github.token }}
-  GITHUB_TOKEN: ${{ secrets.TOKEN_FORK_UPDATE || github.token }}
+  GH_TOKEN: ${{ secrets.TOKEN || github.token }}
+  GITHUB_TOKEN: ${{ secrets.TOKEN || github.token }}
   BRANCHES_TO_PR: ${{ inputs.branches-to-pr || github.event.inputs.branches-to-pr }}
   BRANCHES_TO_AUTOMERGE: ${{ inputs.branches-to-automerge || github.event.inputs.branches-to-automerge }}
   GH_NO_UPDATE_NOTIFIER: 1
