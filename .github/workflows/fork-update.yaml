@@ -75,6 +75,8 @@ jobs:
   create_pr:
     name: Create Fork Update PRs
     if: github.ref_type == 'branch' && ( github.ref_name == 'master' || github.ref_name == 'main' )
+    # without 'contents: write' permission the PR merge fails with the error:
+    # Message: Resource not accessible by integration, Locations: [{Line:1 Column:58}]
     permissions:
       contents: write
       pull-requests: write
