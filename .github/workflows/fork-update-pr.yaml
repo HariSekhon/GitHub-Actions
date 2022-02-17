@@ -71,7 +71,7 @@ defaults:
     shell: bash -euxo pipefail {0}
 
 jobs:
-  create_pr:
+  fork_update_pr:
     name: Create Fork Update PRs
     if: github.ref_type == 'branch' && ( github.ref_name == 'master' || github.ref_name == 'main' )
     # without 'contents: write' permission the PR merge fails with the error:
