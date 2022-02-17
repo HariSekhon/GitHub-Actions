@@ -57,7 +57,7 @@ jobs:
 
       - name: Generate environment variable IS_FORK
         run: |
-          IS_FORK="$(gh api /repos/{owner}/{repo} -q .fork)"
+          IS_FORK="$(gh api "/repos/$GITHUB_REPOSITORY" -q .fork)"
           echo "IS_FORK=$IS_FORK" >> "$GITHUB_ENV"
 
       - name: Sync Fork
