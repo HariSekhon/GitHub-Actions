@@ -54,12 +54,12 @@ on:
     - cron: '0 10 * * 2'
 
 env:
+  #GITHUB_TOKEN: ${{ secrets.TOKEN || github.token }}
   # GH_TOKEN has higher precedence than GITHUB_TOKEN
   GH_TOKEN: ${{ secrets.TOKEN || github.token }}
-  #GITHUB_TOKEN: ${{ secrets.TOKEN || github.token }}
+  GH_NO_UPDATE_NOTIFIER: 1
   BRANCHES_TO_PR: ${{ inputs.branches-to-pr || github.event.inputs.branches-to-pr }}
   BRANCHES_TO_AUTOMERGE: ${{ inputs.branches-to-automerge || github.event.inputs.branches-to-automerge }}
-  GH_NO_UPDATE_NOTIFIER: 1
   DEBUG: ${{ inputs.debug || github.event.inputs.debug }}
 
 concurrency:
