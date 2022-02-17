@@ -112,10 +112,10 @@ jobs:
 
       - name: Generate environment variable IS_FORK
         run: |
-          IS_FORK="$(gh api /repos/{owner}/{repo} -q .fork)"
+          IS_FORK="$(gh api "/repos/$GITHUB_REPOSITORY" -q .fork)"
           echo "IS_FORK=$IS_FORK" >> "$GITHUB_ENV"
 
       - name: Create PRs & Automerge
         if: ${{ env.IS_FORK == 'true' }}
         run: |
-          github_repo_fork_update.sh
+          github_repo_fork_update.sh "$GITHUB_REPOSITORY"
