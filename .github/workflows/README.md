@@ -45,9 +45,9 @@ jobs:
   docker_build:
     uses: HariSekhon/GitHub-Actions/.github/workflows/docker_build.yaml@master
     with:
-      repo: harisekhon/bash-tools
-      tags: latest ubuntu  # builds and pushes to harisekhon/bash-tools:latest and harisekhon/bash-tools:ubuntu
-      context: devops-bash-tools-alpine  # path to dir containing the source and Dockerfile
+      repo: harisekhon/bash-tools  # DockerHub user/repo
+      tags: latest ubuntu          # builds, tags as harisekhon/bash-tools:latest and harisekhon/bash-tools:ubuntu and pushes to DockerHub
+      context: devops-bash-tools-ubuntu  # path to dir containing the source and Dockerfile
     secrets:
       DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
