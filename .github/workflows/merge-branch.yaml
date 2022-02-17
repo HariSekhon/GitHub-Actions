@@ -18,9 +18,9 @@ on:
   workflow_call:
     inputs:
       head:
-        description: Branch to merge from
+        description: Branch to merge from (defaults to triggered branch if not specified)
         type: string
-        required: true
+        required: false
       base:
         description: Branch to merge into
         type: string
@@ -31,9 +31,9 @@ on:
   workflow_dispatch:
     inputs:
       head:
-        description: Branch to merge from
+        description: Branch to merge from (defaults to triggered branch if not specified)
         type: string
-        required: true
+        required: false
       base:
         description: Branch to merge into
         type: string
@@ -80,4 +80,11 @@ jobs:
 
       - name: Create PRs & Automerge
         run: |
-          github_merge_branch.sh
+          if [ -z "$HEAD" ]; then
+            if [ "$GITHUB_REF_TYPE" != "branch" ]; then
+              echo "HEAD branch not given and cannot infer from trigger branch as triggered from '$GITHUB_REF_TYPE' instead of branch"
+              exit 1
+            fi
+            HEAD="$GITHUB_REF_NAME"
+          fi
+          github_merge_branch.sh "$HEAD" "$BASE"
