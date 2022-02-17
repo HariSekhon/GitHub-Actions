@@ -59,7 +59,7 @@ defaults:
 
 jobs:
   merge_branch:
-    name: Merge Branch ${{ env.HEAD }} into ${{ env.BASE }}
+    name: Merge Branch
     # without 'contents: write' permission the PR merge fails with the error:
     # Message: Resource not accessible by integration, Locations: [{Line:1 Column:58}]
     permissions:
@@ -78,7 +78,7 @@ jobs:
           gh config set prompt disabled
           gh auth status
 
-      - name: Create PRs & Automerge
+      - name: check/generate HEAD environment variable
         run: |
           if [ -z "$HEAD" ]; then
             if [ "$GITHUB_REF_TYPE" != "branch" ]; then
@@ -86,6 +86,9 @@ jobs:
               exit 1
             fi
             echo "HEAD branch not specified, assuming trigger branch '$GITHUB_REF_NAME'"
-            HEAD="$GITHUB_REF_NAME"
+            echo "HEAD=$GITHUB_REF_NAME" >> "$GITHUB_ENV"
           fi
+
+      - name: Merge Branch ${{ env.HEAD }} into ${{ env.BASE }}
+        run: |
           github_merge_branch.sh "$HEAD" "$BASE"
