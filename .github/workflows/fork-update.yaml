@@ -19,7 +19,7 @@ on:
     secrets:
       TOKEN:
         description: PAT token with permissions 'repo' and 'read:org' to create Pull Requests (forked repo tokens are read only)
-        required: true
+        required: false
     inputs:
       branches-to-pr:
         type: string
