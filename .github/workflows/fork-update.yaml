@@ -76,7 +76,7 @@ jobs:
     name: Create Fork Update PRs
     if: github.ref_type == 'branch' && ( github.ref_name == 'master' || github.ref_name == 'main' )
     permissions:
-      contents: read
+      contents: write
       pull-requests: write
     runs-on: ubuntu-latest
     container: harisekhon/bash-tools
