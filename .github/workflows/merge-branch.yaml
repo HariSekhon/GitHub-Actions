@@ -82,9 +82,10 @@ jobs:
         run: |
           if [ -z "$HEAD" ]; then
             if [ "$GITHUB_REF_TYPE" != "branch" ]; then
-              echo "HEAD branch not given and cannot infer from trigger branch as triggered from '$GITHUB_REF_TYPE' instead of branch"
+              echo "HEAD branch not specified and cannot infer from trigger branch as triggered from '$GITHUB_REF_TYPE' instead of branch"
               exit 1
             fi
+            echo "HEAD branch not specified, assuming trigger branch '$GITHUB_REF_NAME'"
             HEAD="$GITHUB_REF_NAME"
           fi
           github_merge_branch.sh "$HEAD" "$BASE"
