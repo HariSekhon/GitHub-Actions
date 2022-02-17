@@ -18,7 +18,7 @@ on:
   workflow_call:
     secrets:
       TOKEN:
-        description: PAT token with permissions 'repo' and 'read:org' to create Pull Requests (forked repo tokens are read only)
+        description: Token with permissions 'repo' and 'read:org' to create and merge Pull Requests (uses default temporary repo token otherwise)
         required: false
     inputs:
       branches-to-pr:
@@ -54,10 +54,9 @@ on:
     - cron: '0 10 * * 2'
 
 env:
-  # XXX: default GitHub Actions token is neutered to read-only in forks - must use a Personal Access Token (PAT) with full repo and read:org permissions assigned to it
   # GH_TOKEN has higher precedence than GITHUB_TOKEN
   GH_TOKEN: ${{ secrets.TOKEN || github.token }}
-  GITHUB_TOKEN: ${{ secrets.TOKEN || github.token }}
+  #GITHUB_TOKEN: ${{ secrets.TOKEN || github.token }}
   BRANCHES_TO_PR: ${{ inputs.branches-to-pr || github.event.inputs.branches-to-pr }}
   BRANCHES_TO_AUTOMERGE: ${{ inputs.branches-to-automerge || github.event.inputs.branches-to-automerge }}
   GH_NO_UPDATE_NOTIFIER: 1
@@ -95,12 +94,12 @@ jobs:
           #gh auth login --with-token <<< "${{github.token}}" # errors out if GITHUB_TOKEN is set and refused to write local credential because it wouldn't take effect on subsequent commands with GITHUB_TOKEN overriding it
 
           # what you get by default
-          #GITHUB_TOKEN="${{ github.token }}" gh auth status
-          # Logged in to github.com as github-actions[bot] (GITHUB_TOKEN)
+          #GH_TOKEN="${{ github.token }}" gh auth status
+          # Logged in to github.com as github-actions[bot] (GH_TOKEN)
 
-          # what you need - a PAT with the right permissions - full repo and org:read
           gh auth status
-          # Logged in to github.com as myorg-ci-user (GITHUB_TOKEN)
+          # if you use a PAT with the right permissions - full repo and org:read
+          # Logged in to github.com as myorg-ci-user (GH_TOKEN)
 
           #gh api /user | jq  # implicit pipe collapses format, force through jq to avoid this
 
