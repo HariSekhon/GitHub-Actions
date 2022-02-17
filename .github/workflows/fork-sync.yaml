@@ -50,6 +50,9 @@ jobs:
       - name: Environment
         run: env | sort
 
+      # not needed since everything is done via the GitHub API
+      #- uses: actions/checkout@v2
+
       - name: GH CLI auth status
         run: |
           gh config set prompt disabled
