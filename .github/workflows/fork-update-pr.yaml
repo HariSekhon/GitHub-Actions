@@ -12,7 +12,7 @@
 #
 
 ---
-name: Fork Update
+name: Fork Update PR
 
 on:
   workflow_call:
