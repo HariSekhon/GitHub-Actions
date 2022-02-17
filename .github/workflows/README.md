@@ -36,7 +36,7 @@ jobs:
 
 ### Docker Build and push to DockerHub
 
-[![Docker Build DevOps Bash Tools (Alpine)](https://github.com/HariSekhon/Dockerfiles/actions/workflows/docker_build_devops_bash_tools_alpine.yaml/badge.svg)](https://github.com/HariSekhon/Dockerfiles/actions/workflows/docker_build_devops_bash_tools_alpine.yaml)
+[![Docker Build DevOps Bash Tools (Ubuntu)](https://github.com/HariSekhon/Dockerfiles/actions/workflows/docker_build_devops_bash_tools_ubuntu.yaml/badge.svg)](https://github.com/HariSekhon/Dockerfiles/actions/workflows/docker_build_devops_bash_tools_ubuntu.yaml)
 
 Create `.github/workflows/docker_build.yaml`:
 ```yaml
@@ -46,8 +46,8 @@ jobs:
     uses: HariSekhon/GitHub-Actions/.github/workflows/docker_build.yaml@master
     with:
       repo: harisekhon/bash-tools
-      tags: alpine
-      context: devops-bash-tools-alpine
+      tags: latest ubuntu  # builds and pushes to harisekhon/bash-tools:latest and harisekhon/bash-tools:ubuntu
+      context: devops-bash-tools-alpine  # path to dir containing the source and Dockerfile
     secrets:
       DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
