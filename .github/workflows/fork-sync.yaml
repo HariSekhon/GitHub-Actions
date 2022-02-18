@@ -11,6 +11,12 @@
 #  https://www.linkedin.com/in/harisekhon
 #
 
+# This has the advantage of not triggering GitHub Actions workflows upon updates, and is fast
+#
+# The disadvantage is that updates to the default branch happened without much auditing such as happens with PRs
+#
+# Run just before fork-update-pr.yaml if you only want environment branch updates audited via PRs
+
 ---
 name: Fork Sync
 
@@ -58,12 +64,7 @@ jobs:
           gh config set prompt disabled
           gh auth status
 
-      - name: Generate environment variable IS_FORK
-        run: |
-          IS_FORK="$(gh api "/repos/$GITHUB_REPOSITORY" -q .fork)"
-          echo "IS_FORK=$IS_FORK" >> "$GITHUB_ENV"
-
       - name: Sync Fork
-        if: ${{ env.IS_FORK == 'true' }}
+        if: github.event.repository.fork == true
         run: |
           gh repo sync "$GITHUB_REPOSITORY"
