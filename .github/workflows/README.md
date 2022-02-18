@@ -106,6 +106,21 @@ jobs:
       #ignore_urls_without_dots: 'true'  # any value enables this
 ```
 
+### Merge Production hotfixes back to Staging
+
+Create `.github/workflows/merge_production_to_staging.yaml`:
+```yaml
+on: [push]
+jobs:
+  merge:
+    if: github.ref_name == 'production'
+    name: Merge Production Branch to Staging Branch (hotfix backports)
+    uses: HariSekhon/GitHub-Actions/.github/workflows/merge-branch.yaml@master
+    with:
+      head: production
+      base: staging
+```
+
 ## Permissions
 
 These workflows are locked down to the minimal required permissions, usually just `contents: read`, but for some which write Security Alerts to the GitHub Security tab, if you've locked down your GitHub Organizations permissions, then you may want to copy the permissions key out of the workflow to your calling workflow to grant them the needed permissions, such as:
