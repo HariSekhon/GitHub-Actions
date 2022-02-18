@@ -144,7 +144,7 @@ These 3 permissions are needed for workflows that report to GitHub Security tab,
 
 ### Linting Auto-fixers
 
-For workflows that lint-and-fix code, such as `terraform-fmt-write.yaml`, you'll need to grant:
+For workflows that lint-and-fix code, such as [terraform-fmt-write.yaml](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/terraform-fmt-write.yaml), you'll need to grant:
 ```yaml
 permissions:
   contents: write       # if called by on: push
@@ -153,7 +153,7 @@ permissions:
 
 ### Creating or Commenting on Pull Requests
 
-For workflows that create or comment on PRs, such as `tfsec-pr-commenter.yaml` you'll need to grant:
+For workflows that create or comment on PRs, such as [tfsec-pr-commenter.yaml](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/tfsec-pr-commenter.yaml) you'll need to grant:
 ```yaml
 permissions:
   contents: read
@@ -162,7 +162,7 @@ permissions:
 
 ### Merging Pull Requests
 
-For workflows that merge PRs, such as `merge-branch.yaml` you'll need to grant:
+For workflows that merge PRs, such as [merge-branch.yaml](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/merge-branch.yaml) you'll need to grant:
 ```yaml
 permissions:
   contents: write
