@@ -103,7 +103,9 @@ jobs:
 ```
 See [README](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/README.md) for details on ignoring inaccessible / partially constructed links or those containing variables
 
-### Merge Production hotfixes back to Staging via Pull Request for auditing
+### Merge Production hotfixes back to Staging
+
+Merges via a Pull Request for full auditing.
 
 Create `.github/workflows/merge_production_to_staging.yaml`:
 ```yaml
