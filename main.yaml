@@ -661,7 +661,7 @@ jobs:
             ${{env.DOCKER_IMAGE}}:${{env.TIMESTAMP}}
           # set GIT_AUTH_TOKEN if checkout out from another repo (uses local ${{github.token}} otherwise)
           #secrets: |
-          #    GIT_AUTH_TOKEN=${{ secrets.MYTOKEN }}
+          #    GIT_AUTH_TOKEN=${{ secrets.PAT_TOKEN }}
 
       # ======== or inline Script =========
       # or consider using an external script to do all of the below like aws_ecr_docker_build_push.sh from DevOps Bash tools repo - https://github.com/HariSekhon/DevOps-Bash-tools
