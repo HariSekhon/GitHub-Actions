@@ -127,7 +127,7 @@ These workflows are locked down to the minimal required permissions as per the b
 
 If you've locked down your GitHub Organizations permissions to default to `contents: read` (which I recommend), then you may want to copy the permissions key out of the workflow to your calling workflow to grant them the needed permissions.
 
-#### Security Alerts
+### Security Alerts
 
 ```yaml
 permissions:
@@ -142,7 +142,7 @@ These 3 permissions are needed for workflows that report to GitHub Security tab,
 - [tfsec.yaml](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/tfsec.yaml)
 - [trivy_github.yaml](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/trivy_github.yaml)
 
-#### Linting Auto-fixers
+### Linting Auto-fixers
 
 For workflows that lint-and-fix code, such as `terraform-fmt-write.yaml`, you'll need to grant:
 ```yaml
@@ -151,7 +151,7 @@ permissions:
   pull-requests: write  # if called by on: pull_request
 ```
 
-#### Creating or Commenting on Pull Requests
+### Creating or Commenting on Pull Requests
 
 For workflows that create or comment on PRs, such as `tfsec-pr-commenter.yaml` you'll need to grant:
 ```yaml
@@ -160,7 +160,7 @@ permissions:
   pull-requests: write
 ```
 
-#### Merging Pull Requests
+### Merging Pull Requests
 
 For workflows that merge PRs, such as `merge-branch.yaml` you'll need to grant:
 ```yaml
