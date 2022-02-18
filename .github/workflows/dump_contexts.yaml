@@ -11,22 +11,14 @@
 #  https://www.linkedin.com/in/harisekhon
 #
 
-# Dumps all GitHub contexts for debugging - not recommended for public repositories in case sensitive informatin is dumped to public logs
+# Dumps all GitHub contexts for debugging - not recommended for public repositories in case sensitive information is dumped to public logs
 
 ---
 name: Dump Contexts
 
 on:
-  #push:
-  #  branches:
-  #    - master
-  #    - main
-  #pull_request:
-  #  branches:
-  #    - master
-  #    - main
   workflow_call:
-  #workflow_dispatch:
+  # in calling workflow, you may want to do
   #schedule:
   #  # 1st of every month, see if anything has changed
   #  - cron: '0 0 1 * *'
@@ -37,7 +29,6 @@ concurrency:
 
 jobs:
   dump_contexts:
-    if: github.ref_name == 'master' || github.ref_name == 'main'
     name: Dump Contexts
     runs-on: ubuntu-latest
     timeout-minutes: 10
