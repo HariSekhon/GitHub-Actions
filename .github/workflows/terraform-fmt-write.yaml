@@ -81,4 +81,4 @@ jobs:
           git commit --message "Terraform Fmt fixes - GitHub Actions Workflow: $GITHUB_WORKFLOW" .
 
       - name: Git Push
-        run: git push
+        run: git push origin HEAD:"$GITHUB_HEAD_REF"
