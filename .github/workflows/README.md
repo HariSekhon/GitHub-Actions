@@ -123,15 +123,17 @@ jobs:
 
 ## Permissions
 
-These workflows are locked down to the minimal required permissions, usually just `contents: read`, but for some which write Security Alerts to the GitHub Security tab, if you've locked down your GitHub Organizations permissions, then you may want to copy the permissions key out of the workflow to your calling workflow to grant them the needed permissions, such as:
+These workflows are locked down to the minimal required permissions as per the best practice principal of least privilege, usually just `contents: read`, but some require extra permissions to create Pull Requests or write Security Alerts to the GitHub Security tab.
+
+If you've locked down your GitHub Organizations permissions to default to `contents: read` (which I recommend), then you may want to copy the permissions key out of the workflow to your calling workflow to grant them the needed permissions.
+
+#### Security Alerts
+
 ```yaml
-jobs:
-  myjob:
-    uses: HariSekhon/GitHub-Actions/.github/workflows/tfsec.yaml@master
-    permissions:
-      actions: read
-      contents: read
-      security-events: write
+permissions:
+  actions: read
+  contents: read
+  security-events: write
 ```
 These 3 permissions are needed for workflows that report to GitHub Security tab, including:
 - [checkov.yaml](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/checkov.yaml)
@@ -139,3 +141,30 @@ These 3 permissions are needed for workflows that report to GitHub Security tab,
 - [semgrep.yaml](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/semgrep.yaml)
 - [tfsec.yaml](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/tfsec.yaml)
 - [trivy_github.yaml](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/trivy_github.yaml)
+
+#### Linting Auto-fixers
+
+For workflows that lint-and-fix code, such as `terraform-fmt-write.yaml`, you'll need to grant:
+```yaml
+permissions:
+  contents: write       # if called by on: push
+  pull-requests: write  # if called by on: pull_request
+```
+
+#### Creating Pull Requests
+
+For workflows that create or comment on PRs, such as `tfsec-pr-commenter.yaml` you'll need to grant:
+```yaml
+permissions:
+  contents: read
+  pull-requests: write
+```
+
+#### Merging Pull Requests
+
+For workflows that merge PRs, such as `merge-branch.yaml` you'll need to grant:
+```yaml
+permissions:
+  contents: write
+  pull-requests: write
+```
