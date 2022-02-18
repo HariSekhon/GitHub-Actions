@@ -27,8 +27,8 @@ defaults:
     shell: bash -euxo pipefail {0}
 
 jobs:
-  build:
-    name: Build
+  make:
+    name: Make
     runs-on: ubuntu-latest
     permissions:
       contents: read
