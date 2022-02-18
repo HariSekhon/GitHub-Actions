@@ -275,6 +275,8 @@ jobs:
     # use: 3rdparty/repo@<tag/branch/SHA>  # XXX: GitHub recommends SHA for 3rd party actions for security
     steps:
 
+      # XXX: WARNING: do not dump contexts into public logs in case they contain sensitive data
+
       - name: Dump GitHub context
         #run: echo '${{ toJSON(github) }}'
         env:
