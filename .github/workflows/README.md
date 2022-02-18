@@ -107,7 +107,9 @@ jobs:
       #ignore_urls_without_dots: 'true'  # any value enables this
 ```
 
-### Merge Production hotfixes back to Staging via Pull Request for auditing
+### Auto-Merge Production hotfixes back to Staging
+
+Merges via a Pull Request for full auditing.
 
 Create `.github/workflows/merge_production_to_staging.yaml`:
 ```yaml
