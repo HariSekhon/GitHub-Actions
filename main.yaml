@@ -214,7 +214,7 @@ defaults:
 
 jobs:
   build:
-    #if: github.repository_owner == 'HariSekhon'  # avoids running on forks that don't match your origin owner - workaround for GitHub Actions not having a fork boolean in github context as of Feb 2022
+    #if: github.event.repository.fork == false
     name: Build
     #needs: [job1, job2]  # dependency jobs
     environment:
@@ -448,7 +448,7 @@ jobs:
   # Call reusable workflow
   dockerhub_build:
     name: Docker Build
-    #if: github.repository_owner == 'HariSekhon'  # avoids running on forks that don't match your origin owner - workaround for GitHub Actions not having a fork boolean in github context as of Feb 2022
+    #if: github.event.repository.fork == false
     # XXX: stop this workflow being manually run on other branches if workflow_dispatch is defined
     if: github.ref_name == 'master' || github.ref_name == 'main' || github.ref_name == 'docker'
     uses: HariSekhon/GitHub-Actions/.github/workflows/docker_build.yaml@master
@@ -466,7 +466,7 @@ jobs:
 
   docker_build_aws_ecr:
     name: Docker Build -> AWS ECR
-    #if: github.repository_owner == 'HariSekhon'  # avoids running on forks that don't match your origin owner - workaround for GitHub Actions not having a fork boolean in github context as of Feb 2022
+    #if: github.event.repository.fork == false
     # XXX: stop this workflow being manually run on other branches if workflow_dispatch is defined
     if: github.ref_name == 'master' || github.ref_name == 'main' || contains(github.ref_name, 'docker')
     # XXX: path must include /.github/workflows/ and @<branch/tag/hashref>, otherwise you may get these errors:
@@ -486,7 +486,7 @@ jobs:
       packages: write  # needed for GHCR access if using max-cache: true
 
   docker_build:
-    #if: github.repository_owner == 'HariSekhon'  # avoids running on forks that don't match your origin owner - workaround for GitHub Actions not having a fork boolean in github context as of Feb 2022
+    #if: github.event.repository.fork == false
     name: Docker Build
     #needs: [job1, job2]  # dependency jobs
     timeout-minutes: 10
@@ -739,7 +739,7 @@ jobs:
   # ============================================================================ #
 
   deploy:
-    #if: github.repository_owner == 'HariSekhon'  # avoids running on forks that don't match your origin owner - workaround for GitHub Actions not having a fork boolean in github context as of Feb 2022
+    #if: github.event.repository.fork == false
     name: Deploy
     needs: build
     runs-on: ubuntu-latest
@@ -751,7 +751,7 @@ jobs:
         run: kubectl apply -f ./
 
   argocd:
-    #if: github.repository_owner == 'HariSekhon'  # avoids running on forks that don't match your origin owner - workaround for GitHub Actions not having a fork boolean in github context as of Feb 2022
+    #if: github.event.repository.fork == false
     name: ArgoCD Deploy
     needs: build
     runs-on: ubuntu-latest
@@ -786,7 +786,7 @@ jobs:
   # ============================================================================ #
 
   validate:
-    #if: github.repository_owner == 'HariSekhon'  # avoids running on forks that don't match your origin owner - workaround for GitHub Actions not having a fork boolean in github context as of Feb 2022
+    #if: github.event.repository.fork == false
     name: Validate
     uses: HariSekhon/GitHub-Actions/.github/workflows/validate.yaml@master
 
@@ -795,7 +795,7 @@ jobs:
   # ============================================================================ #
 
   tfsec:
-    #if: github.repository_owner == 'HariSekhon'  # avoids running on forks that don't match your origin owner - workaround for GitHub Actions not having a fork boolean in github context as of Feb 2022
+    #if: github.event.repository.fork == false
     name: tfsec
     uses: HariSekhon/GitHub-Actions/.github/workflows/tfsec.yaml@master
     permissions:
@@ -805,7 +805,7 @@ jobs:
 
   # on: [pull_request]
   tfsec_pr_commenter:
-    #if: github.repository_owner == 'HariSekhon'  # avoids running on forks that don't match your origin owner - workaround for GitHub Actions not having a fork boolean in github context as of Feb 2022
+    #if: github.event.repository.fork == false
     name: tfsec PR commenter
     uses: HariSekhon/GitHub-Actions/.github/workflows/tfsec-pr-commenter.yaml@master
     permissions:
@@ -818,7 +818,7 @@ jobs:
   # ============================================================================ #
 
   trivy:
-    #if: github.repository_owner == 'HariSekhon'  # avoids running on forks that don't match your origin owner - workaround for GitHub Actions not having a fork boolean in github context as of Feb 2022
+    #if: github.event.repository.fork == false
     name: Trivy AWS ECR
     if: github.ref_name == 'main' || contains(github.ref_name, 'docker')
     needs:
@@ -840,7 +840,7 @@ jobs:
   # ============================================================================ #
 
   checkov:
-    #if: github.repository_owner == 'HariSekhon'  # avoids running on forks that don't match your origin owner - workaround for GitHub Actions not having a fork boolean in github context as of Feb 2022
+    #if: github.event.repository.fork == false
     name: Checkov Scan
     uses: HariSekhon/GitHub-Actions/.github/workflows/checkov.yaml@master
     #with:
@@ -855,7 +855,7 @@ jobs:
   # ============================================================================ #
 
   semgrep:
-    #if: github.repository_owner == 'HariSekhon'  # avoids running on forks that don't match your origin owner - workaround for GitHub Actions not having a fork boolean in github context as of Feb 2022
+    #if: github.event.repository.fork == false
     name: Semgrep GitHub Security Tab
     uses: HariSekhon/GitHub-Actions/.github/workflows/semgrep.yaml@master
     permissions:
@@ -864,7 +864,7 @@ jobs:
       security-events: write
 
   semgrep_cloud:
-    #if: github.repository_owner == 'HariSekhon'  # avoids running on forks that don't match your origin owner - workaround for GitHub Actions not having a fork boolean in github context as of Feb 2022
+    #if: github.event.repository.fork == false
     name: Semgrep Cloud
     uses: HariSekhon/GitHub-Actions/.github/workflows/semgrep-cloud.yaml@master
     secrets:
@@ -875,7 +875,7 @@ jobs:
   # ============================================================================ #
 
   reviewdog:
-    #if: github.repository_owner == 'HariSekhon'  # avoids running on forks that don't match your origin owner - workaround for GitHub Actions not having a fork boolean in github context as of Feb 2022
+    #if: github.event.repository.fork == false
     name: reviewdog
     uses: HariSekhon/GitHub-Actions/.github/workflows/reviewdog.yaml@master
     permissions:
@@ -885,7 +885,7 @@ jobs:
 
   # on: [pull_request]
   reviewdog-pr-check:
-    #if: github.repository_owner == 'HariSekhon'  # avoids running on forks that don't match your origin owner - workaround for GitHub Actions not having a fork boolean in github context as of Feb 2022
+    #if: github.event.repository.fork == false
     name: reviewdog PR
     uses: HariSekhon/GitHub-Actions/.github/workflows/reviewdog-pr.yaml@master
     permissions:
