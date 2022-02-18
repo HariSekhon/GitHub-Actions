@@ -1,0 +1,98 @@
+#
+#  Author: Hari Sekhon
+#  Date: Tue Feb 4 09:53:28 2020 +0000
+#
+#  vim:ts=2:sts=2:sw=2:et
+#
+#  https://github.com/HariSekhon/GitHub-Actions
+#
+#  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback
+#
+#  https://www.linkedin.com/in/harisekhon
+#
+
+---
+name: Make
+
+on:
+  workflow_call:
+    inputs:
+      container:
+        description: The docker image:version container to build inside
+        type: string
+        required: true
+      debug:
+        type: string
+        default: ''
+        required: false
+
+jobs:
+  make:
+    name: Make
+    runs-on: ubuntu-latest
+    container: ${{ inputs.container }}
+    permissions:
+      contents: read
+    env:
+      DEBUG: ${{ inputs.debug }}
+      DEBIAN_FRONTEND: noninteractive
+    steps:
+      - name: Environment
+        run: env | sort
+
+      - name: Install Git & Make
+        run: |
+          if command -v apk; then
+            # apk add --no-cache isn't available until Alpine 3
+            #apk add --no-cache git make
+            apk update && apk add git make
+          elif command -v apt-get; then
+            if grep -Fxq 'ID=debian' /etc/*release &&
+               grep -xq 'VERSION_ID="[67]"' /etc/*release; then
+              # switch APT sources to archive.debian.org
+              sed -i 's/deb.debian.org/archive.debian.org/' /etc/apt/sources.list
+              sed -i 's/security.debian.org/archive.debian.org/' /etc/apt/sources.list
+            fi
+            apt-get update && apt-get install -qy git make
+          elif command -v dnf; then
+            dnf install -qy git make
+          elif command -v yum; then
+            # CentOS is EOL
+            if grep -qi centos /etc/*release; then
+              sed -i 's/^[[:space:]]*mirrorlist/#mirrorlist/' /etc/yum.repos.d/CentOS-Linux-*
+              sed -i 's|^#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|' /etc/yum.repos.d/CentOS-Linux-*
+            fi
+            yum install -qy git make
+          fi
+
+      - name: Git version
+        run: git --version
+
+      - name: Git Checkout
+        # git version too old to support recursive submodules checkout on older version Debian and Ubuntu <= 18
+        #uses: actions/checkout@v2
+        #with:
+        #  submodules: recursive  # requires Git 2.18+ to be installed first
+        run: git clone "https://${{github.token}}@github.com/$GITHUB_REPOSITORY" "$GITHUB_WORKSPACE"
+
+      - name: Init
+        run: |
+          if grep -q '^init:' Makefile; then
+            make init
+          fi
+
+      - name: Build
+        run: |
+          if grep -q '^ci:' Makefile; then
+            make ci
+          elif grep -q '^build:' Makefile; then
+            make build
+          else
+            make
+          fi
+
+      - name: Test
+        run: |
+          if grep -q '^test:' Makefile; then
+            make test
+          fi
