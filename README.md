@@ -103,6 +103,21 @@ jobs:
 ```
 See [README](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/README.md) for details on ignoring inaccessible / partially constructed links or those containing variables
 
+### Merge Production hotfixes back to Staging
+
+Create `.github/workflows/merge_production_to_staging.yaml`:
+```yaml
+on: [push]
+jobs:
+  merge:
+    if: github.ref_name == 'production'
+    name: Merge Production Branch to Staging Branch (hotfix backports)
+    uses: HariSekhon/GitHub-Actions/.github/workflows/merge-branch.yaml@master
+    with:
+      head: production
+      base: staging
+```
+
 ### See Also
 
 - [Jenkins](https://github.com/harisekhon/jenkins) - Advanced Jenkinsfile & Jenkins Shared Library
