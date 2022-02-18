@@ -48,6 +48,7 @@ jobs:
       repo: harisekhon/bash-tools  # DockerHub user/repo
       tags: latest ubuntu          # builds, tags as harisekhon/bash-tools:latest and harisekhon/bash-tools:ubuntu and pushes to DockerHub
       context: devops-bash-tools-ubuntu  # path to dir containing the source and Dockerfile
+      #max-cache: true                   # if you need multi-stage caching (uses a separate cache image)
     secrets:
       DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
