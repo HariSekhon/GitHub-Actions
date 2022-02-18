@@ -139,6 +139,16 @@ on:
     paths:
       - '*'  # only run when changes have happened on matching paths, this glob misses hidden directories though such as .github/workflows
 
+  # triggered from another workflow for cross-workflow dependencies
+  workflow_run:
+    workflows:
+      - my-other-workflow
+    types:
+      - completed
+    branches:
+      - 'releases/**'
+      - '!releases/**-alpha'
+
   # https://docs.github.com/en/actions/using-workflows/reusing-workflows#creating-a-reusable-workflow
   workflow_call:
     # accessible as ${{ inputs.* }}
@@ -210,6 +220,9 @@ jobs:
     # XXX: Conditionals must use single quotes for strings or get an error - Unexpected symbol: '"string"'
     if: github.ref_name == 'master' || github.ref_name == 'main' || github.ref_name == 'docker'  # stops this workflow running on manual workflow_dispatch on the wrong branch (eg. to stop it invalidating the Docker build cache, update: solved now because I use many tags to cache)
     #if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
+
+    # if triggered from another workflow using workflow_run above, check that workflow succeeded before running
+    #if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#permissions
     permissions:
