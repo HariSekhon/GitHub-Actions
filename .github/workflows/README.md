@@ -117,7 +117,7 @@ jobs:
     name: Merge Production Branch to Staging Branch (hotfix backports)
     uses: HariSekhon/GitHub-Actions/.github/workflows/merge-branch.yaml@master
     with:
-      head: production  # from
+      head: production  # from - optional - if omitted defaults to the trigger branch, which is always 'production' due to the if condition above
       base: staging     # to
 ```
 
