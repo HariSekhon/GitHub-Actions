@@ -41,6 +41,7 @@ jobs:
     container: hashicorp/terraform:latest
     permissions:
       contents: write
+      pull-requests: write
     steps:
       - name: Environment
         run: env | sort
