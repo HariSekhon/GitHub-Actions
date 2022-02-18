@@ -151,7 +151,7 @@ permissions:
   pull-requests: write  # if called by on: pull_request
 ```
 
-#### Creating Pull Requests
+#### Creating or Commenting on Pull Requests
 
 For workflows that create or comment on PRs, such as `tfsec-pr-commenter.yaml` you'll need to grant:
 ```yaml
