@@ -117,8 +117,8 @@ jobs:
     name: Merge Production Branch to Staging Branch (hotfix backports)
     uses: HariSekhon/GitHub-Actions/.github/workflows/merge-branch.yaml@master
     with:
-      head: production
-      base: staging
+      head: production  # from
+      base: staging     # to
 ```
 
 ## Permissions
