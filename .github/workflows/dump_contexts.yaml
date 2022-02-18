@@ -1,0 +1,77 @@
+#
+#  Author: Hari Sekhon
+#  Date: 2022-02-18 18:29:44 +0000 (Fri, 18 Feb 2022)
+#
+#  vim:ts=2:sts=2:sw=2:et
+#
+#  https://github.com/HariSekhon/GitHub-Actions
+#
+#  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback
+#
+#  https://www.linkedin.com/in/harisekhon
+#
+
+# Dumps all GitHub contexts for debugging - not recommended for public repositories in case sensitive informatin is dumped to public logs
+
+---
+name: Dump Contexts
+
+on:
+  #push:
+  #  branches:
+  #    - master
+  #    - main
+  #pull_request:
+  #  branches:
+  #    - master
+  #    - main
+  workflow_call:
+  #workflow_dispatch:
+  #schedule:
+  #  # 1st of every month, see if anything has changed
+  #  - cron: '0 0 1 * *'
+
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  dump_contexts:
+    if: github.ref_name == 'master' || github.ref_name == 'main'
+    name: Dump Contexts
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+
+    steps:
+
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+
+      - name: Dump job context
+        env:
+          JOB_CONTEXT: ${{ toJson(job) }}
+        run: echo "$JOB_CONTEXT"
+
+      - name: Dump steps context
+        env:
+          STEPS_CONTEXT: ${{ toJson(steps) }}
+        run: echo "$STEP_CONTEXT"
+
+      - name: Dump runner context
+        env:
+          RUNNER_CONTEXT: ${{ toJson(runner) }}
+        run: echo "$RUNNER_CONTEXT"
+
+      - name: Dump strategy context
+        env:
+          STRATEGY_CONTEXT: ${{ toJson(strategy) }}
+        run: echo "$STRATEGY_CONTEXT"
+
+      - name: Dump matrix context
+        env:
+          MATRIX_CONTEXT: ${{ toJson(matrix) }}
+        run: echo "$MATRIX_CONTEXT"
