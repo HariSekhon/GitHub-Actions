@@ -746,6 +746,18 @@ jobs:
         run: argocd app wait "$APP" --grpc-web --timeout 600
 
   # ============================================================================ #
+  #                               G i t   M e r g e
+  # ============================================================================ #
+
+  merge_production_to_staging:
+    if: github.ref_name == 'production'
+    name: Merge Production Branch to Staging Branch (hotfix backports)
+    uses: HariSekhon/GitHub-Actions/.github/workflows/merge-branch.yaml@master
+    with:
+      head: production
+      base: staging
+
+  # ============================================================================ #
   #                                V a l i d a t e
   # ============================================================================ #
 
