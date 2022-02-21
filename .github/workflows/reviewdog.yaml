@@ -33,6 +33,13 @@ jobs:
       - name: Environment
         run: env | sort
 
+      - name: Git version
+        run: git --version
+
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive  # requires Git 2.18+ to be installed first
+
       - name: Run reviewdog
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
