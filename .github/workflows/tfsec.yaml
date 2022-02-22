@@ -23,17 +23,29 @@
 name: tfsec
 
 on:
-  workflow_call
+  workflow_call:
+    inputs:
+      debug:
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  actions: read
+  contents: read
+  security-events: write
+
+defaults:
+  run:
+    shell: bash -euxo pipefail {0}
+
+env:
+  DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }
 
 jobs:
   tfsec:
     name: tfsec scan & sarif report
     runs-on: ubuntu-latest
-    permissions:
-      actions: read
-      contents: read
-      security-events: write
-
     steps:
       - name: Environment
         run: env | sort

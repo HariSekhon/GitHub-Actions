@@ -52,10 +52,25 @@ on:
         description: The branch from dockerfile-repo to checkout (defaults to the default branch if not specified)
         type: string
         required: false
+      debug:
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: read
+  packages: write
 
 defaults:
   run:
     shell: bash -euxo pipefail {0}
+
+env:
+  IMAGE: ${{ inputs.image }}
+  TAGS: ${{ inputs.tags }}
+  DOCKERFILE_REPO: ${{ inputs.dockerfile-repo }}
+  BUILDCACHE: ${{ inputs.build-cache }}
+  DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }
 
 jobs:
   docker_build:
@@ -63,13 +78,6 @@ jobs:
     runs-on: ubuntu-latest
     # better done in the calling workflow to prevent manual docker builds on the wrong branches
     #if: github.ref_name == 'master' || github.ref_name == 'main' || contains(github.ref_name, 'docker')
-    permissions:
-      contents: read
-      packages: write
-    env:
-      IMAGE: ${{ inputs.image }}
-      TAGS: ${{ inputs.tags }}
-      BUILDCACHE: ${{ inputs.build-cache }}
     steps:
       - name: Environment
         run: env | sort
@@ -84,8 +92,6 @@ jobs:
           DOCKERFILE_CHECKOUT_PATH="${{ env.DOCKERFILE_REPO }}"
           DOCKERFILE_CHECKOUT_PATH="${DOCKERFILE_CHECKOUT_PATH##*/}"
           echo "DOCKERFILE_CHECKOUT_PATH=$DOCKERFILE_CHECKOUT_PATH" >> "$GITHUB_ENV"
-        env:
-          DOCKERFILE_REPO: ${{ inputs.dockerfile-repo }}
 
       - name: Git Checkout Dockerfile repo
         if: ${{ inputs.dockerfile-repo }}

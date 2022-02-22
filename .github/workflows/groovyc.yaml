@@ -16,10 +16,21 @@ name: Groovy Compile
 
 on:
   workflow_call:
+    inputs:
+      debug:
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: read
 
 defaults:
   run:
     shell: bash -euxo pipefail {0}
+
+env:
+  DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }
 
 jobs:
   groovyc:
@@ -27,8 +38,6 @@ jobs:
     runs-on: ubuntu-latest
     #container: groovy  # doesn't contain git and no sudo access
     container: harisekhon/bash-tools:ubuntu
-    permissions:
-      contents: read
     steps:
       # allows us to use check_groovyc.sh from the harisekhon/github docker image or the local HariSekhon/DevOps-Bash-tools git checkout further down
       - name: Setup PATH

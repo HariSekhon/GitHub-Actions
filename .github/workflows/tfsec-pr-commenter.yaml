@@ -24,16 +24,28 @@
 name: tfsec-pr-commenter
 
 on:
-  workflow_call
+  workflow_call:
+    inputs:
+      debug:
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: read
+  pull-requests: write
+
+defaults:
+  run:
+    shell: bash -euxo pipefail {0}
+
+env:
+  DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }
 
 jobs:
   tfsec:
     name: tfsec PR commenter
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
-
     steps:
       - name: Environment
         run: env | sort

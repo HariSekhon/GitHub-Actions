@@ -34,20 +34,28 @@ on:
     #  env:
     #    type: string  # pass in string in export shell format eg. export MYVAR=myvalue MYVAR2=myvalue2
     #    required: false
+      debug:
+        type: boolean
+        required: false
+        default: false
   schedule:
     - cron: '0 0 * * 1'
+
+permissions:
+  contents: read
 
 defaults:
   run:
     shell: bash -euxo pipefail {0}
+
+env:
+  DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }
 
 jobs:
   check_url_links:
     name: Check URL Links
     runs-on: ubuntu-latest
     container: harisekhon/bash-tools
-    permissions:
-      contents: read
     steps:
       - name: Environment
         run: env | sort

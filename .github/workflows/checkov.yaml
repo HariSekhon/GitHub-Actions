@@ -37,9 +37,23 @@ on:
         type: string
         default: all
         required: false
+      debug:
+        type: boolean
+        required: false
+        default: false
   workflow_dispatch:
+    inputs:
+      debug:
+        type: boolean
+        required: false
+        default: false
   schedule:
     - cron: '0 0 * * 1'
+
+permissions:
+  actions: read
+  contents: read
+  security-events: write
 
 defaults:
   run:
@@ -52,11 +66,6 @@ jobs:
   checkov:
     name: Checkov Scan
     runs-on: ubuntu-latest
-
-    permissions:
-      actions: read
-      contents: read
-      security-events: write
 
     # Skip any PR created by dependabot to avoid permission issues
     if: (github.actor != 'dependabot[bot]')

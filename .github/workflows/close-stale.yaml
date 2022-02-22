@@ -17,10 +17,22 @@
 name: Close Stale Issues and PRs
 on:
   workflow_call:
+    inputs:
+      debug:
+        type: boolean
+        required: false
+        default: false
 
 permissions:
   issues: write
   pull-requests: write
+
+defaults:
+  run:
+    shell: bash -euxo pipefail {0}
+
+env:
+  DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }
 
 jobs:
   stale:

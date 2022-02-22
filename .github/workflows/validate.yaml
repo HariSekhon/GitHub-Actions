@@ -48,9 +48,16 @@ on:
   schedule:
     - cron: '0 0 * * 1'
 
+permissions:
+  contents: read
+
 defaults:
   run:
     shell: bash -euxo pipefail {0}
+
+env:
+  INPUTS: ${{ inputs.env }}
+  DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }
 
 jobs:
   validate:
@@ -62,11 +69,6 @@ jobs:
     #container: harisekhon/pytools:debian
     container: harisekhon/pytools:centos
     #container: harisekhon/bash-tools:latest
-    permissions:
-      contents: read
-    env:
-      INPUTS: ${{ inputs.env }}
-      DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }
     steps:
       - name: Environment
         run: env | sort

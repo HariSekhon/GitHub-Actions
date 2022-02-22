@@ -26,20 +26,22 @@ on:
         required: false
         default: false
 
+permissions:
+  contents: read
+
 defaults:
   run:
     shell: bash -euxo pipefail {0}
+
+env:
+  DEBIAN_FRONTEND: noninteractive
+  DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }
 
 jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
     container: perl:${{ inputs.version }}
-    permissions:
-      contents: read
-    env:
-      DEBIAN_FRONTEND: noninteractive
-      DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }
     steps:
       - name: Environment
         run: env | sort

@@ -39,6 +39,10 @@ on:
         type: boolean
         default: false
         required: false
+      debug:
+        type: boolean
+        required: false
+        default: false
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
@@ -62,6 +66,10 @@ on:
         type: boolean
         default: false
         required: false
+      debug:
+        type: boolean
+        required: false
+        default: false
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
@@ -72,21 +80,24 @@ on:
   schedule:
     - cron: '0 0 * * 1'
 
+permissions:
+  actions: read
+  contents: read
+  security-events: write
+
 defaults:
   run:
     shell: bash -euxo pipefail {0}
+
+env:
+  REPO: ${{ inputs.repo || github.events.inputs.repo }}
+  AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+  DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }
 
 jobs:
   trivy:
     name: Trivy AWS ECR
     runs-on: ubuntu-latest
-    permissions:
-      actions: read
-      contents: read
-      security-events: write
-    env:
-      REPO: ${{ inputs.repo || github.events.inputs.repo }}
-      AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
     steps:
       - name: Environment
         run: env | sort

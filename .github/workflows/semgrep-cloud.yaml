@@ -28,18 +28,31 @@ on:
       - main
     paths: []
   workflow_call:
+    inputs:
+      debug:
+        type: boolean
+        required: false
+        default: false
     secrets:
       SEMGREP_APP_TOKEN:
         required: true
   schedule:
     - cron: '0 0 * * 0'
 
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash -euxo pipefail {0}
+
+env:
+  DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }
+
 jobs:
   semgrep:
     name: Semgrep Scan, Cloud report
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
     steps:
       - name: Environment
         run: env | sort

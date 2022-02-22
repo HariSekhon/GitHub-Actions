@@ -18,23 +18,31 @@ name: Dump Contexts
 
 on:
   workflow_call:
+    inputs:
+      debug:
+        type: boolean
+        required: false
+        default: false
   # in calling workflow, you may want to do
   #schedule:
   #  # 1st of every month, see if anything has changed
   #  - cron: '0 0 1 * *'
 
+permissions:
+  contents: read
+
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
   cancel-in-progress: true
+
+env:
+  DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }
 
 jobs:
   dump_contexts:
     name: Dump Contexts
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    permissions:
-      contents: read
-
     steps:
 
       - name: Dump GitHub context

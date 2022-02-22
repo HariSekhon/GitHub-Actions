@@ -53,6 +53,14 @@ on:
   schedule:
     - cron: '0 10 * * 2'
 
+permissions:
+  contents: write
+  pull-requests: write
+
+defaults:
+  run:
+    shell: bash -euxo pipefail {0}
+
 env:
   #GITHUB_TOKEN: ${{ secrets.TOKEN || github.token }}
   # GH_TOKEN has higher precedence than GITHUB_TOKEN
@@ -66,19 +74,12 @@ concurrency:
   group: ${{ github.workflow }}
   cancel-in-progress: false  # killing this part way through may leave PRs without auto-merging
 
-defaults:
-  run:
-    shell: bash -euxo pipefail {0}
-
 jobs:
   fork_update_pr:
     name: Create Fork Update PRs
     if: github.ref_type == 'branch' && github.ref_name == github.event.repository.default_branch
     # without 'contents: write' permission the PR merge fails with the error:
     # Message: Resource not accessible by integration, Locations: [{Line:1 Column:58}]
-    permissions:
-      contents: write
-      pull-requests: write
     runs-on: ubuntu-latest
     container: harisekhon/bash-tools
     steps:

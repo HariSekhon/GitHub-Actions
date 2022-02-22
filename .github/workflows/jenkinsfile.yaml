@@ -26,14 +26,23 @@ on:
         type: string
         default: '' # kubernetes:1.31.2
         required: false
+      debug:
+        type: boolean
+        required: false
+        default: false
 
-# doesn't get set
-#env:
-#  GITHUB_WORKSPACE: /var/jenkins_home
+permissions:
+  contents: read
 
 defaults:
   run:
     shell: bash -euxo pipefail {0}
+
+env:
+  PLUGINS_TO_INSTALL: ${{ inputs.plugins }}
+# doesn't get set, as GITHUB_ prefix not being allowed
+#  GITHUB_WORKSPACE: /var/jenkins_home
+  DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }
 
 jobs:
   validate:
@@ -41,10 +50,6 @@ jobs:
     runs-on: ubuntu-latest
     #container: harisekhon/jenkins:latest
     container: jenkins/jenkins:lts
-    permissions:
-      contents: read
-    env:
-      PLUGINS_TO_INSTALL: ${{ inputs.plugins }}
     steps:
       - name: Environment
         run: env | sort

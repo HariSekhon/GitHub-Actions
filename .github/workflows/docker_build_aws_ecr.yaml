@@ -40,6 +40,10 @@ on:
         description: The branch from dockerfile-repo to checkout (defaults to the default branch if not specified)
         type: string
         required: false
+      debug:
+        type: boolean
+        required: false
+        default: false
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
@@ -48,9 +52,17 @@ on:
       AWS_DEFAULT_REGION:
         required: true
 
+permissions:
+  contents: read
+  packages: write
+
 defaults:
   run:
     shell: bash -euxo pipefail {0}
+
+env:
+  REPO: ${{ inputs.repo }}
+  DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }
 
 jobs:
   docker_build:
@@ -58,11 +70,6 @@ jobs:
     runs-on: ubuntu-latest
     # better done in the calling workflow to prevent manual docker builds on the wrong branches
     #if: github.ref_name == 'master' || github.ref_name == 'main' || contains(github.ref_name, 'docker')
-    permissions:
-      contents: read
-      packages: write
-    env:
-      REPO: ${{ inputs.repo }}
     steps:
       - name: Environment
         run: env | sort

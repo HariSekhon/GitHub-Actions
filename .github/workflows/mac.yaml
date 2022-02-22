@@ -26,18 +26,20 @@ on:
         required: false
         default: false
 
+permissions:
+  contents: read
+
 defaults:
   run:
     shell: bash -euxo pipefail {0}
+
+env:
+  DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }
 
 jobs:
   build:
     name: Build
     runs-on: macos-${{ inputs.version }}
-    permissions:
-      contents: read
-    env:
-      DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }
     steps:
       - name: Environment
         run: env | sort

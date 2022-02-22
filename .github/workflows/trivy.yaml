@@ -38,6 +38,10 @@ on:
         type: string
         default: HIGH,CRITICAL
         required: false
+      debug:
+        type: boolean
+        required: false
+        default: false
   workflow_dispatch:
     inputs:
       docker_image:
@@ -49,22 +53,29 @@ on:
         type: string
         default: HIGH,CRITICAL
         required: false
+      debug:
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: read
 
 defaults:
   run:
     shell: bash -euxo pipefail {0}
+
+env:
+  # ${{ inputs.* }}               is set by workflow_call
+  # ${{ github.events.inputs.* }} is set by workflow_dispatch
+  DOCKER_IMAGE: ${{ inputs.docker_image || github.event.inputs.docker_image || 'harisekhon/bash-tools' }}
+  DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }
 
 jobs:
   trivy:
     name: Trivy Docker Image Scan
     runs-on: ubuntu-latest
     container: aquasec/trivy:latest
-    permissions:
-      contents: read
-    env:
-      # ${{ inputs.* }}               is set by workflow_call
-      # ${{ github.events.inputs.* }} is set by workflow_dispatch
-      DOCKER_IMAGE: ${{ inputs.docker_image || github.event.inputs.docker_image || 'harisekhon/bash-tools' }}
     steps:
       - name: Environment
         run: env | sort

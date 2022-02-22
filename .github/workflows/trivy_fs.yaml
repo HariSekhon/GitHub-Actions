@@ -39,6 +39,10 @@ on:
         type: string
         default: HIGH,CRITICAL
         required: false
+      debug:
+        type: boolean
+        required: false
+        default: false
   workflow_dispatch:
     inputs:
       path:
@@ -51,22 +55,29 @@ on:
         type: string
         default: HIGH,CRITICAL
         required: false
+      debug:
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: read
 
 defaults:
   run:
     shell: bash -euxo pipefail {0}
+
+env:
+  # ${{ inputs.* }}               is set by workflow_call
+  # ${{ github.events.inputs.* }} is set by workflow_dispatch
+  SCAN_PATH: ${{ inputs.path || github.event.inputs.path || '.' }}
+  DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }
 
 jobs:
   trivy:
     name: Trivy Filesystem Scan
     runs-on: ubuntu-latest
     container: aquasec/trivy:latest
-    permissions:
-      contents: read
-    env:
-      # ${{ inputs.* }}               is set by workflow_call
-      # ${{ github.events.inputs.* }} is set by workflow_dispatch
-      SCAN_PATH: ${{ inputs.path || github.event.inputs.path || '.' }}
     steps:
       - name: Environment
         run: env | sort

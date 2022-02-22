@@ -38,19 +38,21 @@ on:
   schedule:
     - cron: '0 0 * * 1'
 
+permissions:
+  contents: read
+
 defaults:
   run:
     shell: bash -euxo pipefail {0}
+
+env:
+  DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }
 
 jobs:
   check_yaml:
     name: Check YAML
     runs-on: ubuntu-latest
     container: harisekhon/bash-tools:latest
-    permissions:
-      contents: read
-    env:
-      DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }
     steps:
       - name: Environment
         run: env | sort

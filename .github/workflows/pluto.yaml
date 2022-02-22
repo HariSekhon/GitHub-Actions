@@ -17,17 +17,26 @@
 name: Pluto
 
 on:
-  workflow_call
+  workflow_call:
+    inputs:
+      debug:
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: read
 
 defaults:
   run:
     shell: bash -euxo pipefail {0}
 
+env:
+  DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }
+
 jobs:
   pluto:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
     steps:
       - name: Environment
         run: env | sort
