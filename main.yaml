@@ -46,7 +46,7 @@ env:
   repo: bash-tools
   APP: myapp
   ENV: dev
-  #DEBUG: 1
+  DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }
 
   # or generate dynamic image including the registry, see step section
   DOCKER_IMAGE: myimage
@@ -162,6 +162,10 @@ on:
         description: The ECR repository, without the 'xxx.dkr.ecr.<region>.amazonaws.com' prefix
         type: string
         required: true
+      debug:
+        type: boolean
+        required: false
+        default: false
     secrets:
       aws_access_key_id:
         required: true
@@ -173,11 +177,15 @@ on:
   # https://docs.github.com/en/actions/managing-workflow-runs/manually-running-a-workflow#running-a-workflow
   workflow_dispatch:  # needs to be in default branch before you get the UI option to manually run though
     # accessible as ${{ github.events.inputs.* }}
-    #inputs:
-    #  description:
-    #    description: Some description of this input
-    #    default: My Default Description
-    #    required: true  # or false
+    inputs:
+      repo:
+        description: The ECR repository, without the 'xxx.dkr.ecr.<region>.amazonaws.com' prefix
+        type: string
+        required: true
+      debug:
+        type: boolean
+        required: false
+        default: false
 
   schedule:
     # * is a special character in YAML so you have to quote this string
@@ -407,7 +415,7 @@ jobs:
         #  key: value
 
       - name: Environment
-        #if: ${{ env.DEBUG == '1' }}
+        #if: ${{ env.DEBUG == true }}
         #if: (github.actor != 'dependabot[bot]')  # skip any PR created by dependabot
         #if: github.event_name == 'push' && contains(toJson(github.event.commits), '***NO_CI***') == false && contains(toJson(github.event.commits), '[ci skip]') == false && contains(toJson(github.event.commits), '[skip ci]') == false
         # multi-line scripts start with |
