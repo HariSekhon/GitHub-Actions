@@ -26,6 +26,10 @@ on:
         required: false
         default: false
 
+defaults:
+  run:
+    shell: bash -eux {0}
+
 jobs:
   make:
     name: Make
