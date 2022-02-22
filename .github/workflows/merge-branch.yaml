@@ -26,8 +26,9 @@ on:
         type: string
         required: true
       debug:
-        type: string
+        type: boolean
         required: false
+        default: false
   workflow_dispatch:
     inputs:
       head:
@@ -39,15 +40,16 @@ on:
         type: string
         required: true
       debug:
-        type: string
+        type: boolean
         required: false
+        default: false
 
 env:
   GH_TOKEN: ${{ github.token }}
   GH_NO_UPDATE_NOTIFIER: 1
   HEAD: ${{ inputs.head || github.event.inputs.head }}
   BASE: ${{ inputs.base || github.event.inputs.base }}
-  DEBUG: ${{ inputs.debug || github.event.inputs.debug }}
+  DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }
 
 concurrency:
   group: ${{ github.workflow }}

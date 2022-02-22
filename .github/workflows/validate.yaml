@@ -32,14 +32,19 @@ on:
       #  default: latest
       # workflow calls only permit string/boolean/number - https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#onworkflow_callinputsinput_idtype
       debug:
-        type: string
-        default: ''
+        type: boolean
         required: false
+        default: false
       env:
         type: string  # pass in string in export shell format eg. export MYVAR=myvalue MYVAR2=myvalue2
         default: ''
         required: false
   workflow_dispatch:
+    inputs:
+      debug:
+        type: boolean
+        required: false
+        default: false
   schedule:
     - cron: '0 0 * * 1'
 
@@ -60,8 +65,8 @@ jobs:
     permissions:
       contents: read
     env:
-      DEBUG: ${{ inputs.debug }}
       INPUTS: ${{ inputs.env }}
+      DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }
     steps:
       - name: Environment
         run: env | sort

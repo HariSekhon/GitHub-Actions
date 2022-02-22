@@ -22,9 +22,9 @@ on:
         type: string
         required: true
       debug:
-        type: string
-        default: ''
+        type: boolean
         required: false
+        default: false
 
 defaults:
   run:
@@ -38,8 +38,8 @@ jobs:
     permissions:
       contents: read
     env:
-      DEBUG: ${{ inputs.debug }}
       DEBIAN_FRONTEND: noninteractive
+      DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }
     steps:
       - name: Environment
         run: env | sort

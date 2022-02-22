@@ -41,15 +41,15 @@ on:
           dev
           staging
       debug:
-        type: string
+        type: boolean
         required: false
-        #default: '1'
+        default: false
   workflow_dispatch:
     inputs:
       debug:
-        type: string
+        type: boolean
         required: false
-        #default: '1'
+        default: false
   schedule:
     - cron: '0 10 * * 2'
 
@@ -60,7 +60,7 @@ env:
   GH_NO_UPDATE_NOTIFIER: 1
   BRANCHES_TO_PR: ${{ inputs.branches-to-pr || github.event.inputs.branches-to-pr }}
   BRANCHES_TO_AUTOMERGE: ${{ inputs.branches-to-automerge || github.event.inputs.branches-to-automerge }}
-  DEBUG: ${{ inputs.debug || github.event.inputs.debug }}
+  DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }
 
 concurrency:
   group: ${{ github.workflow }}
