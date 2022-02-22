@@ -42,7 +42,7 @@ env:
   PLUGINS_TO_INSTALL: ${{ inputs.plugins }}
 # doesn't get set, as GITHUB_ prefix not being allowed
 #  GITHUB_WORKSPACE: /var/jenkins_home
-  DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }
+  DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }}
 
 jobs:
   validate:

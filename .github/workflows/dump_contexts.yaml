@@ -36,7 +36,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }
+  DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }}
 
 jobs:
   dump_contexts:

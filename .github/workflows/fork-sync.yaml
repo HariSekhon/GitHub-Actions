@@ -44,7 +44,7 @@ defaults:
 env:
   GH_TOKEN: ${{ github.token }}
   GH_NO_UPDATE_NOTIFIER: 1
-  DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }
+  DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }}
 
 concurrency:
   group: ${{ github.workflow }}

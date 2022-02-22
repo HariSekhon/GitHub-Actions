@@ -68,7 +68,7 @@ env:
   GH_NO_UPDATE_NOTIFIER: 1
   BRANCHES_TO_PR: ${{ inputs.branches-to-pr || github.event.inputs.branches-to-pr }}
   BRANCHES_TO_AUTOMERGE: ${{ inputs.branches-to-automerge || github.event.inputs.branches-to-automerge }}
-  DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }
+  DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }}
 
 concurrency:
   group: ${{ github.workflow }}

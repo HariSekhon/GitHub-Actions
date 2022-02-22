@@ -31,7 +31,7 @@ defaults:
 
 env:
   DEBIAN_FRONTEND: noninteractive
-  DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }
+  DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }}
 
 jobs:
   make:

@@ -92,7 +92,7 @@ defaults:
 env:
   REPO: ${{ inputs.repo || github.events.inputs.repo }}
   AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
-  DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }
+  DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }}
 
 jobs:
   trivy:

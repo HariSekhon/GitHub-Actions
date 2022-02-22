@@ -47,7 +47,7 @@ defaults:
     shell: bash -euxo pipefail {0}
 
 env:
-  DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }
+  DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }}
 
 jobs:
   semgrep:
