@@ -31,14 +31,14 @@ on:
       #  required: true
       #  default: latest
       # workflow calls only permit string/boolean/number - https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#onworkflow_callinputsinput_idtype
-      debug:
-        type: boolean
-        required: false
-        default: false
       env:
         type: string  # pass in string in export shell format eg. export MYVAR=myvalue MYVAR2=myvalue2
         default: ''
         required: false
+      debug:
+        type: boolean
+        required: false
+        default: false
   workflow_dispatch:
     inputs:
       debug:
@@ -89,4 +89,7 @@ jobs:
 
       - name: Validate
         run: |
+          if [ -f .validate.env ]; then
+            source .validate.env
+          fi
           check_all.sh
