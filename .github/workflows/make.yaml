@@ -21,6 +21,16 @@ on:
         description: The docker image:version container to build inside
         type: string
         required: true
+      build-target:
+        description: The Make build target
+        type: string
+        required: false
+        default: ''
+      no-test:
+        description: Don't run 'make test' after build
+        type: boolean
+        required: false
+        default: false
       debug:
         type: boolean
         required: false
@@ -34,6 +44,7 @@ defaults:
     shell: bash -eux {0}
 
 env:
+  BUILD_TARGET: ${{ inputs.build-target || github.event.inputs.build-target }}
   DEBIAN_FRONTEND: noninteractive
   DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }}
 
@@ -89,6 +100,9 @@ jobs:
 
       - name: Build
         run: |
+          if [ -n "${BUILD_TARGET:-}" ] &&
+             grep -q "^$BUILD_TARGET:" Makefile; then
+             make "$BUILD_TARGET"
           if grep -q '^ci:' Makefile; then
             make ci
           elif grep -q '^build:' Makefile; then
@@ -98,6 +112,7 @@ jobs:
           fi
 
       - name: Test
+        if: ! ( inputs.no-test || github.event.inputs.no-test )
         run: |
           if grep -q '^test:' Makefile; then
             make test
