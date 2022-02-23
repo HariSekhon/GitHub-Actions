@@ -112,7 +112,7 @@ jobs:
           fi
 
       - name: Test
-        if: ! ( inputs.no-test || github.event.inputs.no-test )
+        if: ! inputs.no-test && ! github.event.inputs.no-test
         run: |
           if grep -q '^test:' Makefile; then
             make test
