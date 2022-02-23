@@ -59,7 +59,9 @@ jobs:
         run: env | sort
 
       - name: Install Git & Make
-        run: apt-get update && apt-get install -qy git make
+        run: |
+          sudo apt-get update
+          sudo apt-get install -qy git make
 
       - name: Git version
         run: git --version
