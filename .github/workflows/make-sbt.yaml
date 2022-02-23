@@ -1,0 +1,114 @@
+#
+#  Author: Hari Sekhon
+#  Date: Tue Feb 4 09:53:28 2020 +0000
+#
+#  vim:ts=2:sts=2:sw=2:et
+#
+#  https://github.com/HariSekhon/GitHub-Actions
+#
+#  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback
+#
+#  https://www.linkedin.com/in/harisekhon
+#
+
+---
+name: Make
+
+on:
+  workflow_call:
+    inputs:
+      build-target:
+        description: The Make build target
+        type: string
+        required: false
+        default: ''
+      no-test:
+        description: Don't run 'make test' after build
+        type: boolean
+        required: false
+        default: false
+      debug:
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash -euxo pipefail {0}
+
+env:
+  BUILD_TARGET: ${{ inputs.build-target || github.event.inputs.build-target }}
+  DEBIAN_FRONTEND: noninteractive
+  DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }}
+
+jobs:
+  make:
+    name: Make
+    #runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - ubuntu-20.04
+    steps:
+      - name: Environment
+        run: env | sort
+
+      - name: Install Git & Make
+        run: apt-get update && apt-get install -qy git make
+
+      - name: Git version
+        run: git --version
+
+      - name: Git Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive  # requires Git 2.18+ to be installed first
+
+      - name: SBT Cache
+        uses: actions/cache@v1
+        with:
+          path: ~/.sbt
+          key: ${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt') }}
+          restore-keys: |
+            ${{ runner.os }}-sbt-
+
+      - name: SBT Ivy Cache
+        uses: actions/cache@v1
+        with:
+          path: ~/.ivy2/cache
+          key: ${{ runner.os }}-sbt-ivy-cache-${{ hashFiles('**/build.sbt') }}
+          restore-keys: |
+            ${{ runner.os }}-sbt-ivy-cache-
+
+      - name: Init
+        run: |
+          if grep -q '^init:' Makefile; then
+            make init
+          fi
+
+      - name: Build
+        run: |
+          if [ -n "${BUILD_TARGET:-}" ] &&
+             grep -q "^$BUILD_TARGET:" Makefile; then
+             make "$BUILD_TARGET"
+          elif grep -q '^sbt:' Makefile; then
+            make sbt
+          elif grep -q '^ci:' Makefile; then
+            make ci
+          elif grep -q '^build:' Makefile; then
+            make build
+          else
+            make
+          fi
+
+      - name: Test
+        if: ! ( inputs.no-test || github.event.inputs.no-test )
+        run: |
+          if grep -q '^test:' Makefile; then
+            make test
+          fi
