@@ -103,7 +103,7 @@ jobs:
           if [ -n "${BUILD_TARGET:-}" ] &&
              grep -q "^$BUILD_TARGET:" Makefile; then
              make "$BUILD_TARGET"
-          if grep -q '^ci:' Makefile; then
+          elif grep -q '^ci:' Makefile; then
             make ci
           elif grep -q '^build:' Makefile; then
             make build
