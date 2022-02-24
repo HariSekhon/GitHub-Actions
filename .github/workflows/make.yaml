@@ -104,7 +104,7 @@ jobs:
           if [ -n "${BUILD_TARGET:-}" ] &&
              grep -q "^$BUILD_TARGET:" Makefile; then
              make "$BUILD_TARGET"
-          if grep -q '^ci:' Makefile; then
+          elif grep -q '^ci:' Makefile; then
             make ci
           elif grep -q '^build:' Makefile; then
             make build
@@ -113,7 +113,7 @@ jobs:
           fi
 
       - name: Test
-        if: ! ( inputs.no-test || github.event.inputs.no-test )
+        if: inputs.no-test != true && github.event.inputs.no-test != true
         run: |
           if grep -q '^test:' Makefile; then
             make test
