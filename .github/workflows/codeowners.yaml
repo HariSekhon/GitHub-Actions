@@ -1,0 +1,64 @@
+#
+#  Author: Hari Sekhon
+#  Date: 2022-02-24 14:04:44 +0000 (Thu, 24 Feb 2022)
+#
+#  vim:ts=2:sts=2:sw=2:et
+#
+#  https://github.com/HariSekhon/github-actions
+#
+#  License: see accompanying Hari Sekhon LICENSE file
+#
+#  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback to help steer this or other code I publish
+#
+#  https://www.linkedin.com/in/HariSekhon
+#
+
+---
+name: Codeowners
+
+on:
+  push:
+    branches:
+      - master
+      - main
+  pull_request:
+    branches:
+      - master
+      - main
+  workflow_call:
+    inputs:
+      debug:
+        type: boolean
+        required: false
+        default: false
+  workflow_dispatch:
+    inputs:
+      debug:
+        type: boolean
+        required: false
+        default: false
+  schedule:
+    - cron: '0 0 * * 1'
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash -euxo pipefail {0}
+
+env:
+  DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }}
+
+jobs:
+  validate:
+    name: Validate CODEOWNERS
+    runs-on: ubuntu-latest
+    container: harisekhon/bash-tools:latest
+    steps:
+      - name: Environment
+        run: env | sort
+
+      - name: Check Codeowners Errors
+        run: |
+          check_github_codeowners.sh "$GITHUB_REPOSITORY" "$GITHUB_REF_NAME"
