@@ -70,13 +70,13 @@ jobs:
               sed -i 's/deb.debian.org/archive.debian.org/' /etc/apt/sources.list
               sed -i 's/security.debian.org/archive.debian.org/' /etc/apt/sources.list
             fi
-            apt-get update && apt-get install -qy git make
-          elif command -v dnf; then
-            dnf install -qy git make
+            apt-get update
+            apt-get install -qy git make
+          #elif command -v dnf; then
+          #  dnf install -qy git make
           elif command -v yum; then
             # CentOS is EOL
             if grep -qi centos /etc/*release; then
-              if
               sed -i 's/^[[:space:]]*mirrorlist/#mirrorlist/' /etc/yum.repos.d/CentOS-*
               sed -i 's|^#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|' /etc/yum.repos.d/CentOS-*
             fi
