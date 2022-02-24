@@ -48,6 +48,7 @@ defaults:
     shell: bash -euxo pipefail {0}
 
 env:
+  GH_TOKEN: ${{ github.token }}
   DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }}
 
 jobs:
@@ -58,6 +59,11 @@ jobs:
     steps:
       - name: Environment
         run: env | sort
+
+      - name: GH CLI auth status
+        run: |
+          gh config set prompt disabled
+          gh auth status
 
       - name: Check Codeowners Errors
         run: |
