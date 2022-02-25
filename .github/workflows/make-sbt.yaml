@@ -61,7 +61,7 @@ jobs:
       - name: Install Git & Make
         run: |
           sudo apt-get update
-          sudo apt-get install -qy git make
+          sudo apt-get install -y -q git make
 
       - name: Git version
         run: git --version
