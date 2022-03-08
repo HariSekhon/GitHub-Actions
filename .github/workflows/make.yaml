@@ -86,6 +86,15 @@ jobs:
           restore-keys: |
             apt-cache-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('/etc/*release') }}
 
+      - name: Brew Cache
+        if: ( contains(inputs.caches, 'brew') || contains(inputs.caches, 'mac') || contains(inputs.caches, 'macos') ) && startsWith(runner.os, 'macOS')
+        uses: actions/cache@v1
+        with:
+          path: ~/Library/Caches/Homebrew/
+          key: brew-cache-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles(' /System/Library/CoreServices/SystemVersion.plist') }}
+          restore-keys: |
+            brew-cache-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles(' /System/Library/CoreServices/SystemVersion.plist') }}
+
       - name: Yum Cache
         if: ( contains(inputs.caches, 'yum') || contains(inputs.caches, 'centos') || contains(inputs.caches, 'rhel') ) && startsWith(runner.os, 'Linux')
         uses: actions/cache@v1
