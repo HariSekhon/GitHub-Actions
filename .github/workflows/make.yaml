@@ -103,6 +103,63 @@ jobs:
         #  submodules: recursive  # requires Git 2.18+ to be installed first
         run: git clone "https://${{github.token}}@github.com/$GITHUB_REPOSITORY" "$GITHUB_WORKSPACE"
 
+      # ============================================================================ #
+      # Python Caches
+      #
+      - name: Python Pip Cache Linux
+        if: ( contains(inputs.caches, 'pip') || contains(inputs.caches, 'python') ) && startsWith(runner.os, 'Linux')
+        uses: actions/cache@v1
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-${{ runner.arch }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-pip-
+
+      - name: Python Pip Cache Mac
+        if: ( contains(inputs.caches, 'pip') || contains(inputs.caches, 'python') ) && startsWith(runner.os, 'macOS')
+        uses: actions/cache@v1
+        with:
+          path: ~/Library/Caches/pip
+          key: ${{ runner.os }}-${{ runner.arch }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-pip-
+
+      # ============================================================================ #
+      # Perl Caches
+      #
+      - name: Perl CPAN Cache
+        if: contains(inputs.caches, 'perl') || contains(inputs.caches, 'cpan')
+        uses: actions/cache@v1
+        with:
+          path: ~/.cpan
+          key: ${{ runner.os }}-${{ runner.arch }}-cpan-${{ hashFiles('**/cpan-requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-cpan-
+
+      - name: Perl CPANM Cache
+        if: contains(inputs.caches, 'perl') || contains(inputs.caches, 'cpan') || contains(inputs.caches, 'cpanm')
+        uses: actions/cache@v1
+        with:
+          path: ~/.cpanm
+          key: ${{ runner.os }}-${{ runner.arch }}-cpanm-${{ hashFiles('**/cpan-requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-cpanm-
+
+      # ============================================================================ #
+      # Go Cache
+
+      - name: Golang Pkg Cache
+        if: contains(inputs.caches, 'golang')
+        uses: actions/cache@v1
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}--${{ runner.arch }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}--${{ runner.arch }}-go-
+
+      # ============================================================================ #
+      # Java Caches
+
       - name: Maven Cache
         if: contains(inputs.caches, 'maven')
         uses: actions/cache@v1
@@ -121,6 +178,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ runner.arch }}-maven-wrapper-
 
+      # ============================================================================ #
       - name: Gradle Cache
         if: contains(inputs.caches, 'gradle')
         uses: actions/cache@v1
@@ -139,6 +197,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ runner.arch }}-gradle-wrapper-
 
+      # ============================================================================ #
       - name: SBT Cache
         if: contains(inputs.caches, 'sbt')
         uses: actions/cache@v1
@@ -156,6 +215,8 @@ jobs:
           key: ${{ runner.os }}-${{ runner.arch }}-sbt-ivy-cache-${{ hashFiles('**/build.sbt') }}
           restore-keys: |
             ${{ runner.os }}-${{ runner.arch }}-sbt-ivy-cache-
+
+      # ============================================================================
 
       - name: Init
         run: |
