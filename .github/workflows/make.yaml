@@ -20,7 +20,8 @@ on:
       container:
         description: The docker image:version container to build inside
         type: string
-        required: true
+        default: null
+        required: false
       build-target:
         description: The Make build target
         type: string
@@ -31,6 +32,10 @@ on:
         type: boolean
         required: false
         default: false
+      caches:
+        description: Caches eg. pip, cpan, maven, sbt, gradle etc...
+        type: string
+        required: false
       debug:
         type: boolean
         required: false
@@ -59,28 +64,32 @@ jobs:
 
       - name: Install Git & Make
         run: |
+          sudo=sudo
+          if [ "${EUID:-${UID:;-$(id -n)}}" = 0 ]; then
+            sudo=''
+          fi
           if command -v apk; then
             # apk add --no-cache isn't available until Alpine 3
-            #apk add --no-cache git make
-            apk update && apk add git make
+            #$sudo apk add --no-cache git make
+            $sudo apk update && apk add git make
           elif command -v apt-get; then
             if grep -Fxq 'ID=debian' /etc/*release &&
                grep -xq 'VERSION_ID="[67]"' /etc/*release; then
               # switch APT sources to archive.debian.org
-              sed -i 's/deb.debian.org/archive.debian.org/' /etc/apt/sources.list
-              sed -i 's/security.debian.org/archive.debian.org/' /etc/apt/sources.list
+              $sudo sed -i 's/deb.debian.org/archive.debian.org/' /etc/apt/sources.list
+              $sudo sed -i 's/security.debian.org/archive.debian.org/' /etc/apt/sources.list
             fi
-            apt-get update
-            apt-get install -y -q git make
+            $sudo apt-get update
+            $sudo apt-get install -y -q git make
           #elif command -v dnf; then
-          #  dnf install -y -q git make
+          #  $sudo dnf install -y -q git make
           elif command -v yum; then
             # CentOS is EOL - but for some reason CentOS 7 works without this, while CentOS 6 and 8 need archive
             if grep -qi centos /etc/*release && grep -q '^VERSION="[68]"$' /etc/*release; then
-              sed -i 's/^[[:space:]]*mirrorlist/#mirrorlist/' /etc/yum.repos.d/CentOS-*
-              sed -i 's|^#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|' /etc/yum.repos.d/CentOS-*
+              $sudo sed -i 's/^[[:space:]]*mirrorlist/#mirrorlist/' /etc/yum.repos.d/CentOS-*
+              $sudo sed -i 's|^#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|' /etc/yum.repos.d/CentOS-*
             fi
-            yum install -y -q git make
+            $sudo yum install -y -q git make
           fi
 
       - name: Git version
@@ -92,6 +101,24 @@ jobs:
         #with:
         #  submodules: recursive  # requires Git 2.18+ to be installed first
         run: git clone "https://${{github.token}}@github.com/$GITHUB_REPOSITORY" "$GITHUB_WORKSPACE"
+
+      - name: SBT Cache
+        if: contains(caches, "sbt")
+        uses: actions/cache@v1
+        with:
+          path: ~/.sbt
+          key: ${{ runner.os }}-${{ runner.arch }}-sbt-${{ hashFiles('**/build.sbt') }}
+          restore-keys: |
+            ${{ runner.os }}-sbt-
+
+      - name: SBT Ivy Cache
+        if: contains(caches, "sbt")
+        uses: actions/cache@v1
+        with:
+          path: ~/.ivy2/cache
+          key: ${{ runner.os }}-${{ runner.arch }}-sbt-ivy-cache-${{ hashFiles('**/build.sbt') }}
+          restore-keys: |
+            ${{ runner.os }}-sbt-ivy-cache-
 
       - name: Init
         run: |
