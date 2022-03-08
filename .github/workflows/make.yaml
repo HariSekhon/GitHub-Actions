@@ -65,7 +65,7 @@ jobs:
       - name: Install Git & Make
         run: |
           sudo=sudo
-          if [ "${EUID:-${UID:;-$(id -n)}}" = 0 ]; then
+          if [ "${EUID:-${UID:-$(id -u)}}" = 0 ]; then
             sudo=''
           fi
           if command -v apk; then
