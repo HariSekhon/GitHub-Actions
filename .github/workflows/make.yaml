@@ -216,6 +216,18 @@ jobs:
             golang-${{ runner.os }}-${{ runner.arch }}-
 
       # ============================================================================ #
+      # NodeJS Cache
+
+      - name: NodeJS Modules Cache
+        if: contains(inputs.caches, 'nodejs')
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: nodejs-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            nodejs-${{ runner.os }}-${{ runner.arch }}-
+
+      # ============================================================================ #
       # Java Caches
 
       - name: Maven Cache
