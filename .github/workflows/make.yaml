@@ -46,6 +46,7 @@ permissions:
 
 defaults:
   run:
+    # not bash because we could be passed an Alpine container
     shell: sh -eux {0}
 
 env:
@@ -62,7 +63,7 @@ jobs:
       - name: Environment
         run: env | sort
 
-      - name: Install Git & Make
+      - name: Install Bash, Git & Make
         run: |
           sudo=sudo
           if [ "${EUID:-${UID:-$(id -u)}}" = 0 ]; then
@@ -71,7 +72,7 @@ jobs:
           if command -v apk; then
             # apk add --no-cache isn't available until Alpine 3
             #$sudo apk add --no-cache git make
-            $sudo apk update && apk add git make
+            $sudo apk update && apk add bash git make
           elif command -v apt-get; then
             if grep -Fxq 'ID=debian' /etc/*release &&
                grep -xq 'VERSION_ID="[67]"' /etc/*release; then
@@ -80,16 +81,16 @@ jobs:
               $sudo sed -i 's/security.debian.org/archive.debian.org/' /etc/apt/sources.list
             fi
             $sudo apt-get update
-            $sudo apt-get install -y -q git make
+            $sudo apt-get install -y -q bash git make
           #elif command -v dnf; then
-          #  $sudo dnf install -y -q git make
+          #  $sudo dnf install -y -q bash git make
           elif command -v yum; then
             # CentOS is EOL - but for some reason CentOS 7 works without this, while CentOS 6 and 8 need archive
             if grep -qi centos /etc/*release && grep -q '^VERSION="[68]"$' /etc/*release; then
               $sudo sed -i 's/^[[:space:]]*mirrorlist/#mirrorlist/' /etc/yum.repos.d/CentOS-*
               $sudo sed -i 's|^#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|' /etc/yum.repos.d/CentOS-*
             fi
-            $sudo yum install -y -q git make
+            $sudo yum install -y -q bash git make
           fi
 
       - name: Git version
