@@ -228,6 +228,16 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ runner.arch }}-sbt-ivy-cache-
 
+      # ============================================================================ #
+      - name: Groovy Cache
+        if: contains(inputs.caches, 'groovy')
+        uses: actions/cache@v1
+        with:
+          path: ~/.groovy
+          key: ${{ runner.os }}-${{ runner.arch }}-groovy-cache #-${{ hashFiles('**/*.groovy') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-groovy-cache
+
       # ============================================================================
 
       - name: Init
