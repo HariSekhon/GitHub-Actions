@@ -103,14 +103,50 @@ jobs:
         #  submodules: recursive  # requires Git 2.18+ to be installed first
         run: git clone "https://${{github.token}}@github.com/$GITHUB_REPOSITORY" "$GITHUB_WORKSPACE"
 
+      - name: Maven Cache
+        if: contains(inputs.caches, 'maven')
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-${{ runner.arch }}-maven-cache-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-maven-cache-
+
+      - name: Maven Wrapper
+        if: contains(inputs.caches, 'maven')
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2/wrapper
+          key: ${{ runner.os }}-${{ runner.arch }}-maven-wrapper-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-maven-wrapper-
+
+      - name: Gradle Cache
+        if: contains(inputs.caches, 'gradle')
+        uses: actions/cache@v1
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-${{ runner.arch }}-gradle-cache-${{ hashFiles('**/build.gradle') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-gradle-cache-
+
+      - name: Gradle Wrapper
+        if: contains(inputs.caches, 'gradle')
+        uses: actions/cache@v1
+        with:
+          path: ~/.gradle/wrapper
+          key: ${{ runner.os }}-${{ runner.arch }}-gradle-wrapper-${{ hashFiles('**/build.gradle') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-gradle-wrapper-
+
       - name: SBT Cache
         if: contains(inputs.caches, 'sbt')
         uses: actions/cache@v1
         with:
           path: ~/.sbt
-          key: ${{ runner.os }}-${{ runner.arch }}-sbt-${{ hashFiles('**/build.sbt') }}
+          key: ${{ runner.os }}-${{ runner.arch }}-sbt-cache-${{ hashFiles('**/build.sbt') }}
           restore-keys: |
-            ${{ runner.os }}-${{ runner.arch }}-sbt-
+            ${{ runner.os }}-${{ runner.arch }}-sbt-cache
 
       - name: SBT Ivy Cache
         if: contains(inputs.caches, 'sbt')
