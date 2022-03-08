@@ -146,6 +146,18 @@ jobs:
             ${{ runner.os }}-${{ runner.arch }}-cpanm-
 
       # ============================================================================ #
+      # Ruby Gem Cache
+
+      - name: Ruby Gem Cache
+        if: contains(inputs.caches, 'ruby') || contains(inputs.caches, 'gem')
+        uses: actions/cache@v1
+        with:
+          path: ~/.gem
+          key: ${{ runner.os }}--${{ runner.arch }}-gem-${{ hashFiles('**/Gemfile') }}
+          restore-keys: |
+            ${{ runner.os }}--${{ runner.arch }}-ge,-
+
+      # ============================================================================ #
       # Go Cache
 
       - name: Golang Pkg Cache
