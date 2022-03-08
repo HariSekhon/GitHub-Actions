@@ -120,18 +120,18 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-${{ runner.arch }}-pip-${{ hashFiles('**/requirements.txt') }}
+          key: pip-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
-            ${{ runner.os }}-${{ runner.arch }}-pip-
+            pip-${{ runner.os }}-${{ runner.arch }}-
 
       - name: Python Pip Cache Mac
         if: ( contains(inputs.caches, 'pip') || contains(inputs.caches, 'python') ) && startsWith(runner.os, 'macOS')
         uses: actions/cache@v1
         with:
           path: ~/Library/Caches/pip
-          key: ${{ runner.os }}-${{ runner.arch }}-pip-${{ hashFiles('**/requirements.txt') }}
+          key: pip-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
-            ${{ runner.os }}-${{ runner.arch }}-pip-
+            pip-${{ runner.os }}-${{ runner.arch }}-
 
       # ============================================================================ #
       # Perl Caches
@@ -141,18 +141,18 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ~/.cpan
-          key: ${{ runner.os }}-${{ runner.arch }}-cpan-${{ hashFiles('**/cpan-requirements.txt') }}
+          key: cpan-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/cpan-requirements.txt') }}
           restore-keys: |
-            ${{ runner.os }}-${{ runner.arch }}-cpan-
+            cpan-${{ runner.os }}-${{ runner.arch }}-
 
       - name: Perl CPANM Cache
         if: contains(inputs.caches, 'perl') || contains(inputs.caches, 'cpan') || contains(inputs.caches, 'cpanm')
         uses: actions/cache@v1
         with:
           path: ~/.cpanm
-          key: ${{ runner.os }}-${{ runner.arch }}-cpanm-${{ hashFiles('**/cpan-requirements.txt') }}
+          key: cpanm-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/cpan-requirements.txt') }}
           restore-keys: |
-            ${{ runner.os }}-${{ runner.arch }}-cpanm-
+            cpanm-${{ runner.os }}-${{ runner.arch }}-
 
       # ============================================================================ #
       # Ruby Gem Cache
@@ -162,9 +162,9 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ~/.gem
-          key: ${{ runner.os }}-${{ runner.arch }}-gem-${{ hashFiles('**/Gemfile') }}
+          key: gem-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/Gemfile') }}
           restore-keys: |
-            ${{ runner.os }}-${{ runner.arch }}-ge,-
+            gem-${{ runner.os }}-${{ runner.arch }}-
 
       # ============================================================================ #
       # Go Cache
@@ -174,9 +174,9 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ~/go/pkg/mod
-          key: ${{ runner.os }}-${{ runner.arch }}-go-${{ hashFiles('**/go.sum') }}
+          key: golang-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/go.sum') }}
           restore-keys: |
-            ${{ runner.os }}-${{ runner.arch }}-go-
+            golang-${{ runner.os }}-${{ runner.arch }}-
 
       # ============================================================================ #
       # Java Caches
@@ -186,18 +186,18 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ~/.m2/repository
-          key: ${{ runner.os }}-${{ runner.arch }}-maven-cache-${{ hashFiles('**/pom.xml') }}
+          key: maven-cache-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
-            ${{ runner.os }}-${{ runner.arch }}-maven-cache-
+            maven-cache-${{ runner.os }}-${{ runner.arch }}-
 
       - name: Maven Wrapper
         if: contains(inputs.caches, 'maven')
         uses: actions/cache@v1
         with:
           path: ~/.m2/wrapper
-          key: ${{ runner.os }}-${{ runner.arch }}-maven-wrapper-${{ hashFiles('**/pom.xml') }}
+          key: maven-wrapper-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
-            ${{ runner.os }}-${{ runner.arch }}-maven-wrapper-
+            maven-wrapper-${{ runner.os }}-${{ runner.arch }}-
 
       # ============================================================================ #
       - name: Gradle Cache
@@ -205,18 +205,18 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ~/.gradle/caches
-          key: ${{ runner.os }}-${{ runner.arch }}-gradle-cache-${{ hashFiles('**/build.gradle') }}
+          key: gradle-cache-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/build.gradle') }}
           restore-keys: |
-            ${{ runner.os }}-${{ runner.arch }}-gradle-cache-
+            gradle-cache-${{ runner.os }}-${{ runner.arch }}-
 
       - name: Gradle Wrapper
         if: contains(inputs.caches, 'gradle')
         uses: actions/cache@v1
         with:
           path: ~/.gradle/wrapper
-          key: ${{ runner.os }}-${{ runner.arch }}-gradle-wrapper-${{ hashFiles('**/build.gradle') }}
+          key: gradle-wrapper-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/build.gradle') }}
           restore-keys: |
-            ${{ runner.os }}-${{ runner.arch }}-gradle-wrapper-
+            gradle-wrapper-${{ runner.os }}-${{ runner.arch }}-
 
       # ============================================================================ #
       - name: SBT Cache
@@ -224,18 +224,18 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ~/.sbt
-          key: ${{ runner.os }}-${{ runner.arch }}-sbt-cache-${{ hashFiles('**/build.sbt') }}
+          key: sbt-cache-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/build.sbt') }}
           restore-keys: |
-            ${{ runner.os }}-${{ runner.arch }}-sbt-cache
+            sbt-cache-${{ runner.os }}-${{ runner.arch }}
 
       - name: SBT Ivy Cache
         if: contains(inputs.caches, 'sbt')
         uses: actions/cache@v1
         with:
           path: ~/.ivy2/cache
-          key: ${{ runner.os }}-${{ runner.arch }}-sbt-ivy-cache-${{ hashFiles('**/build.sbt') }}
+          key: sbt-ivy-cache-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/build.sbt') }}
           restore-keys: |
-            ${{ runner.os }}-${{ runner.arch }}-sbt-ivy-cache-
+            sbt-ivy-cache-${{ runner.os }}-${{ runner.arch }}
 
       # ============================================================================ #
       - name: Groovy Cache
@@ -243,9 +243,9 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ~/.groovy
-          key: ${{ runner.os }}-${{ runner.arch }}-groovy-cache #-${{ hashFiles('**/*.groovy') }}
+          key: groovy-cache-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/*.groovy') }}
           restore-keys: |
-            ${{ runner.os }}-${{ runner.arch }}-groovy-cache
+            groovy-cache-${{ runner.os }}-${{ runner.arch }}
 
       # ============================================================================
 
