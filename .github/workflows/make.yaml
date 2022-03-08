@@ -103,7 +103,7 @@ jobs:
         run: git clone "https://${{github.token}}@github.com/$GITHUB_REPOSITORY" "$GITHUB_WORKSPACE"
 
       - name: SBT Cache
-        if: contains(inputs.caches, "sbt")
+        if: contains(inputs.caches, 'sbt')
         uses: actions/cache@v1
         with:
           path: ~/.sbt
@@ -112,7 +112,7 @@ jobs:
             ${{ runner.os }}-sbt-
 
       - name: SBT Ivy Cache
-        if: contains(inputs.caches, "sbt")
+        if: contains(inputs.caches, 'sbt')
         uses: actions/cache@v1
         with:
           path: ~/.ivy2/cache
