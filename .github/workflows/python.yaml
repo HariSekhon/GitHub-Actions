@@ -58,9 +58,9 @@ jobs:
       - uses: actions/cache@v1
         with:
           path: ~/.cache/pip
-          key: pip-${{ hashFiles('**/requirements.txt') }}
+          key: pip-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
-            ${{ runner.os }}-pip-bash-tools
+            pip-${{ runner.os }}-${{ runner.arch }}-
 
       - name: Init
         run: |
