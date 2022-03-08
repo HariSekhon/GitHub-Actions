@@ -98,6 +98,10 @@ jobs:
             $sudo yum install -y -q bash git make
           fi
 
+      - name: Brew Update
+        if: startsWith(runner.os, 'macOS')
+        run: which brew && brew update || echo
+
       - name: Git version
         run: git --version
 
