@@ -109,7 +109,7 @@ jobs:
           path: ~/.sbt
           key: ${{ runner.os }}-${{ runner.arch }}-sbt-${{ hashFiles('**/build.sbt') }}
           restore-keys: |
-            ${{ runner.os }}-sbt-
+            ${{ runner.os }}-${{ runner.arch }}-sbt-
 
       - name: SBT Ivy Cache
         if: contains(inputs.caches, 'sbt')
@@ -118,7 +118,7 @@ jobs:
           path: ~/.ivy2/cache
           key: ${{ runner.os }}-${{ runner.arch }}-sbt-ivy-cache-${{ hashFiles('**/build.sbt') }}
           restore-keys: |
-            ${{ runner.os }}-sbt-ivy-cache-
+            ${{ runner.os }}-${{ runner.arch }}-sbt-ivy-cache-
 
       - name: Init
         run: |
