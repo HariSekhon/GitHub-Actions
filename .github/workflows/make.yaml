@@ -68,6 +68,33 @@ jobs:
       - name: Environment
         run: env | sort
 
+      - name: Apk Cache
+        if: ( contains(inputs.caches, 'apk') || contains(inputs.caches, 'alpine') ) && startsWith(runner.os, 'Linux')
+        uses: actions/cache@v1
+        with:
+          path: /var/cache/apk
+          key: apk-cache-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('/etc/*release') }}
+          restore-keys: |
+            apk-cache-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('/etc/*release') }}
+
+      - name: Apt Cache
+        if: ( contains(inputs.caches, 'apt') || contains(inputs.caches, 'debian') || contains(inputs.caches, 'ubuntu') ) && startsWith(runner.os, 'Linux')
+        uses: actions/cache@v1
+        with:
+          path: /var/cache/apt
+          key: apt-cache-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('/etc/*release') }}
+          restore-keys: |
+            apt-cache-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('/etc/*release') }}
+
+      - name: Yum Cache
+        if: ( contains(inputs.caches, 'yum') || contains(inputs.caches, 'centos') || contains(inputs.caches, 'rhel') ) && startsWith(runner.os, 'Linux')
+        uses: actions/cache@v1
+        with:
+          path: /var/cache/yum
+          key: yum-cache-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('/etc/*release') }}
+          restore-keys: |
+            yum-cache-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('/etc/*release') }}
+
       - name: Install Bash, Git & Make
         run: |
           sudo=sudo
@@ -77,7 +104,8 @@ jobs:
           if command -v apk; then
             # apk add --no-cache isn't available until Alpine 3
             #$sudo apk add --no-cache git make
-            $sudo apk update && apk add bash git make
+            $sudo apk update
+            $sudo apk add bash git make
           elif command -v apt-get; then
             if grep -Fxq 'ID=debian' /etc/*release &&
                grep -xq 'VERSION_ID="[67]"' /etc/*release; then
