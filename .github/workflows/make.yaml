@@ -86,7 +86,7 @@ jobs:
           #  $sudo dnf install -y -q bash git make
           elif command -v yum; then
             # CentOS is EOL - but for some reason CentOS 7 works without this, while CentOS 6 and 8 need archive
-            if grep -qi centos /etc/*release && grep -q '^VERSION="[68]"$' /etc/*release; then
+            if grep -qi 'NAME=.*CentOS' /etc/*release && grep -q '^VERSION="[68]"$' /etc/*release; then
               $sudo sed -i 's/^[[:space:]]*mirrorlist/#mirrorlist/' /etc/yum.repos.d/CentOS-*
               $sudo sed -i 's|^#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|' /etc/yum.repos.d/CentOS-*
             fi
