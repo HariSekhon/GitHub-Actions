@@ -42,6 +42,7 @@ jobs:
   dump_contexts:
     name: Dump Contexts
     runs-on: ubuntu-latest
+    container: ubuntu:latest
     timeout-minutes: 10
     steps:
 
