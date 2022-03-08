@@ -21,7 +21,7 @@ on:
         description: The base OS to run on. Must be ubuntu if specifying container
         type: string
         default: ubuntu-latest
-        required: true
+        required: false
       container:
         description: The docker image:version container to build inside
         type: string
