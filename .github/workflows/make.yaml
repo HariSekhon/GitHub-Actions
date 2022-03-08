@@ -250,7 +250,7 @@ jobs:
         run: |
           if [ -n "${BUILD_TARGET:-}" ] &&
              grep -q "^$BUILD_TARGET:" Makefile; then
-             make "$BUILD_TARGET"
+             make $BUILD_TARGET  # intentionally not quoting to pass multiple targets
           elif grep -q '^ci:' Makefile; then
             make ci
           elif grep -q '^build:' Makefile; then
