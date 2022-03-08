@@ -17,6 +17,11 @@ name: Make
 on:
   workflow_call:
     inputs:
+      runs-on:
+        description: The base OS to run on. Must be ubuntu if specifying container
+        type: string
+        default: ubuntu-latest
+        required: true
       container:
         description: The docker image:version container to build inside
         type: string
@@ -57,7 +62,7 @@ env:
 jobs:
   make:
     name: Make
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runs-on }}
     container: ${{ inputs.container }}
     steps:
       - name: Environment
@@ -153,9 +158,9 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ~/.gem
-          key: ${{ runner.os }}--${{ runner.arch }}-gem-${{ hashFiles('**/Gemfile') }}
+          key: ${{ runner.os }}-${{ runner.arch }}-gem-${{ hashFiles('**/Gemfile') }}
           restore-keys: |
-            ${{ runner.os }}--${{ runner.arch }}-ge,-
+            ${{ runner.os }}-${{ runner.arch }}-ge,-
 
       # ============================================================================ #
       # Go Cache
@@ -165,9 +170,9 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ~/go/pkg/mod
-          key: ${{ runner.os }}--${{ runner.arch }}-go-${{ hashFiles('**/go.sum') }}
+          key: ${{ runner.os }}-${{ runner.arch }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
-            ${{ runner.os }}--${{ runner.arch }}-go-
+            ${{ runner.os }}-${{ runner.arch }}-go-
 
       # ============================================================================ #
       # Java Caches
