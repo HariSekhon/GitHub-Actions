@@ -104,6 +104,7 @@ env:
   #SELENIUM_HUB_URL: http://x.x.x.x:4444/wd/hub/
   #SELENIUM_HUB_URL: https://x.x.x.x/wd/hub/
 
+  TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
   TF_IN_AUTOMATION: "1"
   TF_WORKSPACE: ${{ env.ENV }}  # run same code against multiple environments
 
@@ -222,7 +223,6 @@ defaults:
 
 jobs:
   build:
-    #if: github.event.repository.fork == false
     name: Build
     #needs: [job1, job2]  # dependency jobs
     environment:
@@ -230,7 +230,8 @@ jobs:
     timeout-minutes: 10
 
     # XXX: Conditionals must use single quotes for strings or get an error - Unexpected symbol: '"string"'
-    if: github.ref_name == 'master' || github.ref_name == 'main' || github.ref_name == 'docker'  # stops this workflow running on manual workflow_dispatch on the wrong branch (eg. to stop it invalidating the Docker build cache, update: solved now because I use many tags to cache)
+    # stops this workflow running on manual workflow_dispatch on the wrong branch (eg. to stop it invalidating the Docker build cache, update: solved now because I use many tags to cache)
+    if: ( github.ref_name == 'master' || github.ref_name == 'main' || github.ref_name == 'docker' ) && github.event.repository.fork == false
     #if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
 
     # if triggered from another workflow using workflow_run above, check that workflow succeeded before running
@@ -456,9 +457,8 @@ jobs:
   # Call reusable workflow
   dockerhub_build:
     name: Docker Build
-    #if: github.event.repository.fork == false
     # XXX: stop this workflow being manually run on other branches if workflow_dispatch is defined
-    if: github.ref_name == 'master' || github.ref_name == 'main' || github.ref_name == 'docker'
+    if: ( github.ref_name == 'master' || github.ref_name == 'main' || github.ref_name == 'docker' ) && github.event.repository.fork == false
     uses: HariSekhon/GitHub-Actions/.github/workflows/docker_build.yaml@master
     with:
       repo: harisekhon/bash-tools
@@ -474,9 +474,8 @@ jobs:
 
   docker_build_aws_ecr:
     name: Docker Build -> AWS ECR
-    #if: github.event.repository.fork == false
     # XXX: stop this workflow being manually run on other branches if workflow_dispatch is defined
-    if: github.ref_name == 'master' || github.ref_name == 'main' || contains(github.ref_name, 'docker')
+    if: ( github.ref_name == 'master' || github.ref_name == 'main' || contains(github.ref_name, 'docker') ) && github.event.repository.fork == false
     # XXX: path must include /.github/workflows/ and @<branch/tag/hashref>, otherwise you may get these errors:
     #       invalid value workflow reference: references to workflows must be rooted in '.github/workflows'
     #       invalid value workflow reference: no version specified
@@ -494,7 +493,7 @@ jobs:
       packages: write  # needed for GHCR access if using max-cache: true
 
   docker_build:
-    #if: github.event.repository.fork == false
+    if: github.event.repository.fork == false
     name: Docker Build
     #needs: [job1, job2]  # dependency jobs
     timeout-minutes: 10
@@ -747,7 +746,7 @@ jobs:
   # ============================================================================ #
 
   deploy:
-    #if: github.event.repository.fork == false
+    if: github.event.repository.fork == false
     name: Deploy
     needs: build
     runs-on: ubuntu-latest
@@ -759,7 +758,7 @@ jobs:
         run: kubectl apply -f ./
 
   argocd:
-    #if: github.event.repository.fork == false
+    if: github.event.repository.fork == false
     name: ArgoCD Deploy
     needs: build
     runs-on: ubuntu-latest
@@ -794,16 +793,25 @@ jobs:
   # ============================================================================ #
 
   validate:
-    #if: github.event.repository.fork == false
+    if: github.event.repository.fork == false
     name: Validate
     uses: HariSekhon/GitHub-Actions/.github/workflows/validate.yaml@master
+
+  # ============================================================================ #
+  #                               T e r r a f o r m
+  # ============================================================================ #
+
+  terraform:
+    if: github.event.repository.fork == false
+    name: Terraform
+    uses: HariSekhon/GitHub-Actions/.github/workflows/terraform_plan_apply.yaml@master
 
   # ============================================================================ #
   #                                   T F s e c
   # ============================================================================ #
 
   tfsec:
-    #if: github.event.repository.fork == false
+    if: github.event.repository.fork == false
     name: tfsec
     uses: HariSekhon/GitHub-Actions/.github/workflows/tfsec.yaml@master
     permissions:
@@ -813,7 +821,7 @@ jobs:
 
   # on: [pull_request]
   tfsec_pr_commenter:
-    #if: github.event.repository.fork == false
+    if: github.event.repository.fork == false
     name: tfsec PR commenter
     uses: HariSekhon/GitHub-Actions/.github/workflows/tfsec-pr-commenter.yaml@master
     permissions:
@@ -826,9 +834,8 @@ jobs:
   # ============================================================================ #
 
   trivy:
-    #if: github.event.repository.fork == false
     name: Trivy AWS ECR
-    if: github.ref_name == 'main' || contains(github.ref_name, 'docker')
+    if: ( github.ref_name == 'main' || contains(github.ref_name, 'docker') ) && github.event.repository.fork == false
     needs:
       - docker_build
     uses: HariSekhon/GitHub-Actions/.github/workflows/trivy_aws_ecr.yaml@master
@@ -848,7 +855,7 @@ jobs:
   # ============================================================================ #
 
   checkov:
-    #if: github.event.repository.fork == false
+    if: github.event.repository.fork == false
     name: Checkov Scan
     uses: HariSekhon/GitHub-Actions/.github/workflows/checkov.yaml@master
     #with:
@@ -863,7 +870,7 @@ jobs:
   # ============================================================================ #
 
   semgrep:
-    #if: github.event.repository.fork == false
+    if: github.event.repository.fork == false
     name: Semgrep GitHub Security Tab
     uses: HariSekhon/GitHub-Actions/.github/workflows/semgrep.yaml@master
     permissions:
@@ -872,7 +879,7 @@ jobs:
       security-events: write
 
   semgrep_cloud:
-    #if: github.event.repository.fork == false
+    if: github.event.repository.fork == false
     name: Semgrep Cloud
     uses: HariSekhon/GitHub-Actions/.github/workflows/semgrep-cloud.yaml@master
     secrets:
@@ -883,7 +890,7 @@ jobs:
   # ============================================================================ #
 
   reviewdog:
-    #if: github.event.repository.fork == false
+    if: github.event.repository.fork == false
     name: reviewdog
     uses: HariSekhon/GitHub-Actions/.github/workflows/reviewdog.yaml@master
     permissions:
@@ -893,7 +900,7 @@ jobs:
 
   # on: [pull_request]
   reviewdog-pr-check:
-    #if: github.event.repository.fork == false
+    if: github.event.repository.fork == false
     name: reviewdog PR
     uses: HariSekhon/GitHub-Actions/.github/workflows/reviewdog-pr.yaml@master
     permissions:
