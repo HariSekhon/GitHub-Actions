@@ -69,7 +69,7 @@ jobs:
       - name: Download Polaris
         uses: fairwindsops/polaris/.github/actions/setup-polaris@master
         with:
-          version: 5.0.0
+          version: 5.0.0  # omitting this fails to download from latest
 
       - name: Polaris version
         run: polaris version
