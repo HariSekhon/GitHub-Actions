@@ -51,6 +51,8 @@ jobs:
       - name: Download Pluto
         uses: FairwindsOps/pluto/github-action@master
 
+      - name: Pluto version
+        run: pluto version
+
       - name: Pluto detect-files
-        run: |
-          pluto detect-files -d .
+        run: pluto detect-files -d .
