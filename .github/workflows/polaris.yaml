@@ -59,8 +59,16 @@ jobs:
 
       - uses: actions/checkout@v2
 
-      - name: Polaris Audit
-        uses: fairwindsops/polaris@master
+      #- name: Polaris Audit
+      #  uses: fairwindsops/polaris@master
+      #  with:
+      #    #version: 4.0.7
+      #    args: polaris audit --audit-path . -f pretty --only-show-failed-tests
+
+      - name: Download polaris
+        uses: fairwindsops/polaris/.github/actions/setup-polaris@master
         with:
-          #version: 4.0.7
-          args: polaris audit --audit-path . -f pretty --only-show-failed-tests
+          version: 5.0.0
+
+      - name: Polaris Audit
+        run: polaris audit --audit-path . -f pretty --only-show-failed-tests
