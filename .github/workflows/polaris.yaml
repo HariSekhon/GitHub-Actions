@@ -53,6 +53,7 @@ env:
 jobs:
   polaris:
     runs-on: ubuntu-latest
+    #container: quay.io/fairwinds/polaris:4.0.7
     steps:
       - name: Environment
         run: env | sort
