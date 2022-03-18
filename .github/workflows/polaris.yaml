@@ -70,5 +70,8 @@ jobs:
         #with:
         #  version: 5.0.0
 
+      - name: Polaris Version
+        run: polaris version
+
       - name: Polaris Audit
         run: polaris audit --audit-path . -f pretty --only-show-failed-tests
