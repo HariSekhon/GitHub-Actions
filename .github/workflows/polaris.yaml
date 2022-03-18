@@ -66,12 +66,12 @@ jobs:
       #    #version: 4.0.7
       #    args: polaris audit --audit-path . -f pretty --only-show-failed-tests
 
-      - name: Download polaris
+      - name: Download Polaris
         uses: fairwindsops/polaris/.github/actions/setup-polaris@master
         with:
           version: 5.0.0
 
-      - name: Polaris Version
+      - name: Polaris version
         run: polaris version
 
       - name: Polaris Audit
