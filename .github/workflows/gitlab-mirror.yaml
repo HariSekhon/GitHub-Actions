@@ -12,7 +12,7 @@
 #
 
 ---
-name: GitLab Mirrors
+name: GitLab Mirror
 
 on:
   workflow_call:
