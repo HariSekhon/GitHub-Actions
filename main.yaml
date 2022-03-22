@@ -192,6 +192,14 @@ on:
     # * is a special character in YAML so you have to quote this string
     - cron: '0 0 * * 1'
 
+# ============================================================================ #
+#                             P e r m i s s i o n s
+# ============================================================================ #
+
+# use minimal permissions at workflow / jobs level
+permissions:
+  contents: read
+
 
 # ============================================================================ #
 #                             C o n c u r r e n c y
