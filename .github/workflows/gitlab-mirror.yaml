@@ -48,7 +48,7 @@ defaults:
     shell: bash -euxo pipefail {0}
 
 env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
   GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
   GITHUB_ORGANIZATION: ${{ inputs.organization }}
   DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }}
