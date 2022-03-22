@@ -37,9 +37,9 @@ on:
         required: false
         default: ""
       debug:
-        type: boolean
+        type: string
         required: false
-        default: false
+        default: ""
 
 permissions:
   contents: read
