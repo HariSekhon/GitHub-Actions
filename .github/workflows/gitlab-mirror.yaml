@@ -1,0 +1,77 @@
+#
+#  Author: Hari Sekhon
+#  Date: 2022-03-22 18:23:10 +0000 (Tue, 22 Mar 2022)
+#
+#  vim:ts=2:sts=2:sw=2:et
+#
+#  https://github.com/HariSekhon/GitHub-Actions
+#
+#  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback
+#
+#  https://www.linkedin.com/in/harisekhon
+#
+
+---
+name: GitLab Mirrors
+
+on:
+  workflow_call:
+    secrets:
+      GITHUB_TOKEN:
+        description: GitHub Token with permissions 'repo' and 'read:org' to list GitHub repos to mirror to GitLab
+        required: true
+      GITLAB_TOKEN:
+        description: GitLab Token with permissions to create new repos to mirror to
+        required: true
+      SSH_PRIVATE_KEY:
+        description: SSH private key with pull access to GitHub repos and push access to GitLab repos. Private key must be unencrypted
+        required: true
+    inputs:
+      organization:
+        description: The GitHub Organization that owns the repos (defaults to the user of the given GITHUB_TOKEN)
+        required: false
+      repos:
+        description: List of repos to mirror, space separated (otherwise iterates and mirrors all repos belonging to the GITHUB_ORGANIZATION or GITHUB_USER)
+        type: string
+        required: false
+        default: ""
+      debug:
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash -euxo pipefail {0}
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+  GITHUB_ORGANIZATION: ${{ inputs.organization }}
+  DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }}
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false  # killing this part way through may leave inconsistencies
+
+jobs:
+  gitlab_mirror:
+    name: Mirror Repos to GitLab
+    if: github.event.repository.fork == false && github.ref_type == 'branch' && github.ref_name == github.event.repository.default_branch
+    runs-on: ubuntu-latest
+    container: harisekhon/bash-tools
+    steps:
+      - name: Environment
+        run: env | sort
+
+      # not needed since everything is done via the GitHub and GitLab APIs and iterated checkouts
+      #- uses: actions/checkout@v2
+
+      - name: Load SSH Private Key
+        run: echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+
+      - name:
+        run: github_repos_mirror_to_gitlab.sh ${{ inputs.repos }}
