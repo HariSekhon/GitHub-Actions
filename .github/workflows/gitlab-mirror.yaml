@@ -19,16 +19,20 @@ on:
     secrets:
       GH_TOKEN:
         description: GitHub Token with permissions 'repo' and 'read:org' to list GitHub repos to mirror to GitLab
+        type: string
         required: true
       GITLAB_TOKEN:
         description: GitLab Token with permissions to create new repos to mirror to
+        type: string
         required: true
       SSH_PRIVATE_KEY:
         description: SSH private key with pull access to GitHub repos and push access to GitLab repos. Private key must be unencrypted
+        type: string
         required: true
     inputs:
       organization:
         description: The GitHub Organization that owns the repos (defaults to the user of the given GITHUB_TOKEN)
+        type: string
         required: false
       repos:
         description: List of repos to mirror, space separated (otherwise iterates and mirrors all repos belonging to the GITHUB_ORGANIZATION or GITHUB_USER)
