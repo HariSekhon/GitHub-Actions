@@ -34,6 +34,7 @@ on:
         required: false
         default: ""
       debug:
+        # type: boolean doesn't work, gets passed as a string anyway
         type: string
         required: false
         default: ""
@@ -50,7 +51,7 @@ env:
   GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
   GITHUB_ORGANIZATION: ${{ inputs.organization }}
   DEBIAN_FRONTEND: noninteractive
-  #DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }}
+  DEBUG: ${{ inputs.debug == 'false' && '' }}
 
 concurrency:
   group: ${{ github.workflow }}
