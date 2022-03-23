@@ -125,7 +125,7 @@ jobs:
 
 Mirrors all/given GitHub repos to GitLab - including all branches and tags, and GitHub repo description
 
-```
+```yaml
 on:
   schedule:
     # mirror to GitLab hourly
