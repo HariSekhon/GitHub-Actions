@@ -128,7 +128,7 @@ jobs:
 
 Mirrors all/given GitHub repos to GitLab - including all branches and tags, and GitHub repo description
 
-```
+```yaml
 on:
   # allow to run manually with one or more repos
   workflow_dispatch:
