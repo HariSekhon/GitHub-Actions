@@ -205,6 +205,7 @@ permissions:
 #                             C o n c u r r e n c y
 # ============================================================================ #
 
+# XXX: cancels previous builds that haven't started even if cancel-in-progress is set to false
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
   cancel-in-progress: false  # build auto-cancellation - enabling this causes false-positive badge failure statuses
