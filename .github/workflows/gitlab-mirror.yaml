@@ -91,11 +91,17 @@ jobs:
 
       - name: Load SSH known hosts keys for GitHub and GitLab
         run: |
+          #umask 0077
           mkdir -pv ~/.ssh
+          chmod 0700 ~/.ssh
           echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
+          chmod 0600 ~/.ssh/known_hosts
 
       - name: Load SSH Private Key
-        run: echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa && chmod 0600 ~/.ssh/known_hosts
+        run: |
+          #umask 0077
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 0600 ~/.ssh/id_rsa
 
       - name: Mirror Repos
         run: github_mirror_repos_to_gitlab.sh ${{ inputs.repos }}
