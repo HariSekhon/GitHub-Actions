@@ -55,7 +55,7 @@ jobs:
         with:
           python-version: ${{ inputs.version }}
 
-      - uses: actions/cache@v1
+      - uses: actions/cache@v2
         with:
           path: ~/.cache/pip
           key: pip-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/requirements.txt') }}
