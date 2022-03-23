@@ -69,5 +69,12 @@ jobs:
       # not needed since everything is done via the GitHub and GitLab APIs and iterated checkouts
       #- uses: actions/checkout@v2
 
+    - uses: actions/cache@v1
+      with:
+        path: /tmp/github_to_gitlab_mirroring
+        key: github-to-gitlab-mirroring
+        restore-keys: |
+          github-to-gitlab-mirroring
+
       - name: Mirror Repos
         run: github_mirror_repos_to_gitlab.sh ${{ inputs.repos }}
