@@ -121,6 +121,27 @@ jobs:
       base: staging     # to
 ```
 
+### Mirror Repos to GitLab for DR Backups
+
+Mirrors all/given GitHub repos to GitLab - including all branches and tags, and GitHub repo description
+
+```
+on:
+	# back up mirror to GitLab hourly
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  gitlab_mirror:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/gitlab-mirror.yaml@master
+    with:
+      #organization: my-org    # optional: mirror your company's repos instead of your personal repos
+      #repos: repo1 repo2 ...  # list of repos to mirror, space separated, rather than all repos
+    secrets:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+```
+
 ### See Also
 
 - [Jenkins](https://github.com/harisekhon/jenkins) - Advanced Jenkinsfile & Jenkins Shared Library
