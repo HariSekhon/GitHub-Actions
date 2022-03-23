@@ -23,9 +23,6 @@ on:
       GITLAB_TOKEN:
         description: GitLab Token with permissions to create new repos to mirror to
         required: true
-      SSH_PRIVATE_KEY:
-        description: SSH private key with pull access to GitHub repos and push access to GitLab repos. Private key must be unencrypted
-        required: true
     inputs:
       organization:
         description: The GitHub Organization that owns the repos (defaults to the user of the given GITHUB_TOKEN)
@@ -52,27 +49,6 @@ env:
   GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
   GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
   GITHUB_ORGANIZATION: ${{ inputs.organization }}
-  SSH_KNOWN_HOSTS: |
-    # github.com:22 SSH-2.0-babeld-4f04c79d
-    github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==
-    # github.com:22 SSH-2.0-babeld-4f04c79d
-    github.com ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEmKSENjQEezOmxkZMy7opKgwFB9nkt5YRrYMjNuG5N87uRgg6CLrbo5wAdT/y6v0mKV0U2w0WZ2YB/++Tpockg=
-    # github.com:22 SSH-2.0-babeld-4f04c79d
-    github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl
-
-    # ssh.github.com:22 SSH-2.0-babeld-4f04c79d
-    ssh.github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==
-    # ssh.github.com:22 SSH-2.0-babeld-4f04c79d
-    ssh.github.com ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEmKSENjQEezOmxkZMy7opKgwFB9nkt5YRrYMjNuG5N87uRgg6CLrbo5wAdT/y6v0mKV0U2w0WZ2YB/++Tpockg=
-    # ssh.github.com:22 SSH-2.0-babeld-4f04c79d
-    ssh.github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl
-
-    # gitlab.com:22 SSH-2.0-OpenSSH_7.9p1 Debian-10+deb10u2
-    gitlab.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCsj2bNKTBSpIYDEGk9KxsGh3mySTRgMtXL583qmBpzeQ+jqCMRgBqB98u3z++J1sKlXHWfM9dyhSevkMwSbhoR8XIq/U0tCNyokEi/ueaBMCvbcTHhO7FcwzY92WK4Yt0aGROY5qX2UKSeOvuP4D6TPqKF1onrSzH9bx9XUf2lEdWT/ia1NEKjunUqu1xOB/StKDHMoX4/OKyIzuS0q/T1zOATthvasJFoPrAjkohTyaDUz2LN5JoH839hViyEG82yB+MjcFV5MU3N1l1QL3cVUCh93xSaua1N85qivl+siMkPGbO5xR/En4iEY6K2XPASUEMaieWVNTRCtJ4S8H+9
-    # gitlab.com:22 SSH-2.0-OpenSSH_7.9p1 Debian-10+deb10u2
-    gitlab.com ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBFSMqzJeV9rUzU4kWitGjeR4PWSa29SPqJ1fVkhtj3Hw9xjLVXVYrU9QlYWrOLXBpQ6KWjbjTDTdDkoohFzgbEY=
-    # gitlab.com:22 SSH-2.0-OpenSSH_7.9p1 Debian-10+deb10u2
-    gitlab.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAfuCHKVTjquxvt6CM6tdG4SLp1Btn/nOeHHE5UOzRdf
   DEBIAN_FRONTEND: noninteractive
   #DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }}
 
@@ -92,26 +68,6 @@ jobs:
 
       # not needed since everything is done via the GitHub and GitLab APIs and iterated checkouts
       #- uses: actions/checkout@v2
-
-      - name: Install SSH Client
-        run: |
-          whoami
-          sudo apt-get update
-          sudo apt-get install -y openssh-client
-
-      - name: Load SSH known hosts keys for GitHub and GitLab
-        run: |
-          #umask 0077
-          mkdir -pv ~/.ssh
-          chmod 0700 ~/.ssh
-          echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
-          chmod 0600 ~/.ssh/known_hosts
-
-      - name: Load SSH Private Key
-        run: |
-          #umask 0077
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 0600 ~/.ssh/id_rsa
 
       - name: Mirror Repos
         run: github_mirror_repos_to_gitlab.sh ${{ inputs.repos }}
