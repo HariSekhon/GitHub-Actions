@@ -97,7 +97,7 @@ jobs:
         run: |
           whoami
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends openssh-client
+          sudo apt-get install -y openssh-client
 
       - name: Load SSH known hosts keys for GitHub and GitLab
         run: |
