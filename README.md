@@ -127,8 +127,8 @@ Mirrors all/given GitHub repos to GitLab - including all branches and tags, and 
 
 ```
 on:
-  # back up mirror to GitLab hourly
   schedule:
+    # mirror to GitLab hourly
     - cron: '0 0 * * *'
 
 jobs:
