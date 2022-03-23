@@ -140,7 +140,7 @@ on:
         required: false
 
   schedule:
-    # back up mirror to GitLab hourly
+    # mirror to GitLab hourly
     - cron: '0 0 * * *'
 
 jobs:
