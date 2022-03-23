@@ -95,7 +95,7 @@ jobs:
           echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
 
       - name: Load SSH Private Key
-        run: echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        run: echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa && chmod 0600 ~/.ssh/known_hosts
 
       - name: Mirror Repos
-        run: github_repos_mirror_to_gitlab.sh ${{ inputs.repos }}
+        run: github_mirror_repos_to_gitlab.sh ${{ inputs.repos }}
