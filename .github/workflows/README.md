@@ -139,8 +139,8 @@ on:
         default: ""
         required: false
 
-  # back up mirror to GitLab hourly
   schedule:
+    # back up mirror to GitLab hourly
     - cron: '0 0 * * *'
 
 jobs:
