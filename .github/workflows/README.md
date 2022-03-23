@@ -124,6 +124,38 @@ jobs:
       base: staging     # to
 ```
 
+### Mirror Repos to GitLab for DR Backups
+
+Mirrors all/given GitHub repos to GitLab - including all branches and tags, and GitHub repo description
+
+```
+on:
+  # allow to run manually with one or more repos
+  workflow_dispatch:
+    inputs:
+      repos:
+        description: The GitHub repos to mirror to GitLab, space separated (empty defaults to all repos accessible)
+        type: string
+        default: ""
+        required: false
+
+	# back up mirror to GitLab hourly
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  gitlab_mirror:
+    name: GitLab Mirror
+    if: github.event.repository.fork == false && github.ref_type == 'branch' && github.ref_name == github.event.repository.default_branch
+    uses: HariSekhon/GitHub-Actions/.github/workflows/gitlab-mirror.yaml@master
+    with:
+      #organization: my-org  # optional: mirror your company's repos instead of your personal repos
+      repos: ${{ github.event.inputs.repos }}  # if triggering manually, mirror those given repos, if blank, mirror all of them
+    secrets:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+```
+
 ## Permissions
 
 These workflows are locked down to the minimal required permissions as per the best practice principal of least privilege, usually just `contents: read`, but some require extra permissions to create Pull Requests or write Security Alerts to the GitHub Security tab.
