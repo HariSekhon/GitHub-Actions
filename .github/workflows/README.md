@@ -139,7 +139,7 @@ on:
         default: ""
         required: false
 
-	# back up mirror to GitLab hourly
+  # back up mirror to GitLab hourly
   schedule:
     - cron: '0 0 * * *'
 
