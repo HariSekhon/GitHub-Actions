@@ -925,13 +925,13 @@ jobs:
 
     # Cache with matrix
 
-#    - uses: actions/cache@v1
+#    - uses: actions/cache@v2
 #      with:
 #        path: ~/.cache/pip
 #        key: ${{ runner.os }}-pip-bash-tools  # ${{ hashFiles('**/requirements.txt') }}
 #        restore-keys: |
 #          ${{ runner.os }}-pip-
-#    - uses: actions/cache@v1
+#    - uses: actions/cache@v2
 #      with:
 #        path: ~/.cpanm
 #        key: ${{ runner.os }}-cpanm-bash-tools  # ${{ hashFiles('**/cpan-requirements.txt') }}
@@ -940,7 +940,7 @@ jobs:
 
 # ============================================================================ #
 # Python
-#    - uses: actions/cache@v1
+#    - uses: actions/cache@v2
 #      if: startsWith(runner.os, 'Linux')
 #      with:
 #        path: ~/.cache/pip
@@ -948,7 +948,7 @@ jobs:
 #        restore-keys: |
 #          ${{ runner.os }}-pip-
 #
-#    - uses: actions/cache@v1
+#    - uses: actions/cache@v2
 #      if: startsWith(runner.os, 'macOS')
 #      with:
 #        path: ~/Library/Caches/pip
@@ -957,7 +957,7 @@ jobs:
 #          ${{ runner.os }}-pip-
 # ============================================================================
 # Perl
-#    - uses: actions/cache@v1
+#    - uses: actions/cache@v2
 #      with:
 #        path: ~/.cpanm
 #        key: ${{ runner.os }}-cpanm-${{ hashFiles('**/cpan-requirements.txt') }}
@@ -965,7 +965,7 @@ jobs:
 #          ${{ runner.os }}-cpanm-
 # ============================================================================
 # Go
-#    - uses: actions/cache@v1
+#    - uses: actions/cache@v2
 #      with:
 #        path: ~/go/pkg/mod
 #        key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
@@ -973,14 +973,14 @@ jobs:
 #          ${{ runner.os }}-go-
 # ============================================================================
 # Java / Maven
-#    - uses: actions/cache@v1
+#    - uses: actions/cache@v2
 #      name: Maven Cache
 #      with:
 #        path: ~/.m2/repository
 #        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
 #        restore-keys: |
 #          ${{ runner.os }}-maven-
-#    - uses: actions/cache@v1
+#    - uses: actions/cache@v2
 #      name: Maven Wrapper
 #      with:
 #        path: ~/.m2/wrapper
@@ -989,26 +989,26 @@ jobs:
 #          ${{ runner.os }}-maven-wrapper-
 # ============================================================================
 # Scala / SBT
-#    - uses: actions/cache@v1
+#    - uses: actions/cache@v2
 #      name: SBT Cache
 #      with:
 #        path: ~/.sbt
 #        key: ${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt') }}
-#    - uses: actions/cache@v1
+#    - uses: actions/cache@v2
 #      name: SBT Ivy Cache
 #      with:
 #        path: ~/.ivy2/cache
 #        key: ${{ runner.os }}-sbt-ivy-cache-${{ hashFiles('**/build.sbt') }}
 # ============================================================================
 # Gradle
-#    - uses: actions/cache@v1
+#    - uses: actions/cache@v2
 #      name: Gradle Cache
 #      with:
 #        path: ~/.gradle/caches
 #        key: ${{ runner.os }}-gradle-cache-${{ hashFiles('**/build.gradle') }}
 #        restore-keys: |
 #          ${{ runner.os }}-gradle-cache-
-#    - uses: actions/cache@v1
+#    - uses: actions/cache@v2
 #      name: Gradle Wrapper
 #      with:
 #        path: ~/.gradle/wrapper
