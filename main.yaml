@@ -233,6 +233,13 @@ defaults:
 # ============================================================================ #
 
 jobs:
+  reusable_workflow:
+    if: github.event.repository.fork == false
+    name: NAME
+    uses: HariSekhon/GitHub-Actions/.github/workflows/some-workflow.yaml@master
+    with:
+      debug: ${{ github.event.inputs.debug && fromJSON(github.event.inputs.debug) || false }}
+
   build:
     name: Build
     #needs: [job1, job2]  # dependency jobs
@@ -807,6 +814,8 @@ jobs:
     if: github.event.repository.fork == false
     name: Validate
     uses: HariSekhon/GitHub-Actions/.github/workflows/validate.yaml@master
+    with:
+      debug: ${{ github.event.inputs.debug && fromJSON(github.event.inputs.debug) || false }}
 
   # ============================================================================ #
   #                               T e r r a f o r m
