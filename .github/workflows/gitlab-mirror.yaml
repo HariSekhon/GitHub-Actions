@@ -60,7 +60,7 @@ env:
   GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
   GITHUB_ORGANIZATION: ${{ inputs.organization }}
   DEBIAN_FRONTEND: noninteractive
-  DEBUG: ${{ ( inputs.debug != 'false' ) || ( github.event.inputs.debug && fromJSON(github.event.inputs.debug) ) || '' }}
+  DEBUG: ${{ inputs.debug != 'false' || github.event.inputs.debug != 'false' || '' }}
 
 concurrency:
   group: ${{ github.workflow }}

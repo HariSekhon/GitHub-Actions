@@ -36,7 +36,7 @@ on:
         default: ''
         required: false
       debug:
-        type: boolean
+        type: string
         required: false
         default: false
   workflow_dispatch:
@@ -57,7 +57,7 @@ defaults:
 
 env:
   INPUTS: ${{ inputs.env }}
-  DEBUG: ${{ inputs.debug || ( github.event.inputs.debug && fromJSON(github.event.inputs.debug) ) || '' }}
+  DEBUG: ${{ inputs.debug != 'false' || github.event.inputs.debug != 'false' || '' }}
 
 jobs:
   validate:

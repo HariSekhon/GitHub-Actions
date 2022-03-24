@@ -40,7 +40,7 @@ on:
         default: false
         required: false
       debug:
-        type: boolean
+        type: string
         required: false
         default: false
     secrets:
@@ -92,7 +92,7 @@ defaults:
 env:
   REPO: ${{ inputs.repo || github.events.inputs.repo }}
   AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
-  DEBUG: ${{ inputs.debug || ( github.event.inputs.debug && fromJSON(github.event.inputs.debug) ) || '' }}
+  DEBUG: ${{ inputs.debug != 'false' || github.event.inputs.debug != 'false' || '' }}
 
 jobs:
   trivy:

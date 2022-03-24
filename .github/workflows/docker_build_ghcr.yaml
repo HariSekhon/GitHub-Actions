@@ -53,7 +53,7 @@ on:
         type: string
         required: false
       debug:
-        type: boolean
+        type: string
         required: false
         default: false
 
@@ -70,7 +70,7 @@ env:
   TAGS: ${{ inputs.tags }}
   DOCKERFILE_REPO: ${{ inputs.dockerfile-repo }}
   BUILDCACHE: ${{ inputs.build-cache }}
-  DEBUG: ${{ inputs.debug || ( github.event.inputs.debug && fromJSON(github.event.inputs.debug) ) || '' }}
+  DEBUG: ${{ inputs.debug != 'false' || github.event.inputs.debug != 'false' || '' }}
 
 jobs:
   docker_build:

@@ -24,7 +24,7 @@ on:
   workflow_call:
     inputs:
       debug:
-        type: boolean
+        type: string
         required: false
         default: false
   workflow_dispatch:
@@ -44,7 +44,7 @@ defaults:
 env:
   GH_TOKEN: ${{ github.token }}
   GH_NO_UPDATE_NOTIFIER: 1
-  DEBUG: ${{ inputs.debug || ( github.event.inputs.debug && fromJSON(github.event.inputs.debug) ) || '' }}
+  DEBUG: ${{ inputs.debug != 'false' || github.event.inputs.debug != 'false' || '' }}
 
 concurrency:
   group: ${{ github.workflow }}
@@ -53,7 +53,12 @@ concurrency:
 jobs:
   sync:
     name: Sync
-    if: github.ref_type == 'branch' && github.ref_name == github.event.repository.default_branch
+    if: |
+      github.event.repository.fork == true &&
+      (
+        github.event_name == 'schedule' ||
+        ( github.ref_type == 'branch' && github.ref_name == github.event.repository.default_branch )
+      )
     runs-on: ubuntu-latest
     steps:
       - name: Environment

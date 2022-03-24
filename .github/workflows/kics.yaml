@@ -48,7 +48,7 @@ on:
         required: false
         default: results
       debug:
-        type: boolean
+        type: string
         required: false
         default: false
   workflow_dispatch:
@@ -67,7 +67,7 @@ defaults:
 env:
   CONFIG: ${{ inputs.config }}
   CONFIG_FILE: ''
-  DEBUG: ${{ inputs.debug || ( github.event.inputs.debug && fromJSON(github.event.inputs.debug) ) || '' }}
+  DEBUG: ${{ inputs.debug != 'false' || github.event.inputs.debug != 'false' || '' }}
 
 jobs:
   kics:

@@ -41,7 +41,7 @@ on:
         type: string
         required: false
       debug:
-        type: boolean
+        type: string
         required: false
         default: false
     secrets:
@@ -62,7 +62,7 @@ defaults:
 
 env:
   REPO: ${{ inputs.repo }}
-  DEBUG: ${{ inputs.debug || ( github.event.inputs.debug && fromJSON(github.event.inputs.debug) ) || '' }}
+  DEBUG: ${{ inputs.debug != 'false' || github.event.inputs.debug != 'false' || '' }}
 
 jobs:
   docker_build:

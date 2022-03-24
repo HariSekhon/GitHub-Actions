@@ -40,7 +40,7 @@ on:
         default: HIGH,CRITICAL
         required: false
       debug:
-        type: boolean
+        type: string
         required: false
         default: false
   workflow_dispatch:
@@ -71,7 +71,7 @@ env:
   # ${{ inputs.* }}               is set by workflow_call
   # ${{ github.events.inputs.* }} is set by workflow_dispatch
   SCAN_PATH: ${{ inputs.path || github.event.inputs.path || '.' }}
-  DEBUG: ${{ inputs.debug || ( github.event.inputs.debug && fromJSON(github.event.inputs.debug) ) || '' }}
+  DEBUG: ${{ inputs.debug != 'false' || github.event.inputs.debug != 'false' || '' }}
 
 jobs:
   trivy:

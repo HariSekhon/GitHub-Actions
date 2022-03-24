@@ -22,7 +22,7 @@ on:
         type: string
         required: true
       debug:
-        type: boolean
+        type: string
         required: false
         default: false
 
@@ -34,7 +34,7 @@ defaults:
     shell: bash -euxo pipefail {0}
 
 env:
-  DEBUG: ${{ inputs.debug || ( github.event.inputs.debug && fromJSON(github.event.inputs.debug) ) || '' }}
+  DEBUG: ${{ inputs.debug != 'false' || github.event.inputs.debug != 'false' || '' }}
 
 jobs:
   build:
