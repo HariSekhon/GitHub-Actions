@@ -248,7 +248,9 @@ jobs:
     name: NAME
     uses: HariSekhon/GitHub-Actions/.github/workflows/some-workflow.yaml@master
     with:
-      debug: ${{ github.event.inputs.debug && fromJSON(github.event.inputs.debug) || false }}
+      # don't cast in calling workflow any more, reusable workflows are using debug string and handling the comparison
+      #debug: ${{ github.event.inputs.debug && fromJSON(github.event.inputs.debug) || false }}
+      debug: ${{ github.event.inputs.debug }}
 
   build:
     name: Build
