@@ -70,7 +70,7 @@ env:
   TAGS: ${{ inputs.tags }}
   DOCKERFILE_REPO: ${{ inputs.dockerfile-repo }}
   BUILDCACHE: ${{ inputs.build-cache }}
-  DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }}
+  DEBUG: ${{ inputs.debug || fromJSON(github.event.inputs.debug) || '' }}
 
 jobs:
   docker_build:

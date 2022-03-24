@@ -67,7 +67,7 @@ defaults:
 env:
   CONFIG: ${{ inputs.config }}
   CONFIG_FILE: ''
-  DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }}
+  DEBUG: ${{ inputs.debug || fromJSON(github.event.inputs.debug) || '' }}
 
 jobs:
   kics:

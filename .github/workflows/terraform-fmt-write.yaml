@@ -49,7 +49,7 @@ defaults:
     shell: sh -eux {0}
 
 env:
-  DEBUG: ${{ inputs.debug || github.event.inputs.debug || '' }}
+  DEBUG: ${{ inputs.debug || fromJSON(github.event.inputs.debug) || '' }}
 
 jobs:
   format-write:
