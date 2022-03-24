@@ -141,7 +141,7 @@ on:
 
   schedule:
     # mirror to GitLab hourly
-    - cron: '0 0 * * *'
+    - cron: '0 * * * *'
 
 jobs:
   gitlab_mirror:
