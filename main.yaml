@@ -47,7 +47,7 @@ env:
   APP: myapp
   ENV: dev
   # workflow_dispatch passes even boolean as string, so use fromJSON to cast string to actual boolean
-  DEBUG: ${{ inputs.debug || fromJSON(github.event.inputs.debug) || '' }}
+  DEBUG: ${{ inputs.debug || ( github.event.inputs.debug && fromJSON(github.event.inputs.debug) ) || '' }}
 
   # or generate dynamic image including the registry, see step section
   DOCKER_IMAGE: myimage

@@ -49,7 +49,7 @@ defaults:
 
 env:
   GH_TOKEN: ${{ github.token }}
-  DEBUG: ${{ inputs.debug || fromJSON(github.event.inputs.debug) || '' }}
+  DEBUG: ${{ inputs.debug || ( github.event.inputs.debug && fromJSON(github.event.inputs.debug) ) || '' }}
 
 jobs:
   validate:
