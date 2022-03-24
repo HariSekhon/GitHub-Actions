@@ -34,8 +34,7 @@ on:
         required: false
         default: ""
       debug:
-        # type: boolean doesn't work, gets passed as a string anyway
-        type: string
+        type: boolean
         required: false
         default: ""
 
@@ -60,7 +59,7 @@ concurrency:
 jobs:
   gitlab_mirror:
     name: Mirror Repos to GitLab
-    if: github.event.repository.fork == false && github.ref_type == 'branch' && github.ref_name == github.event.repository.default_branch
+    #if: github.event.repository.fork == false && github.ref_type == 'branch' && github.ref_name == github.event.repository.default_branch
     runs-on: ubuntu-latest
     container: harisekhon/bash-tools
     steps:
