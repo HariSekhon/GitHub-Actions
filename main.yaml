@@ -164,8 +164,18 @@ on:
         description: The ECR repository, without the 'xxx.dkr.ecr.<region>.amazonaws.com' prefix
         type: string
         required: true
+      # workflow_dispatch pass through sends a string instead of boolean due to this issue:
+      #
+      #   https://github.com/actions/runner/issues/1483
+      #
+      # so to avoid forcing all calling workflows to have casting expressions such as
+      #
+      #   ${{ github.event.inputs.debug && fromJSON(github.event.inputs.debug) || false }}
+      #
+      # use more forgiving string type instead of boolean and cast in reusable workflow
       debug:
-        type: boolean
+        #type: boolean
+        type: string
         required: false
         default: false
     secrets:
