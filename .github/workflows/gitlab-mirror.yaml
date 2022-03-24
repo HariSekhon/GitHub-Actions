@@ -34,16 +34,6 @@ on:
         required: false
         default: ""
       debug:
-        # workflow_dispatch pass through sends a string instead of broken due to this issue:
-        #
-        #   https://github.com/actions/runner/issues/1483
-        #
-        # so to avoid forcing all calling workflows to have casting expressions such as
-        #
-        #   ${{ github.event.inputs.debug && fromJSON(github.event.inputs.debug) || false }}
-        #
-        # use more forgiving string type instead of boolean and cast in this workflow
-        #type: boolean
         type: string
         required: false
         default: false
