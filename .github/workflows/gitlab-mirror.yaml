@@ -36,7 +36,7 @@ on:
       clear_cache:
         type: string
         required: false
-        default: ''
+        default: false
       debug:
         type: string
         required: false
