@@ -62,7 +62,7 @@ defaults:
 
 env:
   REPO: ${{ inputs.repo }}
-  DEBUG: ${{ inputs.debug != 'false' || github.event.inputs.debug != 'false' || '' }}
+  DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
 
 jobs:
   docker_build:

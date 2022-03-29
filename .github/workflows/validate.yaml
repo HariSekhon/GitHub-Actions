@@ -57,7 +57,7 @@ defaults:
 
 env:
   INPUTS: ${{ inputs.env }}
-  DEBUG: ${{ inputs.debug != 'false' || github.event.inputs.debug != 'false' || '' }}
+  DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
 
 jobs:
   validate:

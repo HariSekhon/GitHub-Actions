@@ -74,7 +74,7 @@ env:
   REPO: ${{ inputs.repo }}
   TAGS: ${{ inputs.tags }}
   BUILDCACHE: ${{ inputs.build-cache }}
-  DEBUG: ${{ inputs.debug != 'false' || github.event.inputs.debug != 'false' || '' }}
+  DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
 
 jobs:
   docker_build:

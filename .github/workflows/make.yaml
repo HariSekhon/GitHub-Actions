@@ -57,7 +57,7 @@ defaults:
 env:
   BUILD_TARGET: ${{ inputs.build-target || github.event.inputs.build-target }}
   DEBIAN_FRONTEND: noninteractive
-  DEBUG: ${{ inputs.debug != 'false' || github.event.inputs.debug != 'false' || '' }}
+  DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
 
 jobs:
   make:

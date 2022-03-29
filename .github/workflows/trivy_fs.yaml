@@ -71,7 +71,7 @@ env:
   # ${{ inputs.* }}               is set by workflow_call
   # ${{ github.events.inputs.* }} is set by workflow_dispatch
   SCAN_PATH: ${{ inputs.path || github.event.inputs.path || '.' }}
-  DEBUG: ${{ inputs.debug != 'false' || github.event.inputs.debug != 'false' || '' }}
+  DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
 
 jobs:
   trivy:
