@@ -33,6 +33,10 @@ on:
         type: string
         required: false
         default: ""
+      clear_cache:
+        type: string
+        required: false
+        default: ''
       debug:
         type: string
         required: false
@@ -50,6 +54,7 @@ env:
   GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
   GITHUB_ORGANIZATION: ${{ inputs.organization }}
   DEBIAN_FRONTEND: noninteractive
+  CLEAR_CACHE_GITHUB_MIRROR: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
   DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
 
 concurrency:
