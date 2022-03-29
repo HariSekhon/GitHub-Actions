@@ -54,7 +54,7 @@ env:
   GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
   GITHUB_ORGANIZATION: ${{ inputs.organization }}
   DEBIAN_FRONTEND: noninteractive
-  CLEAR_CACHE_GITHUB_MIRROR: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
+  CLEAR_CACHE_GITHUB_MIRROR: ${{ inputs.clear_cache == 'true' || github.event.inputs.clear_cache == 'true' || '' }}
   DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
 
 concurrency:
