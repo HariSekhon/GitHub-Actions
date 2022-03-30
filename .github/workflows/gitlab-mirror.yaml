@@ -89,7 +89,3 @@ jobs:
 
       - name: Mirror Repos
         run: github_mirror_repos_to_gitlab.sh ${{ inputs.repos }}
-
-      - name: Clear Cache
-        if: failure()
-        run: rm -fr /tmp/github_*
