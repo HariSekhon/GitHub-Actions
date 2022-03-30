@@ -18,7 +18,7 @@ on:
   workflow_call:
     secrets:
       GH_TOKEN:
-        description: GitHub Token with permissions 'repo' and 'read:org' to list GitHub repos to mirror to GitLab
+        description: GitHub Token with permissions 'repo' and 'read:org' to list GitHub repos
         required: true
       GITLAB_TOKEN:
         description: GitLab Token with permissions to create new repos to mirror to
