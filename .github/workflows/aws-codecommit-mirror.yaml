@@ -30,6 +30,12 @@ on:
       AWS_DEFAULT_REGION:
         description: AWS region where the repos should exist
         required: true
+      AWS_GIT_USER:
+        description: AWS Git username (optional), falls back to using git-remote-codecommit python module to use IAM integration otherwise
+        required: false
+      AWS_GIT_PASSWORD:
+        description: AWS Git password (optional), falls back to using git-remote-codecommit python module to use IAM integration otherwise
+        required: false
     inputs:
       organization:
         description: The GitHub Organization that owns the repos (defaults to the user of the given GITHUB_TOKEN)
@@ -62,6 +68,8 @@ env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+  AWS_GIT_USER: ${{ secrets.AWS_GIT_USER }}
+  AWS_GIT_PASSWORD: ${{ secrets.AWS_GIT_PASSWORD }}
   DEBIAN_FRONTEND: noninteractive
   CLEAR_CACHE_GITHUB_MIRROR: ${{ inputs.clear_cache == 'true' || github.event.inputs.clear_cache == 'true' || '' }}
   DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
