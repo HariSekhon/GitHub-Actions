@@ -97,4 +97,4 @@ jobs:
             github-to-aws-codecommit-mirroring
 
       - name: Mirror Repos
-        run: github_mirror_repos_to_aws_codecommmit.sh ${{ inputs.repos }}
+        run: github_mirror_repos_to_aws_codecommit.sh ${{ inputs.repos }}
