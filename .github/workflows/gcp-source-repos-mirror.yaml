@@ -94,7 +94,7 @@ jobs:
 
       - name: GCP Login
         run: |
-          echo "$GCP_SERVICEACCOUNT_KEY" > /tmp/credentials.json
+          base64 --decode <<< "$GCP_SERVICEACCOUNT_KEY" > /tmp/credentials.json
           gcloud auth activate-service-account --key-file /tmp/credentials.json
           rm -f /tmp/credentials.json
           gcloud auth list
