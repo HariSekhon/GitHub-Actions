@@ -82,10 +82,10 @@ jobs:
 
       - uses: actions/cache@v2
         with:
-          path: /tmp/github_to_gitlab_mirroring
-          key: github-to-gitlab-mirroring
+          path: /tmp/github_mirror_to_gitlab
+          key: github-mirror-to-gitlab
           restore-keys: |
-            github-to-gitlab-mirroring
+            github-mirror-to-gitlab
 
       - name: Mirror Repos
         run: github_mirror_repos_to_gitlab.sh ${{ inputs.repos }}
