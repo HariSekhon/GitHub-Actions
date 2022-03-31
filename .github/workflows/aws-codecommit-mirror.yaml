@@ -99,10 +99,10 @@ jobs:
 
       - uses: actions/cache@v2
         with:
-          path: /tmp/github_to_aws_codecommit_mirroring
-          key: github-to-aws-codecommit-mirroring
+          path: /tmp/github_mirror_to_aws_codecommit
+          key: github-mirror-to-aws-codecommit
           restore-keys: |
-            github-to-aws-codecommit-mirroring
+            github-mirror-to-aws-codecommit
 
       - name: Mirror Repos
         run: github_mirror_repos_to_aws_codecommit.sh ${{ inputs.repos }}
