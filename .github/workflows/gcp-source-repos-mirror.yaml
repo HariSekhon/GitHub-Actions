@@ -1,0 +1,96 @@
+#
+#  Author: Hari Sekhon
+#  Date: 2022-03-31 16:48:18 +0100 (Thu, 31 Mar 2022)
+#
+#  vim:ts=2:sts=2:sw=2:et
+#
+#  https://github.com/HariSekhon/GitHub-Actions
+#
+#  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback
+#
+#  https://www.linkedin.com/in/harisekhon
+#
+
+---
+name: GCP Source Repos Mirror
+
+on:
+  workflow_call:
+    secrets:
+      GH_TOKEN:
+        description: GitHub Token with permissions 'repo' and 'read:org' to list GitHub repos
+        required: true
+      GCP_SERVICEACCOUNT_KEY:
+        description: GCP serviceaccount JSON key credential
+        required: true
+      # the reason this is a secret and not an input is because you can set this secret Organization wide on GitHub and just inherit it
+      CLOUDSDK_CORE_PROJECT:
+        description: GCP Project where the repos should exist
+        required: true
+    inputs:
+      organization:
+        description: The GitHub Organization that owns the repos (defaults to the user of the given GITHUB_TOKEN)
+        type: string
+        required: false
+      repos:
+        description: List of repos to mirror, space separated (otherwise iterates and mirrors all repos belonging to the GITHUB_ORGANIZATION or GITHUB_USER)
+        type: string
+        required: false
+        default: ""
+      clear_cache:
+        type: string
+        required: false
+        default: false
+      debug:
+        type: string
+        required: false
+        default: false
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash -euxo pipefail {0}
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+  GITHUB_ORGANIZATION: ${{ inputs.organization }}
+  GCP_SERVICEACCOUNT_KEY: ${{ secrets.GCP_SERVICEACCOUNT_KEY }}
+  CLOUDSDK_CORE_PROJECT: ${{ CLOUDSDK_CORE_PROJECT }}
+  DEBIAN_FRONTEND: noninteractive
+  CLEAR_CACHE_GITHUB_MIRROR: ${{ inputs.clear_cache == 'true' || github.event.inputs.clear_cache == 'true' || '' }}
+  DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false  # killing this part way through may leave inconsistencies
+
+jobs:
+  gcp_source_repos_mirror:
+    name: Mirror Repos to GCP Source Repos
+    # the schedule event doesn't have github.event.repository.* to compare branches so needs to just check for event_name instead
+    #if: |
+    #  github.event.repository.fork == false &&
+    #  (
+    #    github.event_name == 'schedule' ||
+    #    ( github.ref_type == 'branch' && github.ref_name == github.event.repository.default_branch )
+    #  )
+    runs-on: ubuntu-latest
+    container: harisekhon/bash-tools
+    steps:
+      - name: Environment
+        run: env | sort
+
+      # not needed since everything is done via the GitHub and GitLab APIs and iterated checkouts
+      #- uses: actions/checkout@v2
+
+      - uses: actions/cache@v2
+        with:
+          path: /tmp/github_mirror_to_gcp_source_repos
+          key: github-mirror-to-gcp-source-repos
+          restore-keys: |
+            github-mirror-to-gcp-source-repos
+
+      - name: Mirror Repos
+        run: github_mirror_repos_to_gcp_source_repos.sh ${{ inputs.repos }}
