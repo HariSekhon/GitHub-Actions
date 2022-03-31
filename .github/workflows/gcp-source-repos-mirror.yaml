@@ -57,7 +57,7 @@ env:
   GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
   GITHUB_ORGANIZATION: ${{ inputs.organization }}
   GCP_SERVICEACCOUNT_KEY: ${{ secrets.GCP_SERVICEACCOUNT_KEY }}
-  CLOUDSDK_CORE_PROJECT: ${{ CLOUDSDK_CORE_PROJECT }}
+  CLOUDSDK_CORE_PROJECT: ${{ secrets.CLOUDSDK_CORE_PROJECT }}
   DEBIAN_FRONTEND: noninteractive
   CLEAR_CACHE_GITHUB_MIRROR: ${{ inputs.clear_cache == 'true' || github.event.inputs.clear_cache == 'true' || '' }}
   DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
