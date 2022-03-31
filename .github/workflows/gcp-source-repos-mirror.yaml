@@ -21,7 +21,7 @@ on:
         description: GitHub Token with permissions 'repo' and 'read:org' to list GitHub repos
         required: true
       GCP_SERVICEACCOUNT_KEY:
-        description: GCP serviceaccount JSON key credential
+        description: GCP serviceaccount JSON key credential, base64 encoded
         required: true
       # the reason this is a secret and not an input is because you can set this secret Organization wide on GitHub and just inherit it
       CLOUDSDK_CORE_PROJECT:
