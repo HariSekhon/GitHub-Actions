@@ -207,9 +207,25 @@ on:
 #                             P e r m i s s i o n s
 # ============================================================================ #
 
+# https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs#assigning-permissions-to-a-specific-job
+
 # use minimal permissions at workflow / jobs level
 permissions:
   contents: read
+
+  #actions: read|write|none
+  #checks: read|write|none
+  #contents: read|write|none
+  #deployments: read|write|none
+  #id-token: read|write|none
+  #issues: read|write|none
+  #discussions: read|write|none
+  #packages: read|write|none
+  #pages: read|write|none
+  #pull-requests: read|write|none
+  #repository-projects: read|write|none
+  #security-events: read|write|none
+  #statuses: read|write|none
 
 
 # ============================================================================ #
@@ -291,6 +307,12 @@ jobs:
 #        python-version: ['2.7', '3.7', '3.8', '3.9', '3.10', 'pypy-2.7', 'pypy-3.8']
 #        #node: [6, 8, 10]
     container: centos
+
+    # run on a private container image hosted on GHCR - credentials are the same as would be provided to docker login command
+    #container:
+    #  image: ghcr.io/owner/image
+    #  username: ${{ github.actor }}
+    #  password: ${{ secrets.github_token }}
 
 
     # ============================================================================ #
