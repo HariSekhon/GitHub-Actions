@@ -77,8 +77,8 @@ env:
   DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
 
 jobs:
-  docker_build:
-    name: Docker Build -> DockerHub
+  dockerhub_build:
+    name: DockerHub Build
     runs-on: ubuntu-latest
     # better done in the calling workflow to prevent manual docker builds on the wrong branches
     #if: github.ref_name == 'master' || github.ref_name == 'main' || contains(github.ref_name, 'docker')
@@ -152,8 +152,8 @@ jobs:
       # call like so:
       #
       #   jobs:
-      #     docker_build:
-      #       uses: HariSekhon/GitHub-Actions/.github/workflows/docker_build.yaml@master
+      #     dockerhub_build:
+      #       uses: HariSekhon/GitHub-Actions/.github/workflows/dockerhub_build.yaml@master
       #       with:
       #         max-cache: true
       #         ...
