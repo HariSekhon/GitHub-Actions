@@ -1,0 +1,186 @@
+#
+#  Author: Hari Sekhon
+#  Date: 2022-01-27 18:38:27 +0000 (Thu, 27 Jan 2022)
+#
+#  vim:ts=2:sts=2:sw=2:et
+#
+#  https://github.com/HariSekhon/GitHub-Actions
+#
+#  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback
+#
+#  https://www.linkedin.com/in/HariSekhon
+#
+
+# ============================================================================ #
+#                            D o c k e r   B u i l d
+# ============================================================================ #
+
+# Docker Build, Tag & Push to one or more repos
+#
+# Supports:
+#
+#   - DockerHub
+#   - GitHub Container Registry (GHCR)
+#   - AWS Elastic Container Registry (ECR)
+
+---
+name: Docker Build
+
+on:
+  workflow_call:
+    inputs:
+      repo_tags:
+        description: full repository:tag list to push to, space or line separated eg. username/repo:<tag> (defaults to DockerHub), ghcr.io/$GITHUB_REPOSITORY_OWNER/$IMAGE:latest,
+        type: string
+        required: true
+      context:
+        type: string
+        #default: .
+      file:
+        type: string
+        #default: Dockerfile  # breaks auto-pathing when specifying context, you'd have to remember to set file to $context/Dockerfile yourself, better to omit this
+      max-cache:
+        type: boolean
+        default: false
+      build-cache:
+        description: The build cache tag to use
+        type: string
+        default: buildcache
+      dockerfile-repo:
+        description: A separate repo where the Dockerfile for the build can be found. Will be checked out first to a directory of the same name
+        type: string
+        required: false
+      dockerfile-ref:
+        description: The branch from dockerfile-repo to checkout (defaults to the default branch if not specified)
+        type: string
+        required: false
+      debug:
+        type: string
+        required: false
+        default: false
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: false
+      AWS_SECRET_ACCESS_KEY:
+        required: false
+      DOCKERHUB_USER:
+        required: false
+      DOCKERHUB_TOKEN:
+        required: false
+
+permissions:
+  contents: read
+  packages: write
+
+defaults:
+  run:
+    shell: bash -euxo pipefail {0}
+
+env:
+  REPO_TAGS: ${{ inputs.repo_tags }}
+  BUILDCACHE: ${{ inputs.build-cache }}
+  DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
+
+jobs:
+  docker_build:
+    name: Docker Build -> DockerHub
+    runs-on: ubuntu-latest
+    # better done in the calling workflow to prevent manual docker builds on the wrong branches
+    #if: github.ref_name == 'master' || github.ref_name == 'main' || contains(github.ref_name, 'docker')
+    steps:
+      - name: Environment
+        run: env | sort
+
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'true'  # requires Git 2.18+ to be installed first
+
+      - name: Generate environment variable DOCKERFILE_CHECKOUT_PATH
+        if: inputs.dockerfile-repo
+        run: |
+          DOCKERFILE_CHECKOUT_PATH="${{ env.DOCKERFILE_REPO }}"
+          DOCKERFILE_CHECKOUT_PATH="${DOCKERFILE_CHECKOUT_PATH##*/}"
+          echo "DOCKERFILE_CHECKOUT_PATH=$DOCKERFILE_CHECKOUT_PATH" >> "$GITHUB_ENV"
+        env:
+          DOCKERFILE_REPO: ${{ inputs.dockerfile-repo }}
+
+      - name: Generate environment variable AWS_ECR_REGISTRY
+        if: contains(inputs.repo_tags, '.amazonaws.com')
+        run: echo "AWS_ECR_REGISTRY=$(grep -om1 '[^[:space:]]*\.amazonaws\.com' <<< "$REPO_TAGS")" >> "$GITHUB_ENV"
+
+      - name: Git Checkout Dockerfile repo
+        if: inputs.dockerfile-repo
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ inputs.dockerfile-repo }}
+          ref: ${{ inputs.dockerfile-ref }}
+          submodules: 'true'  # requires Git 2.18+ to be installed first
+          path: ${{ env.DOCKERFILE_CHECKOUT_PATH }}
+
+      - name: Docker Login GHCR
+        run: docker login ghcr.io -u "$GITHUB_REPOSITORY_OWNER" --password-stdin <<< "${{github.token}}"
+
+      - name: Docker Login to DockerHub
+        if: secrets.DOCKERHUB_USER && secrets.DOCKERHUB_TOKEN
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USER }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Login to AWS ECR
+        if: secrets.AWS_ACCESS_KEY_ID && secrets.AWS_SECRET_ACCESS_KEY && env.AWS_ECR_REGISTRY
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.AWS_ECR_REGISTRY }}
+          username: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          password: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Generate environment variable CACHE_FROM
+        run: |
+          echo "CACHE_FROM<<EOF" >> "$GITHUB_ENV"
+            for repo_tag in ${{ env.REPO_TAGS }}; do
+              echo "type=registry,ref=$repo_tag" >> "$GITHUB_ENV"
+            done
+          echo "EOF" >> "$GITHUB_ENV"
+
+      - name: Generate environment variable DOCKER_IMAGE_CACHE
+        if: ${{ inputs.max-cache }}
+        run: echo "DOCKER_IMAGE_CACHE=ghcr.io/${{ github.repository }}" >> "$GITHUB_ENV"
+        #run: echo "DOCKER_IMAGE_CACHE=${{ env.AWS_ECR_REGISTRY }}/${{ env.APP }}-cache" >> $GITHUB_ENV  # doesn't work, ECR simply doesn't support it
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      # XXX: Normal build, use inline cache when max-cache input is not set to 'true' - fine for most purposes except for multi-stage builds
+      - name: Docker Build & Push
+        if: ${{ ! inputs.max-cache }}
+        uses: docker/build-push-action@v2
+        with:
+          context: ${{ inputs.context }}
+          file: ${{ inputs.file }}
+          tags: ${{ env.REPO_TAGS }}
+          push: true
+          cache-from: ${{ env.CACHE_FROM }}
+          cache-to: type=inline
+
+      # call like so:
+      #
+      #   jobs:
+      #     docker_build:
+      #       uses: HariSekhon/GitHub-Actions/.github/workflows/docker_build.yaml@master
+      #       with:
+      #         max-cache: true
+      #         ...
+      #
+      - name: Docker Build & Push with external build cache
+        if: ${{ inputs.max-cache }}
+        uses: docker/build-push-action@v2
+        with:
+          context: ${{ inputs.context }}
+          file: ${{ inputs.file }}
+          tags: ${{ env.REPO_TAGS }}
+          push: true
+          cache-from: |
+            type=registry,ref=${{env.REPO}}:${{env.BUILDCACHE}}
+            ${{ env.CACHE_FROM }}
+          cache-to: type=registry,ref=${{env.DOCKER_IMAGE_CACHE}}:${{env.BUILDCACHE}},mode=max  # XXX: fails to push to ECR which doesn't support external registry cache export, so set to GHCR for cache instead
