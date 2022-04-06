@@ -32,6 +32,10 @@ on:
         type: boolean
         default: false
         required: false
+      build-cache:
+        description: The build cache tag to use
+        type: string
+        default: buildcache
       dockerfile-repo:
         description: A separate repo where the Dockerfile for the build can be found. Will be checked out first to a directory of the same name
         type: string
@@ -62,6 +66,7 @@ defaults:
 
 env:
   REPO: ${{ inputs.repo }}
+  BUILDCACHE: ${{ inputs.build-cache }}
   DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
 
 jobs:
@@ -165,11 +170,11 @@ jobs:
         with:
           push: true
           cache-from: |
-            type=registry,ref=${{env.DOCKER_IMAGE_CACHE}}:buildcache
+            type=registry,ref=${{env.DOCKER_IMAGE_CACHE}}:${{env.BUILDCACHE}}
             type=registry,ref=${{env.DOCKER_IMAGE}}:latest
             type=registry,ref=${{env.DOCKER_IMAGE}}:${{github.ref_name}}
             type=registry,ref=${{env.DOCKER_IMAGE}}:${{github.sha}}
-          cache-to: type=registry,ref=${{env.DOCKER_IMAGE_CACHE}}:buildcache,mode=max  # XXX: fails to push to ECR which doesn't support external registry cache export, so set to GHCR for cache instead
+          cache-to: type=registry,ref=${{env.DOCKER_IMAGE_CACHE}}:${{env.BUILDCACHE}},mode=max  # XXX: fails to push to ECR which doesn't support external registry cache export, so set to GHCR for cache instead
           tags: |
             ${{env.DOCKER_IMAGE}}:latest
             ${{env.DOCKER_IMAGE}}:${{github.ref_name}}
