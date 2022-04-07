@@ -50,6 +50,10 @@ on:
         type: string
         required: false
         default: false
+      force-mirror:
+        type: string
+        required: false
+        default: false
       debug:
         type: string
         required: false
@@ -71,7 +75,8 @@ env:
   AWS_GIT_USER: ${{ secrets.AWS_GIT_USER }}
   AWS_GIT_PASSWORD: ${{ secrets.AWS_GIT_PASSWORD }}
   DEBIAN_FRONTEND: noninteractive
-  CLEAR_CACHE_GITHUB_MIRROR: ${{ inputs.clear_cache == 'true' || github.event.inputs.clear_cache == 'true' || '' }}
+  CLEAR_CACHE_GITHUB_MIRROR: ${{ inputs.clear_cache == 'true' || github.event.inputs.clear_cache == 'true' }}
+  FORCE_MIRROR: ${{ inputs.force_mirror == 'true' || github.event.inputs.force_mirror == 'true' }}
   DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
 
 concurrency:
