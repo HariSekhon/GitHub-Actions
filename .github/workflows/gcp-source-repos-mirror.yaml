@@ -41,6 +41,10 @@ on:
         type: string
         required: false
         default: false
+      force-mirror:
+        type: string
+        required: false
+        default: false
       debug:
         type: string
         required: false
@@ -59,7 +63,8 @@ env:
   GCP_SERVICEACCOUNT_KEY: ${{ secrets.GCP_SERVICEACCOUNT_KEY }}
   CLOUDSDK_CORE_PROJECT: ${{ secrets.CLOUDSDK_CORE_PROJECT }}
   DEBIAN_FRONTEND: noninteractive
-  CLEAR_CACHE_GITHUB_MIRROR: ${{ inputs.clear_cache == 'true' || github.event.inputs.clear_cache == 'true' || '' }}
+  CLEAR_CACHE_GITHUB_MIRROR: ${{ inputs.clear_cache == 'true' || github.event.inputs.clear_cache == 'true' }}
+  FORCE_MIRROR: ${{ inputs.force_mirror == 'true' || github.event.inputs.force_mirror == 'true' }}
   DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
 
 concurrency:
