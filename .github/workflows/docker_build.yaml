@@ -105,6 +105,10 @@ jobs:
             echo "::set-output name=ecr::true"
             AWS_ECR_REGISTRY="$(grep -om1 '[^[:space:]]*\.amazonaws\.com' <<< "$REPO_TAGS")"
             echo "::set-output name=ecr_registry::$AWS_ECR_REGISTRY"
+          elif [ -n "${{ secrets.QUAY_USERNAME }}" ]] &&
+               [ -n "${{ secrets.QUAY_TOKEN }}" ]]; then
+            echo "Quay.io registry credentials set"
+            echo "::set-output name=quay::true"
           fi
 
   docker_build:
@@ -161,6 +165,14 @@ jobs:
           registry: ${{ env.AWS_ECR_REGISTRY }}
           username: ${{ secrets.AWS_ACCESS_KEY_ID }}
           password: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Login to Quay.io
+        if: needs.determine_registries.outputs.quay == 'true'
+        uses: docker/login-action@v1
+        with:
+          registry: quay.io
+          username: ${{ secrets.QUAY_USERNAME }}
+          password: ${{ secrets.QUAY_TOKEN }}
 
       - name: Generate environment variable CACHE_FROM
         run: |
