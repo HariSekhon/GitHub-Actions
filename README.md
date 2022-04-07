@@ -66,7 +66,7 @@ Create `.github/workflows/docker_build.yaml`:
 on: [push]
 jobs:
   docker_build:
-    uses: HariSekhon/GitHub-Actions/.github/workflows/docker_build.yaml@master
+    uses: HariSekhon/GitHub-Actions/.github/workflows/dockerhub_build.yaml@master
     with:
       repo: user/repo  # your DockerHub user/repo
       tags: latest v1.1
