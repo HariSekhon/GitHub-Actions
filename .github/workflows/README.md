@@ -86,6 +86,25 @@ Supports multi-stage build caching using GHCR for intermediate layer caching sin
       max-cache: true
 ```
 
+### Docker Build and push to multiple registries
+
+Create `.github/workflows/docker_build.yaml`:
+```yaml
+on: [push]
+jobs:
+  docker_build:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/docker_build.yaml@master
+    with:
+      repo_tags: |
+        harisekhon/bash-tools:latest
+        ghcr.io/harisekhon/bash-tools:latest
+      context: devops-bash-tools-ubuntu  # path to dir containing the source and Dockerfile
+    # GHCR uses the local github.token, for other registries, add secrets, see docker_build.yaml for details
+    secrets:
+      DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+```
+
 ### Check for Broken URL Links
 
 [![URL Links](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/url_links.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/url_links.yaml)
