@@ -61,7 +61,7 @@ jobs:
 
 [![Docker Build DevOps Bash Tools (Ubuntu)](https://github.com/HariSekhon/Dockerfiles/actions/workflows/docker_build_devops_bash_tools_ubuntu.yaml/badge.svg)](https://github.com/HariSekhon/Dockerfiles/actions/workflows/docker_build_devops_bash_tools_ubuntu.yaml)
 
-Create `.github/workflows/docker_build.yaml`:
+Create `.github/workflows/dockerhub_build.yaml`:
 ```yaml
 on: [push]
 jobs:
