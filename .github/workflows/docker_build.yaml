@@ -20,8 +20,8 @@
 # Supports:
 #
 #   - DockerHub
-#   - GitHub Container Registry (GHCR)
-#   - AWS Elastic Container Registry (ECR)
+#   - GHCR - GitHub Container Registry
+#   - ECR  - AWS Elastic Container Registry
 
 ---
 name: Docker Build
@@ -89,6 +89,7 @@ jobs:
       dockerhub: ${{ steps.setvar.outputs.dockerhub }}
       ghcr: ${{ steps.setvar.outputs.ghcr }}
       ecr: ${{ steps.setvar.outputs.ecr }}
+      ecr_registry: ${{ steps.setvar.outputs.ecr_registry }}
     steps:
       - name: Set output variables
         id: setvar
@@ -102,12 +103,13 @@ jobs:
                grep -qi '\.amazonaws\.com' <<< "$REPO_TAGS"; then
             echo "AWS ECR registry credentials set"
             echo "::set-output name=ecr::true"
+            AWS_ECR_REGISTRY="$(grep -om1 '[^[:space:]]*\.amazonaws\.com' <<< "$REPO_TAGS")"
+            echo "::set-output name=ecr_registry::$AWS_ECR_REGISTRY"
           fi
 
   docker_build:
-    name: Docker Build -> DockerHub
-    needs:
-      - determine_registries
+    name: Docker Build
+    needs: determine_registries
     runs-on: ubuntu-latest
     # better done in the calling workflow to prevent manual docker builds on the wrong branches
     #if: github.ref_name == 'master' || github.ref_name == 'main' || contains(github.ref_name, 'docker')
@@ -119,7 +121,6 @@ jobs:
         with:
           submodules: 'true'  # requires Git 2.18+ to be installed first
 
-
       - name: Generate environment variable DOCKERFILE_CHECKOUT_PATH
         if: inputs.dockerfile-repo
         run: |
@@ -130,8 +131,9 @@ jobs:
           DOCKERFILE_REPO: ${{ inputs.dockerfile-repo }}
 
       - name: Generate environment variable AWS_ECR_REGISTRY
-        if: contains(inputs.repo_tags, '.amazonaws.com')
-        run: echo "AWS_ECR_REGISTRY=$(grep -om1 '[^[:space:]]*\.amazonaws\.com' <<< "$REPO_TAGS")" >> "$GITHUB_ENV"
+        #if: contains(inputs.repo_tags, '.amazonaws.com')
+        if: needs.determine_registries.outputs.ecr
+        run: echo "AWS_ECR_REGISTRY=${{ needs.determine_registries.outputs.ecr_registry }}" >> "$GITHUB_ENV"
 
       - name: Git Checkout Dockerfile repo
         if: inputs.dockerfile-repo
