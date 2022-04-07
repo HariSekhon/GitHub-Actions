@@ -43,7 +43,7 @@ Create `.github/workflows/docker_build.yaml`:
 on: [push]
 jobs:
   docker_build:
-    uses: HariSekhon/GitHub-Actions/.github/workflows/docker_build.yaml@master
+    uses: HariSekhon/GitHub-Actions/.github/workflows/dockerhub_build.yaml@master
     with:
       repo: harisekhon/bash-tools  # DockerHub user/repo
       tags: latest ubuntu          # builds, tags as harisekhon/bash-tools:latest and harisekhon/bash-tools:ubuntu and pushes to DockerHub
