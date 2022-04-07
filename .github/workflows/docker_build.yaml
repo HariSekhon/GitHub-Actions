@@ -21,7 +21,12 @@
 #
 #   - DockerHub
 #   - GHCR - GitHub Container Registry
+#   - ACR  - Azure Container Registry
 #   - ECR  - AWS Elastic Container Registry
+#   - GCR  - Google Container Registry
+#   - GAR  - Google Artifact Registry
+#   - GitLab Registry
+#   - Quay.io Registry
 
 ---
 name: Docker Build
@@ -59,6 +64,13 @@ on:
         required: false
         default: false
     secrets:
+      ACR_REGISTRY:
+        # <registry-name>.azurecr.io
+        required: false
+      AZURE_CLIENT_ID:
+        required: false
+      AZURE_CLIENT_SECRET:
+        required: false
       AWS_ACCESS_KEY_ID:
         required: false
       AWS_SECRET_ACCESS_KEY:
@@ -66,6 +78,22 @@ on:
       DOCKERHUB_USER:
         required: false
       DOCKERHUB_TOKEN:
+        required: false
+      GAR_JSON_KEY:
+        required: false
+      GAR_REGISTRY:
+        required: false
+        # us-docker.pkg.dev / asia-docker.pkg.dev
+        default: europe-docker.pkg.dev
+      GCR_JSON_KEY:
+        required: false
+      GCR_REGISTRY:
+        required: false
+        # eu.gcr.io
+        default: gcr.io
+      GITLAB_USER:
+        required: false
+      GITLAB_PASSWORD:
         required: false
 
 permissions:
@@ -94,21 +122,57 @@ jobs:
       - name: Set output variables
         id: setvar
         run: |
-          if [ -n " ${{ secrets.DOCKERHUB_USER }}" ] &&
+          if [ -n "${{ secrets.DOCKERHUB_USER }}" ] &&
              [ -n "${{ secrets.DOCKERHUB_TOKEN }}" ]; then
+
             echo "DockerHub registry credentials set"
             echo "::set-output name=dockerhub::true"
+
+          elif [ -n "${{ secrets.ACR_REGISTRY }}" ]] &&
+               [ -n "${{ secrets.AZURE_CLIENT_ID }}" ]] &&
+               [ -n "${{ secrets.AZURE_CLIENT_SECRET }}" ]] &&
+               grep -qi '\.azurecr\.io' <<< "$REPO_TAGS"; then
+
+            echo "Azure Container Registry credentials set"
+            echo "::set-output name=acr::true"
+
           elif [ -n "${{ secrets.AWS_ACCESS_KEY_ID }}" ]] &&
                [ -n "${{ secrets.AWS_SECRET_ACCESS_KEY }}" ]] &&
                grep -qi '\.amazonaws\.com' <<< "$REPO_TAGS"; then
+
             echo "AWS ECR registry credentials set"
             echo "::set-output name=ecr::true"
             AWS_ECR_REGISTRY="$(grep -om1 '[^[:space:]]*\.amazonaws\.com' <<< "$REPO_TAGS")"
             echo "::set-output name=ecr_registry::$AWS_ECR_REGISTRY"
-          elif [ -n "${{ secrets.QUAY_USERNAME }}" ]] &&
-               [ -n "${{ secrets.QUAY_TOKEN }}" ]]; then
+
+          elif [ -n "${{ secrets.GAR_JSON_KEY }}" ]] &&
+               [ -n "${{ secrets.GAR_REGISTRY }}" ]] &&
+               grep -qi '\.pkg\.dev' <<< "$REPO_TAGS"; then
+
+            echo "Google Artifact Registry credentials set"
+            echo "::set-output name=gar::true"
+
+          elif [ -n "${{ secrets.GCR_JSON_KEY }}" ]] &&
+               [ -n "${{ secrets.GCR_REGISTRY }}" ]] &&
+               grep -qi '\.gcr\.io' <<< "$REPO_TAGS"; then
+
+            echo "Google Container Registry credentials set"
+            echo "::set-output name=gcr::true"
+
+          elif [ -n "${{ secrets.GITLAB_USER }}" ]] &&
+               [ -n "${{ secrets.GITLAB_PASSWORD }}" ]] &&
+               grep -qi '\.gitlab\.com' <<< "$REPO_TAGS"; then
+
             echo "Quay.io registry credentials set"
             echo "::set-output name=quay::true"
+
+          elif [ -n "${{ secrets.QUAY_USER }}" ]] &&
+               [ -n "${{ secrets.QUAY_TOKEN }}" ]] &&
+               grep -qi '\.quay\.io' <<< "$REPO_TAGS"; then
+
+            echo "Quay.io registry credentials set"
+            echo "::set-output name=quay::true"
+
           fi
 
   docker_build:
@@ -158,6 +222,14 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Login to ACR
+        if: needs.determine_registries.outputs.acr == 'true'
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.ACR_REGISTRY }}
+          username: ${{ secrets.AZURE_CLIENT_ID }}
+          password: ${{ secrets.AZURE_CLIENT_SECRET }}
+
       - name: Login to AWS ECR
         if: needs.determine_registries.outputs.ecr == 'true'
         uses: docker/login-action@v1
@@ -166,12 +238,36 @@ jobs:
           username: ${{ secrets.AWS_ACCESS_KEY_ID }}
           password: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
+      - name: Login to GCR
+        if: needs.determine_registries.outputs.gcr == 'true'
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ secrets.GCR_REGISTRY }}
+          username: _json_key
+          password: ${{ secrets.GCR_JSON_KEY }}
+
+      - name: Login to GAR
+        if: needs.determine_registries.outputs.gar == 'true'
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ secrets.GAR_REGISTRY }}
+          username: _json_key
+          password: ${{ secrets.GAR_JSON_KEY }}
+
+      - name: Login to GitLab
+        if: needs.determine_registries.outputs.gitlab == 'true'
+        uses: docker/login-action@v1
+        with:
+          registry: registry.gitlab.com
+          username: ${{ secrets.GITLAB_USER }}
+          password: ${{ secrets.GITLAB_PASSWORD }}
+
       - name: Login to Quay.io
         if: needs.determine_registries.outputs.quay == 'true'
         uses: docker/login-action@v1
         with:
           registry: quay.io
-          username: ${{ secrets.QUAY_USERNAME }}
+          username: ${{ secrets.QUAY_USER }}
           password: ${{ secrets.QUAY_TOKEN }}
 
       - name: Generate environment variable CACHE_FROM
