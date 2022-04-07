@@ -37,6 +37,10 @@ on:
         type: string
         required: false
         default: false
+      force_mirror:
+        type: string
+        required: false
+        default: false
       debug:
         type: string
         required: false
@@ -54,7 +58,8 @@ env:
   GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
   GITHUB_ORGANIZATION: ${{ inputs.organization }}
   DEBIAN_FRONTEND: noninteractive
-  CLEAR_CACHE_GITHUB_MIRROR: ${{ inputs.clear_cache == 'true' || github.event.inputs.clear_cache == 'true' || '' }}
+  CLEAR_CACHE: ${{ inputs.clear_cache == 'true' || github.event.inputs.clear_cache == 'true' }}
+  FORCE_MIRROR: ${{ inputs.force_mirror == 'true' || github.event.inputs.force_mirror == 'true' }}
   DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
 
 concurrency:
