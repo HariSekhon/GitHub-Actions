@@ -28,13 +28,13 @@ on:
       - master
       - main
     ignore-paths:
-      - **/README.md
+      - '**/README.md'
   pull_request:
     branches:
       - master
       - main
     ignore-paths:
-      - **/README.md
+      - '**/README.md'
   workflow_call:
     inputs:
       debug:
