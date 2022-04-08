@@ -37,6 +37,10 @@ on:
         type: boolean
         required: false
         default: false
+      python-version:
+        description: Setup specific Python version
+        type: string
+        required: false
       caches:
         description: Caches eg. pip, cpan, maven, sbt, gradle etc...
         type: string
@@ -149,11 +153,16 @@ jobs:
         #  submodules: recursive  # requires Git 2.18+ to be installed first
         run: git clone "https://${{github.token}}@github.com/$GITHUB_REPOSITORY" "$GITHUB_WORKSPACE"
 
+      - uses: actions/setup-python@v1
+        if: inputs.python-version
+        with:
+          python-version: ${{ inputs.python-version }}
+
       # ============================================================================ #
       # Python Caches
       #
       - name: Python Pip Cache Linux
-        if: ( contains(inputs.caches, 'pip') || contains(inputs.caches, 'python') ) && startsWith(runner.os, 'Linux')
+        if: ( contains(inputs.caches, 'pip') || contains(inputs.caches, 'python') ) || inputs.python-version && startsWith(runner.os, 'Linux')
         uses: actions/cache@v2
         with:
           path: ~/.cache/pip
@@ -162,7 +171,7 @@ jobs:
             pip-${{ runner.os }}-${{ runner.arch }}-
 
       - name: Python Pip Cache Mac
-        if: ( contains(inputs.caches, 'pip') || contains(inputs.caches, 'python') ) && startsWith(runner.os, 'macOS')
+        if: ( contains(inputs.caches, 'pip') || contains(inputs.caches, 'python') ) || inputs.python-version && startsWith(runner.os, 'macOS')
         uses: actions/cache@v2
         with:
           path: ~/Library/Caches/pip
