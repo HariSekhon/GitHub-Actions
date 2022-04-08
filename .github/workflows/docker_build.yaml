@@ -87,9 +87,8 @@ on:
       GCR_JSON_KEY:
         required: false
       GCR_REGISTRY:
+        # gcr.io / eu.gcr.io
         required: false
-        # eu.gcr.io
-        default: gcr.io
       GITLAB_USER:
         required: false
       GITLAB_PASSWORD:
