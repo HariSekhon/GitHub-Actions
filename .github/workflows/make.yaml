@@ -38,7 +38,7 @@ on:
         required: false
         default: false
       python-version:
-        description: Setup specific Python version
+        description: Set up a specific Python version
         type: string
         required: false
       caches:
