@@ -134,6 +134,8 @@ on:
       - '*docker*'  # glob requires quoting, only run on branches with docker in the name
     paths:
       - '*'  # only run when changes have happened on matching paths, this glob misses hidden directories though such as .github/workflows
+    #paths-ignore:
+    #  - README.md
 
   pull_request:
     branches:
@@ -144,6 +146,8 @@ on:
       - production
     paths:
       - '*'  # only run when changes have happened on matching paths, this glob misses hidden directories though such as .github/workflows
+    #paths-ignore:
+    #  - README.md
 
   # triggered from another workflow for cross-workflow dependencies
   workflow_run:
