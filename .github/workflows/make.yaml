@@ -82,6 +82,7 @@ jobs:
             apk-cache-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('/etc/*release') }}
 
       - name: Apt Cache
+        # could specify '! inputs.container ||' , which would infer we are still on ubuntu-latest and enable apt cache, but better to give calling workflow the option of enabling/disabling cache via input instead
         if: ( contains(inputs.caches, 'apt') || contains(inputs.caches, 'debian') || contains(inputs.caches, 'ubuntu') ) && startsWith(runner.os, 'Linux')
         uses: actions/cache@v2
         with:
@@ -162,6 +163,7 @@ jobs:
       # Python Caches
       #
       - name: Python Pip Cache Linux
+        # could specify 'inputs.python-version', but better to give calling workflow the option of enabling/disabling cache via input instead
         if: ( contains(inputs.caches, 'pip') || contains(inputs.caches, 'python') ) && startsWith(runner.os, 'Linux')
         uses: actions/cache@v2
         with:
