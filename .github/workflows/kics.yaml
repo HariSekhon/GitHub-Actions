@@ -21,10 +21,14 @@ on:
     branches:
       - master
       - main
+    ignore-paths:
+      - **/README.md
   pull_request:
     branches:
       - master
       - main
+    ignore-paths:
+      - **/README.md
   workflow_call:
     # https://github.com/Checkmarx/kics-github-action#inputs
     inputs:
