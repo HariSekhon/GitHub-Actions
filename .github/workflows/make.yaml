@@ -55,7 +55,7 @@ defaults:
     shell: sh -eux {0}
 
 env:
-  BUILD_TARGETS: ${{ inputs.build-targets }}
+  BUILD_TARGETS: ${{ github.event.inputs.build-targets }}
   DEBIAN_FRONTEND: noninteractive
   DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
 
