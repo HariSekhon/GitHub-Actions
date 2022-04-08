@@ -27,8 +27,8 @@ on:
         type: string
         default: null
         required: false
-      build-target:
-        description: The Make build target
+      build-targets:
+        description: The Make build targets, space separated
         type: string
         required: false
         default: ''
@@ -55,7 +55,7 @@ defaults:
     shell: sh -eux {0}
 
 env:
-  BUILD_TARGET: ${{ inputs.build-target || github.event.inputs.build-target }}
+  BUILD_TARGETS: ${{ inputs.build-targets }}
   DEBIAN_FRONTEND: noninteractive
   DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
 
@@ -306,9 +306,9 @@ jobs:
 
       - name: Build
         run: |
-          if [ -n "${BUILD_TARGET:-}" ] &&
-             grep -q "^$BUILD_TARGET:" Makefile; then
-             make $BUILD_TARGET  # intentionally not quoting to pass multiple targets
+          if [ -n "${BUILD_TARGETS:-}" ]; then
+             # intentionally not quoting to permit splitting to individual targets
+             make $BUILD_TARGETS
           elif grep -q '^ci:' Makefile; then
             make ci
           elif grep -q '^build:' Makefile; then
