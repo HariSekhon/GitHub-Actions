@@ -82,9 +82,8 @@ on:
       GAR_JSON_KEY:
         required: false
       GAR_REGISTRY:
+        # europe-docker.pkg.dev / us-docker.pkg.dev / asia-docker.pkg.dev
         required: false
-        # us-docker.pkg.dev / asia-docker.pkg.dev
-        default: europe-docker.pkg.dev
       GCR_JSON_KEY:
         required: false
       GCR_REGISTRY:
