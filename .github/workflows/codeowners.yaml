@@ -21,10 +21,16 @@ on:
     branches:
       - master
       - main
+    paths:
+      - CODEOWNERS
+      - .github/CODEOWNERS
   pull_request:
     branches:
       - master
       - main
+    paths:
+      - CODEOWNERS
+      - .github/CODEOWNERS
   workflow_call:
     inputs:
       debug:
