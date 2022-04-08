@@ -21,12 +21,16 @@ on:
       - main
     paths:
       - .github/workflows/trivy_fs.yaml
+    #ignore-paths:
+    #  - **/README.md
   pull_request:
     branches:
       - master
       - main
     paths:
       - .github/workflows/trivy_fs.yaml
+    #ignore-paths:
+    #  - **/README.md
   workflow_call:
     inputs:
       path:
