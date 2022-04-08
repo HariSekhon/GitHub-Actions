@@ -78,7 +78,7 @@ jobs:
             apk-cache-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('/etc/*release') }}
 
       - name: Apt Cache
-        if: ( contains(inputs.caches, 'apt') || contains(inputs.caches, 'debian') || contains(inputs.caches, 'ubuntu') ) && startsWith(runner.os, 'Linux')
+        if: ( ! inputs.container || contains(inputs.caches, 'apt') || contains(inputs.caches, 'debian') || contains(inputs.caches, 'ubuntu') ) && startsWith(runner.os, 'Linux')
         uses: actions/cache@v2
         with:
           path: /var/cache/apt
