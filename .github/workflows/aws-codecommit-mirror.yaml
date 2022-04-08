@@ -16,26 +16,6 @@ name: AWS CodeCommit Mirror
 
 on:
   workflow_call:
-    secrets:
-      GH_TOKEN:
-        description: GitHub Token with permissions 'repo' and 'read:org' to list GitHub repos
-        required: true
-      AWS_ACCESS_KEY_ID:
-        description: AWS access key ID with permissions to create new repos to mirror to
-        required: true
-      AWS_SECRET_ACCESS_KEY:
-        description: AWS secret access key with permissions to create new repos to mirror to
-        required: true
-      # the reason this is a secret and not an input is because you can set this secret Organization wide on GitHub and just inherit it
-      AWS_DEFAULT_REGION:
-        description: AWS region where the repos should exist
-        required: true
-      AWS_GIT_USER:
-        description: AWS Git username (optional), falls back to using git-remote-codecommit python module to use IAM integration otherwise
-        required: false
-      AWS_GIT_PASSWORD:
-        description: AWS Git password (optional), falls back to using git-remote-codecommit python module to use IAM integration otherwise
-        required: false
     inputs:
       organization:
         description: The GitHub Organization that owns the repos (defaults to the user of the given GITHUB_TOKEN)
@@ -58,6 +38,26 @@ on:
         type: string
         required: false
         default: false
+    secrets:
+      GH_TOKEN:
+        description: GitHub Token with permissions 'repo' and 'read:org' to list GitHub repos
+        required: true
+      AWS_ACCESS_KEY_ID:
+        description: AWS access key ID with permissions to create new repos to mirror to
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        description: AWS secret access key with permissions to create new repos to mirror to
+        required: true
+      # the reason this is a secret and not an input is because you can set this secret Organization wide on GitHub and just inherit it
+      AWS_DEFAULT_REGION:
+        description: AWS region where the repos should exist
+        required: true
+      AWS_GIT_USER:
+        description: AWS Git username (optional), falls back to using git-remote-codecommit python module to use IAM integration otherwise
+        required: false
+      AWS_GIT_PASSWORD:
+        description: AWS Git password (optional), falls back to using git-remote-codecommit python module to use IAM integration otherwise
+        required: false
 
 permissions:
   contents: read
