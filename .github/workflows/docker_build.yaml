@@ -161,8 +161,8 @@ jobs:
                [ -n "${{ secrets.GITLAB_PASSWORD }}" ]] &&
                grep -qi '\.gitlab\.com' <<< "$REPO_TAGS"; then
 
-            echo "Quay.io registry credentials set"
-            echo "::set-output name=quay::true"
+            echo "GitLab registry credentials set"
+            echo "::set-output name=gitlab::true"
 
           elif [ -n "${{ secrets.QUAY_USER }}" ]] &&
                [ -n "${{ secrets.QUAY_TOKEN }}" ]] &&
