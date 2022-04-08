@@ -15,18 +15,6 @@
 name: Trivy AWS ECR
 
 on:
-  #push:
-  #  branches:
-  #    - master
-  #    - main
-  #  ignore-paths:
-  #    - '**/README.md'
-  #pull_request:
-  #  branches:
-  #    - master
-  #    - main
-  #  ignore-paths:
-  #    - '**/README.md'
   workflow_call:
     inputs:
       repo:
