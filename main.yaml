@@ -135,7 +135,8 @@ on:
     paths:
       - '*'  # only run when changes have happened on matching paths, this glob misses hidden directories though such as .github/workflows
     #paths-ignore:
-    #  - **/README.md
+    #  #- '**/README.md'
+    #  - '**/*.md'
 
   pull_request:
     branches:
