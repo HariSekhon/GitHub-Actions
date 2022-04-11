@@ -104,6 +104,9 @@ jobs:
         run: echo "AWS_ECR_REGISTRY=${{env.AWS_ACCOUNT_ID}}.dkr.ecr.${{env.AWS_DEFAULT_REGION}}.amazonaws.com" >> "$GITHUB_ENV"
       - name: Generate environment variable DOCKER_IMAGE
         run: echo "DOCKER_IMAGE=${{ env.AWS_ECR_REGISTRY }}/${{ env.REPO }}" >> "$GITHUB_ENV"
+        # branches called things like feature/dockerize need to be sanitized to pass as docker tags -> feature_dockerize
+      - name: Generate environment variable BRANCH_TAG
+        run: echo "BRANCH_TAG=$(sed 's/[^[:alnum:]-_]/_/g' <<< "${{ github.ref_name }}")" >> "$GITHUB_ENV"
       - name: Generate environment variable EPOCH
         run: echo "EPOCH=$(date --utc '+%s')" >> "$GITHUB_ENV"
       - name: Generate environment variable DATESTAMP
@@ -142,12 +145,12 @@ jobs:
           push: true
           cache-from: |
             type=registry,ref=${{env.DOCKER_IMAGE}}:latest
-            type=registry,ref=${{env.DOCKER_IMAGE}}:${{github.ref_name}}
+            type=registry,ref=${{env.DOCKER_IMAGE}}:${{env.BRANCH_TAG}}
             type=registry,ref=${{env.DOCKER_IMAGE}}:${{github.sha}}
           cache-to: type=inline
           tags: |
             ${{env.DOCKER_IMAGE}}:latest
-            ${{env.DOCKER_IMAGE}}:${{github.ref_name}}
+            ${{env.DOCKER_IMAGE}}:${{env.BRANCH_TAG}}
             ${{env.DOCKER_IMAGE}}:${{github.sha}}
             ${{env.DOCKER_IMAGE}}:${{env.EPOCH}}
             ${{env.DOCKER_IMAGE}}:${{env.DATESTAMP}}
@@ -172,12 +175,12 @@ jobs:
           cache-from: |
             type=registry,ref=${{env.DOCKER_IMAGE_CACHE}}:${{env.BUILDCACHE}}
             type=registry,ref=${{env.DOCKER_IMAGE}}:latest
-            type=registry,ref=${{env.DOCKER_IMAGE}}:${{github.ref_name}}
+            type=registry,ref=${{env.DOCKER_IMAGE}}:${{env.BRANCH_TAG}}
             type=registry,ref=${{env.DOCKER_IMAGE}}:${{github.sha}}
           cache-to: type=registry,ref=${{env.DOCKER_IMAGE_CACHE}}:${{env.BUILDCACHE}},mode=max  # XXX: fails to push to ECR which doesn't support external registry cache export, so set to GHCR for cache instead
           tags: |
             ${{env.DOCKER_IMAGE}}:latest
-            ${{env.DOCKER_IMAGE}}:${{github.ref_name}}
+            ${{env.DOCKER_IMAGE}}:${{env.BRANCH_TAG}}
             ${{env.DOCKER_IMAGE}}:${{github.sha}}
             ${{env.DOCKER_IMAGE}}:${{env.EPOCH}}
             ${{env.DOCKER_IMAGE}}:${{env.DATESTAMP}}
