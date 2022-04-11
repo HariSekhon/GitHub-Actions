@@ -145,7 +145,9 @@ jobs:
 
 ### Mirror Repos to GitLab for DR Backups
 
-Mirrors all/given GitHub repos to GitLab - including all branches and tags, and GitHub repo description
+Mirrors all/given GitHub repos to GitLab - including all branches and tags, and GitHub repo description.
+
+There are similar workflows in this repo to mirror GitHub repos to [AWS CodeCommit](https://aws.amazon.com/codecommit/) or [GCP Source Repos](https://source.cloud.google.com/onboarding/welcome) too.
 
 ```yaml
 on:
