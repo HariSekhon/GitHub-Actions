@@ -88,6 +88,16 @@ Supports multi-stage build caching using GHCR for intermediate layer caching sin
 
 ### Docker Build and push to multiple registries
 
+Supports pushing pushing to any combination of the following, just add the relevant secrets to the yaml, see [docker_build.yaml](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/docker_build.yaml) for the variables:
+
+- GHCR - GitHub Container Registry
+- ACR  - Azure Container Registry
+- ECR  - AWS Elastic Container Registry
+- GCR  - Google Container Registry
+- GAR  - Google Artifact Registry
+- GitLab Registry
+- Quay.io Registry
+
 Create `.github/workflows/docker_build.yaml`:
 ```yaml
 on: [push]
