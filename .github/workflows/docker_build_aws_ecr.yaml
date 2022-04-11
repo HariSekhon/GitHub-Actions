@@ -106,7 +106,7 @@ jobs:
         run: echo "DOCKER_IMAGE=${{ env.AWS_ECR_REGISTRY }}/${{ env.REPO }}" >> "$GITHUB_ENV"
         # branches called things like feature/dockerize need to be sanitized to pass as docker tags -> feature_dockerize
       - name: Generate environment variable BRANCH_TAG
-        run: echo "BRANCH_TAG=$(sed 's/[^[:alnum:]-_]/_/g' <<< "${{ github.ref_name }}")" >> "$GITHUB_ENV"
+        run: echo "BRANCH_TAG=$(sed 's/[^[:alnum:]_-]/_/g' <<< "${{ github.ref_name }}")" >> "$GITHUB_ENV"
       - name: Generate environment variable EPOCH
         run: echo "EPOCH=$(date --utc '+%s')" >> "$GITHUB_ENV"
       - name: Generate environment variable DATESTAMP
