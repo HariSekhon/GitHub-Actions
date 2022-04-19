@@ -445,10 +445,10 @@ jobs:
 
       # manually generate a PIP_INDEX_URL to use with 'pip --extra-index-url "$PIP_INDEX_URL" requirements.txt' to be able to use PyPI and CodeArtifact at the same time
       # these templated instructions are taken from the "View connection instructions" button in the CodeArtifact repo page
-      - name: Generate CODEARTIFACT_AUTH_TOKEN
+      - name: Generate environment variable CODEARTIFACT_AUTH_TOKEN
         run: echo "CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain ${{secrets.CODEARTIFACT_DOMAIN}} --domain-owner ${{secrets.AWS_ACCOUNT_ID}} --query authorizationToken --output text)" >> "$GITHUB_ENV"
 
-      - name: Generate CodeArtifact PIP_INDEX_URL
+      - name: Generate environment variable PIP_INDEX_URL for CodeArtifact
         run: echo "PIP_INDEX_URL=https://aws:${{env.CODEARTIFACT_AUTH_TOKEN}}@${{secrets.CODEARTIFACT_DOMAIN}}-${{secrets.AWS_ACCOUNT_ID}}.d.codeartifact.${{secrets.AWS_DEFAULT_REGION}}.amazonaws.com/pypi/${{env.CODEARTIFACT_REPO}}/simple/" >> "$GITHUB_ENV"
 
       # above manual method of creating a supplementary index url is usually what you want instead
@@ -480,9 +480,9 @@ jobs:
       #                                     ... jq ... | tee --append "$GITHUB_ENV"
       #
       # XXX: WARNING: echo/printf suppress subshell failures even with -o pipefail
-      - name: Generate env GITHUB_SHA_SHORT
+      - name: Generate environment variable GITHUB_SHA_SHORT
         run: echo "GITHUB_SHA_SHORT=${GITHUB_SHA:0:6}" >> "$GITHUB_ENV"
-      - name: Generate env GITHUB_REPO
+      - name: Generate environment variable GITHUB_REPO
         run: echo "GITHUB_REPO=${GITHUB_REPOSITORY##*/}" >> "$GITHUB_ENV"
         #
         # step-specific environment variables
