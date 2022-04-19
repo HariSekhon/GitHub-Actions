@@ -443,17 +443,17 @@ jobs:
           python-version: '3.x' # Version range or exact version of a Python version to use, using SemVer's version range syntax
           #python-version: ${{ matrix.python-version }}
 
-      # manually generate a PIP_INDEX_URL to use with 'pip --extra-index-url "$PIP_INDEX_URL" requirements.txt' to be able to use PyPI and CodeArtifact at the same time
-      # these templated instructions are taken from the "View connection instructions" button in the CodeArtifact repo page
+      # CodeArtifact templated instructions are taken from the "View connection instructions" button in the CodeArtifact repo page
+      #
+      #- name: Configure Pip to default to CodeArtifact
+      #  run: aws codeartifact login --tool pip --repository "${{env.CODEARTIFACT_REPO}}" --domain "${{secrets.CODEARTIFACT_DOMAIN}}" --domain-owner "${{secrets.AWS_ACCOUNT_ID}}"
+      # or
       - name: Generate environment variable CODEARTIFACT_AUTH_TOKEN
         run: echo "CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain ${{secrets.CODEARTIFACT_DOMAIN}} --domain-owner ${{secrets.AWS_ACCOUNT_ID}} --query authorizationToken --output text)" >> "$GITHUB_ENV"
 
+      # change PIP_INDEX_URL to another variable to not replace default repo but instead use as a supplemental repo via 'pip --extra-index-url "$pip_index_url" requirements.txt' to be able to use PyPI and CodeArtifact at the same time
       - name: Generate environment variable PIP_INDEX_URL for CodeArtifact
         run: echo "PIP_INDEX_URL=https://aws:${{env.CODEARTIFACT_AUTH_TOKEN}}@${{secrets.CODEARTIFACT_DOMAIN}}-${{secrets.AWS_ACCOUNT_ID}}.d.codeartifact.${{secrets.AWS_DEFAULT_REGION}}.amazonaws.com/pypi/${{env.CODEARTIFACT_REPO}}/simple/" >> "$GITHUB_ENV"
-
-      # above manual method of creating a supplementary index url is usually what you want instead
-      #- name: Configure Pip to default to CodeArtifact
-      #  run: aws codeartifact login --tool pip --repository "${{env.CODEARTIFACT_REPO}}" --domain "${{secrets.CODEARTIFACT_DOMAIN}}" --domain-owner "${{secrets.AWS_ACCOUNT_ID}}"
       # =================
 
       # https://github.com/marketplace/actions/setup-java-jdk
