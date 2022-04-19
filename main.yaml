@@ -690,8 +690,13 @@ jobs:
           username: _json_key  # or _json_key_base64 if you base64 encoded the credentials file before upload
           password: ${{ secrets.GAR_JSON_KEY }}  # upload entire downloaded credentials key to GitHub Secrets
 
+      # use credentials from the aws-actions/configure-aws-credentials step
+      # don't need to do this if using the reusable workflow docker_build_aws_ecr.yaml
+      - name: Login to AWS ECR
+        uses: aws-actions/amazon-ecr-login@v1
+      # or
       # https://github.com/docker/login-action#aws-elastic-container-registry-ecr
-      - name: Login to ECR
+      - name: Login to AWS ECR
         uses: docker/login-action@v1
         with:
           #registry: ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_DEFAULT_REGION }}.amazonaws.com  # XXX: make sure to set these env vars
@@ -701,6 +706,7 @@ jobs:
           # if you need to log in to multiple ECR accounts
           #env:
           #  AWS_ACCOUNT_IDS: 012345678910,023456789012
+
 
       # https://github.com/docker/login-action#aws-public-elastic-container-registry-ecr
       - name: Login to Public ECR
