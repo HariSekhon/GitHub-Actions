@@ -606,6 +606,8 @@ jobs:
           echo "AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID" >> "$GITHUB_ENV"
       - name: Generate environment variable AWS_ECR_REGISTRY
         run: echo "AWS_ECR_REGISTRY=${{env.AWS_ACCOUNT_ID}}.dkr.ecr.${{env.AWS_DEFAULT_REGION}}.amazonaws.com" >> "$GITHUB_ENV"
+        # if using aws-actions/amazon-ecr-login step (in which case put this after that step further down)
+        #run: echo "AWS_ECR_REGISTRY=${{ steps.aws-ecr-login.outputs.registry }}" >> "$GITHUB_ENV"
       - name: Generate environment variable GHCR_REGISTRY$
         run: echo "GHCR_REGISTRY=ghcr.io/${{ github.repository_owner }}" >> "$GITHUB_ENV"
       - name: Generate environment variable DOCKER_IMAGE
@@ -694,6 +696,7 @@ jobs:
       # use credentials from the aws-actions/configure-aws-credentials step
       # don't need to do this if using the reusable workflow docker_build_aws_ecr.yaml
       - name: Login to AWS ECR
+        id: aws-ecr-login  # to be able to create environment variable AWS_ECR_REGISTRY from ${{ steps.aws-ecr-login.outputs.registry }}
         uses: aws-actions/amazon-ecr-login@v1
       # or
       # https://github.com/docker/login-action#aws-elastic-container-registry-ecr
