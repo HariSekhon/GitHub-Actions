@@ -433,6 +433,9 @@ jobs:
       - name: AWS CLI whoami
         run: aws sts get-caller-identity
 
+      - name: Generate CODEARTIFACT_AUTH_TOKEN
+        run: echo "CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain ${{secrets.CODEARTIFACT_DOMAIN}} --domain-owner ${{secrets.AWS_ACCOUNT_ID}} --query authorizationToken --output text)" >> "$GITHUB_ENV"
+
       # https://github.com/marketplace/actions/setup-python
       - uses: actions/setup-python@v2
         #name: Setup Python
