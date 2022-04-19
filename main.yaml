@@ -452,6 +452,7 @@ jobs:
         run: echo "CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain ${{secrets.CODEARTIFACT_DOMAIN}} --domain-owner ${{secrets.AWS_ACCOUNT_ID}} --query authorizationToken --output text)" >> "$GITHUB_ENV"
 
       # change PIP_INDEX_URL to another variable to not replace default repo but instead use as a supplemental repo via 'pip --extra-index-url "$pip_index_url" requirements.txt' to be able to use PyPI and CodeArtifact at the same time
+      # if using sudo you'll need to preserve the environment variable via 'sudo -e PIP_INDEX_URL'
       - name: Generate environment variable PIP_INDEX_URL for CodeArtifact
         run: echo "PIP_INDEX_URL=https://aws:${{env.CODEARTIFACT_AUTH_TOKEN}}@${{secrets.CODEARTIFACT_DOMAIN}}-${{secrets.AWS_ACCOUNT_ID}}.d.codeartifact.${{secrets.AWS_DEFAULT_REGION}}.amazonaws.com/pypi/${{env.CODEARTIFACT_REPO}}/simple/" >> "$GITHUB_ENV"
       # =================
