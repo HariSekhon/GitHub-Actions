@@ -119,15 +119,15 @@ jobs:
         run: echo "DOCKER_IMAGE_CACHE=ghcr.io/${{ github.repository }}" >> "$GITHUB_ENV"
         #run: echo "DOCKER_IMAGE_CACHE=${{ env.AWS_ECR_REGISTRY }}/${{ env.APP }}-cache" >> $GITHUB_ENV  # doesn't work, ECR simply doesn't support it
 
-      #- name: Login to Amazon ECR
+      #- name: Login to AWS ECR
       #  uses: docker/login-action@v1
       #  with:
       #    registry: ${{ env.AWS_ECR_REGISTRY }}
       #    username: ${{ secrets.AWS_ACCESS_KEY_ID }}
       #    password: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-			- name: Login to Amazon ECR
-				uses: aws-actions/amazon-ecr-login@v1
+      - name: Login to AWS ECR
+        uses: aws-actions/amazon-ecr-login@v1
 
       - name: Login to GHCR
         if: ${{ inputs.max-cache }}
