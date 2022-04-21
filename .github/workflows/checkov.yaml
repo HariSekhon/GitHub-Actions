@@ -72,7 +72,10 @@ jobs:
     runs-on: ubuntu-latest
 
     # Skip any PR created by dependabot to avoid permission issues
-    if: (github.actor != 'dependabot[bot]')
+    # github.event.repository.fork isn't available in scheduled workflows
+    if: |
+      github.actor != 'dependabot[bot]' &&
+      github.repository == 'HariSekhon/Github-Actions'
 
     steps:
       - name: Generate LOG_LEVEL environment variable
