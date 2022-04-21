@@ -73,9 +73,8 @@ jobs:
 
     # Skip any PR created by dependabot to avoid permission issues
     # github.event.repository.fork isn't available in scheduled workflows
-    if: |
-      github.actor != 'dependabot[bot]' &&
-      github.repository == 'HariSekhon/Github-Actions'
+    # can't prevent forks of this repo, because also prevents caller workflows
+    if: github.actor != 'dependabot[bot]'
 
     steps:
       - name: Generate LOG_LEVEL environment variable
