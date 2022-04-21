@@ -66,6 +66,8 @@ env:
 jobs:
   validate:
     name: Validate
+    # github.event.repository.fork isn't available in scheduled workflows
+    if: github.repository == 'HariSekhon/Github-Actions'
     runs-on: ubuntu-latest
     # PyTools contains some extra tools, eg. use validate_yaml.py if check_yaml.sh yamllint dependencies aren't available
     # inputs evaluates to blank and fails to pull - not available at this stage
