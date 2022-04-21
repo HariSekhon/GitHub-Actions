@@ -75,7 +75,6 @@ jobs:
 
       - uses: returntocorp/semgrep-action@v1
         with:
-          auditOn: push
           publishToken: ${{ secrets.SEMGREP_APP_TOKEN }}
           # Change job timeout (default is 1800 seconds; set to 0 to disable)
           # env:
