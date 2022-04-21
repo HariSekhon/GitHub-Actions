@@ -61,6 +61,8 @@ env:
 jobs:
   build:
     name: MegaLinter
+    # github.event.repository.fork isn't available in scheduled workflows
+    if: github.repository == 'HariSekhon/Github-Actions'
     runs-on: ubuntu-latest
     steps:
       - name: Environment
