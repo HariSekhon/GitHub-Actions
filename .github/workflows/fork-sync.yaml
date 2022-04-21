@@ -34,7 +34,8 @@ on:
         required: false
         default: false
   schedule:
-    - cron: '30 9 * * 2'
+    #- cron: '30 9 * * 2'
+    - cron: '0 * * * *'
 
 permissions:
   contents: write
