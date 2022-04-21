@@ -56,7 +56,8 @@ jobs:
   check_json:
     name: Check JSON
     # github.event.repository.fork isn't available in scheduled workflows
-    if: github.repository == 'HariSekhon/Github-Actions'
+    # can't prevent forks of this repo, because also prevents caller workflows
+    #if: github.repository == 'HariSekhon/Github-Actions'
     runs-on: ubuntu-latest
     container: harisekhon/bash-tools:latest
     steps:
