@@ -79,9 +79,9 @@ jobs:
   fork_update_pr:
     name: Create Fork Update PRs
     if: |
-      github.event.repository.fork == true &&
+      github.event_name == 'schedule' ||
       (
-        github.event_name == 'schedule' ||
+        github.event.repository.fork == true &&
         ( github.ref_type == 'branch' && github.ref_name == github.event.repository.default_branch )
       )
     # without 'contents: write' permission the PR merge fails with the error:
@@ -118,7 +118,16 @@ jobs:
       #- name: GH API User
       #  run: gh api /user
 
+      # because github.event.repository context is missing from scheduled workflows:
+      #
+      #   https://github.com/github/feedback/discussions/12269
+      #
+      - name: Generate environment variable IS_FORK
+        run: |
+          IS_FORK="$(gh api "/repos/$GITHUB_REPOSITORY" -q .fork)"
+          echo "IS_FORK=$IS_FORK" >> "$GITHUB_ENV"
+
       - name: Create PRs & Automerge
-        if: github.event.repository.fork == true
+        if: github.event.repository.fork == true || env.IS_FORK == 'true'
         run: |
           github_repo_fork_update.sh "$GITHUB_REPOSITORY"
