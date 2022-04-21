@@ -78,6 +78,7 @@ concurrency:
 jobs:
   fork_update_pr:
     name: Create Fork Update PRs
+    # github.event.repository.fork isn't available in scheduled workflows
     if: |
       github.repository_owner != 'HariSekhon' &&
       (
