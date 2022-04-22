@@ -729,6 +729,24 @@ jobs:
           username: ${{ secrets.QUAY_USER }}
           password: ${{ secrets.QUAY_TOKEN }}
 
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          # list of Docker images to use as base name for tags
+          images: |
+            name/app
+            ghcr.io/username/app
+          # generate Docker tags based on the following events/attributes
+          tags: |
+            type=schedule
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=sha
+
       # ============
       # Build & Push
       - name: Docker Build & Push
@@ -745,6 +763,7 @@ jobs:
           #cache-from: type=local,src=path/to/dir
           #cache-to: type=local,dest=path/to/dir  # XXX: continues to grow, must add a move action afterwards
           #
+          #cache-from: ${{ steps.meta.outputs.tags }}
           cache-from: |
             type=registry,ref=${{env.DOCKER_IMAGE}}:latest
             type=registry,ref=${{env.DOCKER_IMAGE}}:${{github.ref_name}}
@@ -769,6 +788,7 @@ jobs:
           #pull: true  # default: false  # use this or local cache but not both
           push: true  # default: false
           # tags is a CSV or List where List is a newline delimited string
+          #tags: ${{ steps.meta.outputs.tags }}
           tags: |
             ${{env.DOCKER_IMAGE}}:latest
             ${{env.DOCKER_IMAGE}}:${{github.ref_name}}
