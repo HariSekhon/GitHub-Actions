@@ -87,6 +87,8 @@ jobs:
           # extended PATH gives option of using bash tools checkout or version from container
           export PATH="$PWD/bash-tools:$PATH"
 
+          git config --global --add safe.directory "$PWD"
+
           # this is just to account for the examples in the .github/workflows/README.md in this own repo
           if [ -z "$URL_LINKS_IGNORED" ]; then
             export URL_LINKS_IGNORED="
