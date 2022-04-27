@@ -39,8 +39,8 @@ on:
         type: boolean
         required: false
         default: false
-  schedule:
-    - cron: '0 0 * * 1'
+  #schedule:
+  #  - cron: '0 0 * * 1'
 
 permissions:
   contents: read
