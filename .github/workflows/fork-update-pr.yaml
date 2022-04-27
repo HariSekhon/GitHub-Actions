@@ -92,7 +92,13 @@ jobs:
       - name: Environment
         run: env | sort
 
-      # not needed since everything is done via the GitHub API
+      # checkout is needed for gh command, otherwise the 'gh pr create' command gets this error::
+      #
+      #   [git remote -v]
+      #   fatal: not a git repository (or any parent up to mount point /)
+      #   Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+      #   /usr/bin/git: exit status 128
+      #
       - uses: actions/checkout@v2
 
       - name: GH CLI auth status
@@ -130,4 +136,6 @@ jobs:
       - name: Create PRs & Automerge
         if: github.event.repository.fork == true || env.IS_FORK == 'true'
         run: |
+          git config --global --add safe.directory "$PWD"
+
           github_repo_fork_update.sh "$GITHUB_REPOSITORY"
