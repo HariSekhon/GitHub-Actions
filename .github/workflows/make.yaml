@@ -309,6 +309,9 @@ jobs:
 
       # ============================================================================
 
+      - name: Allow Git commands
+        run: git config --global --add safe.directory "$PWD"
+
       - name: Init
         run: |
           if grep -q '^init:' Makefile; then
