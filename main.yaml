@@ -406,6 +406,9 @@ jobs:
       - name: Git Checkout
         run: git clone "https://$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY" "$GITHUB_WORKSPACE"
 
+      - name: Allow Git commands
+        run: git config --global --add safe.directory "${GITHUB_WORKSPACE:-$PWD}"
+
       # checkout another repo
       #- uses: actions/checkout@v2
       #  with:
