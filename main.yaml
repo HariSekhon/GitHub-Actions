@@ -127,10 +127,10 @@ on:
   push:
     branches:
       - master
+      - main
       - dev
       - staging
       - production
-      - main
       - '*docker*'  # glob requires quoting, only run on branches with docker in the name
     paths:
       - '*'  # only run when changes have happened on matching paths, this glob misses hidden directories though such as .github/workflows
@@ -145,6 +145,7 @@ on:
       - dev
       - staging
       - production
+      - '*docker*'  # glob requires quoting, only run on branches with docker in the name
     paths:
       - '*'  # only run when changes have happened on matching paths, this glob misses hidden directories though such as .github/workflows
     #paths-ignore:
