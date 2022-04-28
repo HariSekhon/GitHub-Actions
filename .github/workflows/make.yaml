@@ -309,7 +309,7 @@ jobs:
 
       # ============================================================================
 
-      - name: Allow Git commands
+      - name: Allow Git Commands
         run: git config --global --add safe.directory "$PWD"
 
       - name: Init
