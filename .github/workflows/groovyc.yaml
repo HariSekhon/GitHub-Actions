@@ -55,7 +55,7 @@ jobs:
             sudo=sudo
           fi
           $sudo apt-get update
-          $sudo apt-get install -y groovy --no-install-recommends
+          $sudo apt-get install -y groovy
 
       - uses: actions/checkout@v2
         with:
