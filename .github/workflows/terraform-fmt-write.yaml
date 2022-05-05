@@ -90,6 +90,6 @@ jobs:
 
       - name: Git Push
         run: |
-          git diff ..  "${GITHUB_HEAD_REF:-$GITHUB_REF}":HEAD
-          git diff ... "${GITHUB_HEAD_REF:-$GITHUB_REF}":HEAD
+          git diff origin/"${GITHUB_HEAD_REF:-$GITHUB_REF}"..HEAD
+          git diff origin/"${GITHUB_HEAD_REF:-$GITHUB_REF}"...HEAD
           git push origin HEAD:"${GITHUB_HEAD_REF:-$GITHUB_REF}"
