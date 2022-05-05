@@ -68,6 +68,8 @@ jobs:
         run: |
           git config --global --add safe.directory "$PWD"
 
+          git pull
+
           #git commit --author "$(git log -n 1 --format='%an <%ae>')" --message "Terraform Fmt fixes - GitHub Actions Workflow: $GITHUB_WORKFLOW" .
           # --author override doesn't work, still gets:
           #
