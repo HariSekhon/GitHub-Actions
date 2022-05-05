@@ -68,8 +68,6 @@ jobs:
         run: |
           git config --global --add safe.directory "$PWD"
 
-          git pull
-
           #git commit --author "$(git log -n 1 --format='%an <%ae>')" --message "Terraform Fmt fixes - GitHub Actions Workflow: $GITHUB_WORKFLOW" .
           # --author override doesn't work, still gets:
           #
@@ -92,6 +90,7 @@ jobs:
 
       - name: Git Push
         run: |
+          git fetch
           git diff origin/"${GITHUB_HEAD_REF:-$GITHUB_REF}"..HEAD
           git diff origin/"${GITHUB_HEAD_REF:-$GITHUB_REF}"...HEAD
           git push origin HEAD:"${GITHUB_HEAD_REF:-$GITHUB_REF}"
