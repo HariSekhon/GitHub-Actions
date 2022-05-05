@@ -92,5 +92,6 @@ jobs:
         run: |
           git fetch
           git diff origin/"${GITHUB_HEAD_REF:-$GITHUB_REF}"..HEAD
-          git diff origin/"${GITHUB_HEAD_REF:-$GITHUB_REF}"...HEAD
+          # fatal: origin/UN-xxxxx-mybranch...HEAD: no merge base
+          #git diff origin/"${GITHUB_HEAD_REF:-$GITHUB_REF}"...HEAD
           git push origin HEAD:"${GITHUB_HEAD_REF:-$GITHUB_REF}"
