@@ -146,7 +146,7 @@ jobs:
           # Instead, just collect findings for semgrep.dev/manage/findings
           #auditOn: push
           #auditOn: push workflow_dispatch cron
-          #generateSarif: "1"
+          generateSarif: "1"
 
         # Change job timeout (default is 1800 seconds; set to 0 to disable)
         #env:
