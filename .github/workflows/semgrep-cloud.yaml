@@ -63,7 +63,7 @@ env:
 
 jobs:
   semgrep:
-    name: Semgrep Scan, Cloud report
+    name: Semgrep Scan, report -> semgrep.dev
 
     # github.event.repository.fork isn't available in scheduled workflows
     # can't prevent forks of this repo, because also prevents caller workflows
