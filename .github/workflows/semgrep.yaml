@@ -37,12 +37,43 @@ on:
       - '**/README.md'
   workflow_call:
     inputs:
+      config:
+        type: string
+        required: false
+        default: |
+          # https://semgrep.dev/explore
+          # https://semgrep.dev/r  # full rule list
+          p/r2c-ci
+          p/r2c-best-practices
+          p/docker-compose
+          p/dockerfile
+          p/kubernetes
+          p/nginx
+          p/terraform
+          p/python
+          p/golang
+          #p/kotlin
+          #p/insecure-transport
+          #p/jwt
+          #p/xss
+          #p/django
+          #p/scala
+          #p/ruby
+          #p/javascript
+          #p/flask
+          #p/react
+          #p/nodejsscan
+          #p/eslint-plugin-security
+          #p/phpcs-security-audit
       debug:
         type: string
         required: false
         default: false
   workflow_dispatch:
     inputs:
+      config:
+        type: string
+        required: false
       debug:
         type: boolean
         required: false
@@ -90,17 +121,29 @@ jobs:
       - uses: returntocorp/semgrep-action@v1
         with:
           config: >- # more at semgrep.dev/explore
+            ${{ inputs.config }}
+            ${{ github.event.inputs.config }}
+
             p/security-audit
             p/secrets
+            p/semgrep-misconfigurations
+            p/semgrep-rule-lints
+            p/github-actions
+            p/ci
+            p/owasp-top-ten
+            p/command-injection
+            p/sql-injection
 
-        # == Optional settings in the `with:` block
+          # == Optional settings in the `with:` block
 
-        # Instead of `config:`, use rules set in Semgrep App.
-        # Get your token from semgrep.dev/manage/settings.
-        #   publishToken: ${{ secrets.SEMGREP_APP_TOKEN }}
+          # Instead of `config:`, use rules set in Semgrep App.
+          # Get your token from semgrep.dev/manage/settings.
+          #   publishToken: ${{ secrets.SEMGREP_APP_TOKEN }}
 
-        # Never fail the build due to findings on pushes.
-        # Instead, just collect findings for semgrep.dev/manage/findings
+          # XXX: both of these are not obsolete cause breakage
+          #
+          # Never fail the build due to findings on pushes.
+          # Instead, just collect findings for semgrep.dev/manage/findings
           #auditOn: push
           #auditOn: push workflow_dispatch cron
           generateSarif: "1"
