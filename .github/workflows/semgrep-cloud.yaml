@@ -35,6 +35,34 @@ on:
       - '**/README.md'
   workflow_call:
     inputs:
+      config:
+        type: string
+        required: false
+        default: |
+          # https://semgrep.dev/explore
+          # https://semgrep.dev/r  # full rule list
+          p/r2c-ci
+          p/r2c-best-practices
+          p/docker-compose
+          p/dockerfile
+          p/kubernetes
+          p/nginx
+          p/terraform
+          p/python
+          p/golang
+          #p/kotlin
+          #p/insecure-transport
+          #p/jwt
+          #p/xss
+          #p/django
+          #p/scala
+          #p/ruby
+          #p/javascript
+          #p/flask
+          #p/react
+          #p/nodejsscan
+          #p/eslint-plugin-security
+          #p/phpcs-security-audit
       debug:
         type: string
         required: false
@@ -42,6 +70,15 @@ on:
     secrets:
       SEMGREP_APP_TOKEN:
         required: true
+  workflow_dispatch:
+    inputs:
+      config:
+        type: string
+        required: false
+      debug:
+        type: boolean
+        required: false
+        default: false
   schedule:
     - cron: '0 0 * * 1'
 
@@ -58,9 +95,11 @@ env:
 jobs:
   semgrep:
     name: Semgrep Scan, Cloud report
+
     # github.event.repository.fork isn't available in scheduled workflows
     # can't prevent forks of this repo, because also prevents caller workflows
     #if: github.repository == 'HariSekhon/Github-Actions'
+
     runs-on: ubuntu-latest
     steps:
       - name: Environment
@@ -76,6 +115,21 @@ jobs:
       - uses: returntocorp/semgrep-action@v1
         with:
           publishToken: ${{ secrets.SEMGREP_APP_TOKEN }}
-          # Change job timeout (default is 1800 seconds; set to 0 to disable)
-          # env:
-          #   SEMGREP_TIMEOUT: 300
+          config: >- # more at semgrep.dev/explore
+            ${{ inputs.config }}
+            ${{ github.event.inputs.config }}
+
+            p/security-audit
+            p/secrets
+            p/semgrep-misconfigurations
+            p/semgrep-rule-lints
+            p/github-actions
+            p/ci
+            p/owasp-top-ten
+            p/command-injection
+            p/sql-injection
+
+        # Change job timeout (default is 1800 seconds; set to 0 to disable)
+        #env:
+          #SEMGREP_AGENT_DEBUG: 1
+          #SEMGREP_TIMEOUT: 300
