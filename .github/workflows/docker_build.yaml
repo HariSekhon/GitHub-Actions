@@ -116,6 +116,11 @@ jobs:
       ghcr: ${{ steps.setvar.outputs.ghcr }}
       ecr: ${{ steps.setvar.outputs.ecr }}
       ecr_registry: ${{ steps.setvar.outputs.ecr_registry }}
+      acr: ${{ steps.setvar.outputs.acr }}
+      gcr: ${{ steps.setvar.outputs.gcr }}
+      gar: ${{ steps.setvar.outputs.gar }}
+      gitlab: ${{ steps.setvar.outputs.gitlab }}
+      quay: ${{ steps.setvar.outputs.quay }}
     steps:
       - name: Set output variables
         id: setvar
