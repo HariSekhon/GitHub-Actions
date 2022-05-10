@@ -95,8 +95,14 @@ jobs:
         if: steps.commit.outputs.new_commits == 'true'
         run: |
           git fetch
-          git log origin/"${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}"..HEAD
-          git diff origin/"${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}"..HEAD
+
+          ref="${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}"
+
+          git log origin/"$ref"..HEAD
+
+          git diff origin/"$ref"..HEAD
+
           # fatal: origin/UN-xxxxx-mybranch...HEAD: no merge base
-          #git diff origin/"${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}"...HEAD
-          git push origin HEAD:"${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}"
+          #git diff origin/"$ref"...HEAD
+
+          git push origin HEAD:"$ref"
