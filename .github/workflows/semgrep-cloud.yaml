@@ -42,6 +42,12 @@ on:
     secrets:
       SEMGREP_APP_TOKEN:
         required: true
+  workflow_dispatch:
+    inputs:
+      debug:
+        type: boolean
+        required: false
+        default: false
   schedule:
     - cron: '0 0 * * 1'
 
@@ -57,10 +63,12 @@ env:
 
 jobs:
   semgrep:
-    name: Semgrep Scan, Cloud report
+    name: Semgrep Scan, report -> semgrep.dev
+
     # github.event.repository.fork isn't available in scheduled workflows
     # can't prevent forks of this repo, because also prevents caller workflows
     #if: github.repository == 'HariSekhon/Github-Actions'
+
     runs-on: ubuntu-latest
     steps:
       - name: Environment
@@ -76,6 +84,9 @@ jobs:
       - uses: returntocorp/semgrep-action@v1
         with:
           publishToken: ${{ secrets.SEMGREP_APP_TOKEN }}
-          # Change job timeout (default is 1800 seconds; set to 0 to disable)
-          # env:
-          #   SEMGREP_TIMEOUT: 300
+          # does not accept config key - must use semgrep.dev to configure rules to run
+          config: >- # more at semgrep.dev/explore
+        # Change job timeout (default is 1800 seconds; set to 0 to disable)
+        #env:
+          #SEMGREP_AGENT_DEBUG: 1
+          #SEMGREP_TIMEOUT: 300
