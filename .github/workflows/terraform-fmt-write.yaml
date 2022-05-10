@@ -92,7 +92,7 @@ jobs:
           echo "::set-output name=new_commits::true"
 
       - name: Git Push
-        if: steps.commit.new_commits == 'true'
+        if: steps.commit.outputs.new_commits == 'true'
         run: |
           git fetch
           git diff origin/"${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}"..HEAD
