@@ -54,7 +54,7 @@ jobs:
 
       - name: tfsec
         #uses: tfsec/tfsec-pr-commenter-action@5e9f770638057da497182661aacbf640ca94f4e9
-        uses: tfsec/tfsec-pr-commenter-action@main
+        uses: tfsec/tfsec-pr-commenter-action@master
         with:
           github_token: ${{ github.token }}
           # or
