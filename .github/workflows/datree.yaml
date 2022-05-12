@@ -13,6 +13,8 @@
 
 # https://github.com/datreeio/action-datree
 
+# Logs results to https://datree.io
+
 ---
 name: Datree
 
