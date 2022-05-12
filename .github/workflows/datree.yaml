@@ -31,14 +31,16 @@ on:
         default: --only-k8s-files
         required: false
       isHelmChart:
-        type: boolean
+        #type: boolean
+        type: string
         required: false
       helmArguments:
         # eg. '--values values.yaml'
         type: string
         required: false
       isKustomization:
-        type: boolean
+        #type: boolean
+        type: string
         required: false
       kustomizeArguments:
         type: string
@@ -73,7 +75,7 @@ jobs:
         with:
           path: ${{ inputs.path }}
           cliArguments: ${{ inputs.cliArguments }}
-          isHelmChart: ${{ inputs.isHelmChart }}
+          isHelmChart: ${{ inputs.isHelmChart == 'true' }}
           helmArguments: ${{ inputs.helmArguments }}
-          isKustomization: ${{ inputs.isKustomization }}
+          isKustomization: ${{ inputs.isKustomization == 'true' }}
           kustomizeArguments: ${{ inputs.kustomizeArguments }}
