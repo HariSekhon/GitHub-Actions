@@ -27,7 +27,9 @@ on:
     inputs:
       path:
         type: string
-        default: '**/*.y*ml'
+        # recursive glob doesn't work - https://github.com/datreeio/action-datree/issues/3
+        #default: '**/*.y*ml'
+        default: '*.y*ml'
         required: false
       # https://hub.datree.io/setup/cli-arguments
       cliArguments:
