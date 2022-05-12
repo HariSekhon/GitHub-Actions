@@ -25,8 +25,8 @@ on:
         type: string
         default: '**/*.yaml'
         required: false
+      # https://hub.datree.io/setup/cli-arguments
       args:
-        # eg. '--policy Staging --output simple'
         type: string
         default: --only-k8s-files
         required: false
