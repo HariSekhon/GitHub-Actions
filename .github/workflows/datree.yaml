@@ -69,7 +69,7 @@ jobs:
       - name: Datree Policy Check
         uses: datreeio/action-datree@main
         with:
-          path: '${{ inputs.path }}'
+          path: ${{ inputs.path }}
           cliArguments: ${{ inputs.args }}
           isHelmChart: ${{ inputs.isHelmChart }}
           helmArguments: ${{ inputs.helmArguments }}
