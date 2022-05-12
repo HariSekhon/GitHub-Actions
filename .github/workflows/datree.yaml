@@ -27,7 +27,11 @@ on:
     inputs:
       path:
         type: string
-        # recursive glob doesn't work - https://github.com/datreeio/action-datree/issues/3
+        # recursive glob doesn't work:
+        #
+        #   https://github.com/datreeio/action-datree/issues/3
+        #   https://github.com/datreeio/datree/issues/618
+        #
         #default: '**/*.y*ml'
         default: '*.y*ml'
         required: false
