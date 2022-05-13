@@ -184,6 +184,15 @@ on:
         type: string
         required: false
         default: false
+      #log_level:
+      #  description: Log level
+      #  required: true
+      #  default: warning
+      #  type: choice
+      #  options:
+      #    - info
+      #    - warning
+      #    - debug
     secrets:
       aws_access_key_id:
         required: true
