@@ -84,7 +84,7 @@ jobs:
         uses: datreeio/action-datree@main
         with:
           path: ${{ inputs.path }}
-          cliArguments: ${{ inputs.cliArguments }}
+          cliArguments: --output simple ${{ inputs.cliArguments }}
           isHelmChart: ${{ inputs.isHelmChart == 'true' }}
           helmArguments: ${{ inputs.helmArguments }}
           isKustomization: ${{ inputs.isKustomization == 'true' }}
