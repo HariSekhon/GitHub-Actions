@@ -88,6 +88,6 @@ jobs:
 
       - name: Upload Trivy sarif scan results to GitHub Security tab
         if: ${{ ! ( inputs.no_sarif || github.event.inputs.sarif ) }}
-        uses: github/codeql-action/upload-sarif@v1
+        uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: trivy-results.sarif
