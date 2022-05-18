@@ -37,12 +37,12 @@ on:
       - '**/README.md'
   workflow_call:
     inputs:
+      # https://semgrep.dev/explore
+      # https://semgrep.dev/r  # full rule list
       config:
         type: string
         required: false
         default: |
-          # https://semgrep.dev/explore
-          # https://semgrep.dev/r  # full rule list
           p/r2c-ci
           p/r2c-best-practices
           p/docker-compose
@@ -52,19 +52,19 @@ on:
           p/terraform
           p/python
           p/golang
-          #p/kotlin
-          #p/insecure-transport
-          #p/jwt
-          #p/xss
-          #p/django
-          #p/scala
-          #p/ruby
-          #p/javascript
-          #p/flask
-          #p/react
-          #p/nodejsscan
-          #p/eslint-plugin-security
-          #p/phpcs-security-audit
+         #p/kotlin
+         #p/insecure-transport
+         #p/jwt
+         #p/xss
+         #p/django
+         #p/scala
+         #p/ruby
+         #p/javascript
+         #p/flask
+         #p/react
+         #p/nodejsscan
+         #p/eslint-plugin-security
+         #p/phpcs-security-audit
       debug:
         type: string
         required: false
