@@ -65,7 +65,7 @@ defaults:
     shell: bash -euxo pipefail {0}
 
 env:
-  ECR_REPO: ${{ inputs.repo }}
+  AWS_ECR_REPO: ${{ inputs.repo }}
   BUILDCACHE: ${{ inputs.build-cache }}
   DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
 
@@ -129,7 +129,7 @@ jobs:
         run: echo "AWS_ECR_REGISTRY=${{ steps.aws-ecr-login.outputs.registry }}" >> "$GITHUB_ENV"
 
       - name: Generate environment variable DOCKER_IMAGE
-        run: echo "DOCKER_IMAGE=${{ env.AWS_ECR_REGISTRY }}/${{ env.ECR_REPO }}" >> "$GITHUB_ENV"
+        run: echo "DOCKER_IMAGE=${{ env.AWS_ECR_REGISTRY }}/${{ env.AWS_ECR_REPO }}" >> "$GITHUB_ENV"
 
         # branches called things like feature/dockerize need to be sanitized to pass as docker tags -> feature_dockerize
       - name: Generate environment variable BRANCH_TAG
