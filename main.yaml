@@ -850,7 +850,7 @@ jobs:
       # doing this in 2 steps so we can differentiate AWS CLI failures from Docker CLI failures
       - name: AWS ECR password
         run: |
-          set +x  # to not expose the pw in the logs
+          set +x  # don't shell trace this step because it will expose the password in the logs
           AWS_ECR_PASSWORD="$(aws ecr get-login-password --region "${{env.AWS_DEFAULT_REGION}}")"
           echo "AWS_ECR_PASSWORD=$AWS_ECR_PASSWORD" >> "$GITHUB_ENV"
           echo "::add-mask::$AWS_ECR_PASSWORD"
