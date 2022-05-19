@@ -62,18 +62,20 @@ env:
   # DockerHub
   #DOCKER_IMAGE: "harisekhon/${{env.APP}}"
 
-  DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
-  DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  # XXX: don't expose these as environment variables, then you'd have to echo "::add-mask::$VARIABLE" each one, use directly from secrets
+  #DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
+  #DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 
   GHCR_REGISTRY: ghcr.io/harisekhon
 
+  # XXX: don't expose these as environment variables, then you'd have to echo "::add-mask::$VARIABLE" each one, use directly from secrets
   # or configure via aws-actions/configure-aws-credentials in Setup section
-  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  GCP_SERVICEACCOUNT_KEY: ${{ secrets.GCP_SERVICEACCOUNT_KEY }}
-  GITHUB_USER: ${{ secrets.GITHUB_USER }}
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY }}
+  #AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #GCP_SERVICEACCOUNT_KEY: ${{ secrets.GCP_SERVICEACCOUNT_KEY }}
+  #GITHUB_USER: ${{ secrets.GITHUB_USER }}
+  #GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY }}
 
   AWS_DEFAULT_REGION: eu-west-2  # London
   # use secrets from Environments as dynamic variables to share workflow across environments
@@ -415,7 +417,7 @@ jobs:
       # for OS with Git < 2.18, actions/checkout uses an API download tarball which will screw up your git commands such as 'git submodule init'
       # in these cases, you can emulate the correct checkout behaviour on older versions of Git like so:
       - name: Git Checkout
-        run: git clone "https://$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY" "$GITHUB_WORKSPACE"
+        run: git clone "https://${{secrets.GITHUB_TOKEN}}@github.com/$GITHUB_REPOSITORY" "$GITHUB_WORKSPACE"
 
       - name: Allow Git Commands
         run: git config --global --add safe.directory "${GITHUB_WORKSPACE:-$PWD}"
@@ -464,7 +466,14 @@ jobs:
       #  run: aws codeartifact login --tool pip --repository "${{env.CODEARTIFACT_REPO}}" --domain "${{secrets.CODEARTIFACT_DOMAIN}}" --domain-owner "${{secrets.AWS_ACCOUNT_ID}}"
       # or
       - name: Generate environment variable CODEARTIFACT_AUTH_TOKEN
-        run: echo "CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain ${{secrets.CODEARTIFACT_DOMAIN}} --domain-owner ${{secrets.AWS_ACCOUNT_ID}} --query authorizationToken --output text)" >> "$GITHUB_ENV"
+        # XXX: don't generate env vars with subshells in one line like this - even with set -euxo pipefail the failure of the AWS CLI command won't be detected to error out at this step properly
+        #run: echo "CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain ${{secrets.CODEARTIFACT_DOMAIN}} --domain-owner ${{secrets.AWS_ACCOUNT_ID}} --query authorizationToken --output text)" >> "$GITHUB_ENV"
+        run: |
+          # don't shell trace this step because it will expose the token in the logs
+          set +x
+          CODEARTIFACT_AUTH_TOKEN="$(aws codeartifact get-authorization-token --domain ${{secrets.CODEARTIFACT_DOMAIN}} --domain-owner ${{ secrets.AWS_ACCOUNT_ID}} --query authorizationToken --output text)"
+          echo "CODEARTIFACT_AUTH_TOKEN=$CODEARTIFACT_AUTH_TOKEN" >> "$GITHUB_ENV"
+          echo "::add-mask::$CODEARTIFACT_AUTH_TOKEN"
 
       # change PIP_INDEX_URL to another variable to not replace default repo but instead use as a supplemental repo via 'pip --extra-index-url "$pip_index_url" requirements.txt' to be able to use PyPI and CodeArtifact at the same time
       # if using sudo you'll need to preserve the environment variable via 'sudo -e PIP_INDEX_URL'
@@ -523,7 +532,7 @@ jobs:
         run: yum install -y git make
 
       - name: Git Checkout
-        run: git clone "https://$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY" "$GITHUB_WORKSPACE"
+        run: git clone "https://${{secrets.GITHUB_TOKEN}}@github.com/$GITHUB_REPOSITORY" "$GITHUB_WORKSPACE"
 
       # 'cd' in one step, is ignored in the next step, which ends up back in $GITHUB_WORKSPACE, regardless of whether you inject a new value for $GITHUB_WORKSPACE
 
@@ -637,22 +646,34 @@ jobs:
       # don't need this any more, just use ${{ github.sha }} instead which is more readily available
       # $GITHUB_SHA is shown in environment dump but evaluates to blank, so use our own generated env var instead
       #- name: Generate environment variable GIT_SHA
-      #  run: echo "GIT_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+      #  run: |
+      #    GIT_SHA="$(git rev-parse HEAD)"
+      #    echo "GIT_SHA=$GIT_SHA" >> "$GITHUB_ENV"
       #  # this works too
       #  run: echo "GIT_SHA=$GITHUB_SHA" >> "$GITHUB_ENV"
 
       # use ${{ github.ref_name }} instead which comes out to the branch or tag (${{github.ref_type}} == 'branch' if you check the github context dump above)
       #- name: Generate environment variable GIT_BRANCH
-      #  run: echo "GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)" >> "$GITHUB_ENV"
+      #  run: |
+      #    GIT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+      #    echo "GIT_BRANCH=$GIT_BRANCH" >> "$GITHUB_ENV"
       #- name: Generate environment variable GIT_TAG
-      #  run: echo "GIT_TAG=$(git tag --points-at HEAD)" >> "$GITHUB_ENV"
+      #  run: |
+      #    GIT_TAG="$(git tag --points-at HEAD)"
+      #    echo "GIT_TAG=$GIT_TAG" >> "$GITHUB_ENV"
 
       - name: Generate environment variable EPOCH
-        run: echo "EPOCH=$(date --utc '+%s')" >> "$GITHUB_ENV"
+        run: |
+          EPOCH="$(date --utc '+%s')"
+          echo "EPOCH=$EPOCH" >> "$GITHUB_ENV"
       - name: Generate environment variable DATESTAMP
-        run: echo "DATESTAMP=$(date --utc --date="@${{env.EPOCH}}" '+%FT%H%M%SZ')" >> "$GITHUB_ENV"
+        run: |
+          DATESTAMP="$(date --utc --date="@${{env.EPOCH}}" '+%FT%H%M%SZ')"
+          echo "DATESTAMP=$DATESTAMP" >> "$GITHUB_ENV"
       - name: Generate environment variable TIMESTAMP
-        run: echo "TIMESTAMP=$(date --utc --date="@${{env.EPOCH}}" '+%F')" >> "$GITHUB_ENV"
+        run: |
+          TIMESTAMP="$(date --utc --date="@${{env.EPOCH}}" '+%F')"
+          echo "TIMESTAMP=$TIMESTAMP" >> "$GITHUB_ENV"
 
       # ======== Docker Actions =========
       - name: Set up Docker Buildx
@@ -828,11 +849,15 @@ jobs:
 
       # doing this in 2 steps so we can differentiate AWS CLI failures from Docker CLI failures
       - name: AWS ECR password
-        run: echo "AWS_ECR_PASSWORD=$(aws ecr get-login-password --region "${{env.AWS_DEFAULT_REGION}}")" >> "$GITHUB_ENV"
+        run: |
+          set +x  # to not expose the pw in the logs
+          AWS_ECR_PASSWORD="$(aws ecr get-login-password --region "${{env.AWS_DEFAULT_REGION}}")"
+          echo "AWS_ECR_PASSWORD=$AWS_ECR_PASSWORD" >> "$GITHUB_ENV"
+          echo "::add-mask::$AWS_ECR_PASSWORD"
       - name: Docker Login ECR
         run: docker login "${{env.AWS_ECR_REGISTRY}}" -u AWS -p "${{env.AWS_ECR_PASSWORD}}"
       - name: Docker Login GHCR
-        run: docker login ghcr.io -u "${{env.GITHUB_USER}}" -p "${{env.GITHUB_TOKEN}}"
+        run: docker login ghcr.io -u "${{secrets.GITHUB_USER}}" -p "${{secrets.GITHUB_TOKEN}}"
 
       # don't split Docker Login to separate job as it may happen on a separate machine, resulting in a docker push error of 'no basic auth credentials'
       # also can't dynamically create AWS_ECR_REGISTRY env var for 2 jobs, would have to set statically in workflow env or duplicate generation in each job
