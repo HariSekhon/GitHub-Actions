@@ -118,11 +118,12 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Generate environment variable AWS_ACCOUNT_ID
-        run: |
-          #AWS_ACCOUNT_ID="$(aws sts get-caller-identity | jq -r .Account)"
-          #echo "AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID" >> "$GITHUB_ENV"
-          echo "AWS_ACCOUNT_ID=${{ steps.configure-aws-credentials.outputs.aws-account-id }}" >> "$GITHUB_ENV"
+      # not needed when using ecr login output
+      #- name: Generate environment variable AWS_ACCOUNT_ID
+      #  run: |
+      #    #AWS_ACCOUNT_ID="$(aws sts get-caller-identity | jq -r .Account)"
+      #    #echo "AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID" >> "$GITHUB_ENV"
+      #    echo "AWS_ACCOUNT_ID=${{ steps.configure-aws-credentials.outputs.aws-account-id }}" >> "$GITHUB_ENV"
 
       - name: Generate environment variable AWS_ECR_REGISTRY
         #run: echo "AWS_ECR_REGISTRY=${{env.AWS_ACCOUNT_ID}}.dkr.ecr.${{env.AWS_DEFAULT_REGION}}.amazonaws.com" >> "$GITHUB_ENV"
