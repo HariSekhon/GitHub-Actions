@@ -46,6 +46,9 @@ jobs:
     timeout-minutes: 10
     steps:
 
+      - name: Environment
+        run: env | sort
+
       - name: Dump GitHub context
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
