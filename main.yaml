@@ -466,7 +466,7 @@ jobs:
       #  run: aws codeartifact login --tool pip --repository "${{env.CODEARTIFACT_REPO}}" --domain "${{secrets.CODEARTIFACT_DOMAIN}}" --domain-owner "${{secrets.AWS_ACCOUNT_ID}}"
       # or
       - name: Generate environment variable CODEARTIFACT_AUTH_TOKEN
-        # XXX: don't generate env vars with subshells in one line like this - even with set -euxo pipefail the failure of the AWS CLI command won't be detected to error out at this step properly
+        # XXX: don't generate env vars with one-liner subshells like this - even with 'set -euo pipefail' the failure of the AWS CLI command won't be detected to error out at this step properly
         #run: echo "CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain ${{secrets.CODEARTIFACT_DOMAIN}} --domain-owner ${{secrets.AWS_ACCOUNT_ID}} --query authorizationToken --output text)" >> "$GITHUB_ENV"
         run: |
           # don't shell trace this step because it will expose the token in the logs
