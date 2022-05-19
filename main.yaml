@@ -77,7 +77,8 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY }}
 
-  AWS_DEFAULT_REGION: eu-west-2  # London
+  # should be provided into the environment by aws-actions/configure-aws-credentials
+  #AWS_DEFAULT_REGION: eu-west-2  # London
   # use secrets from Environments as dynamic variables to share workflow across environments
   #AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}  # or generate this from aws access keys (see Generate steps further down)
   #AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
