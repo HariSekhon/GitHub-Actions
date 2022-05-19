@@ -62,20 +62,20 @@ env:
   # DockerHub
   #DOCKER_IMAGE: "harisekhon/${{env.APP}}"
 
-  # XXX: don't expose these as environment variables, then you'd have to echo "::add-mask::$VARIABLE" each one, use directly from secrets
-  #DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
-  #DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  # these are automatically masked in the logs because they are derived from secrets
+  DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
+  DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 
   GHCR_REGISTRY: ghcr.io/harisekhon
 
-  # XXX: don't expose these as environment variables, then you'd have to echo "::add-mask::$VARIABLE" each one, use directly from secrets
+  # these are automatically masked in the logs because they are derived from secrets
   # or configure via aws-actions/configure-aws-credentials in Setup section
-  #AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  #AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  #GCP_SERVICEACCOUNT_KEY: ${{ secrets.GCP_SERVICEACCOUNT_KEY }}
-  #GITHUB_USER: ${{ secrets.GITHUB_USER }}
-  #GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  GCP_SERVICEACCOUNT_KEY: ${{ secrets.GCP_SERVICEACCOUNT_KEY }}
+  GITHUB_USER: ${{ secrets.GITHUB_USER }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY }}
 
   AWS_DEFAULT_REGION: eu-west-2  # London
   # use secrets from Environments as dynamic variables to share workflow across environments
