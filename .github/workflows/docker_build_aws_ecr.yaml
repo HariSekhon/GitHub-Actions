@@ -92,6 +92,7 @@ jobs:
           submodules: 'true'  # requires Git 2.18+ to be installed first
 
       - name: Configure AWS credentials
+        id: configure-aws-credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -99,7 +100,10 @@ jobs:
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
       - name: Generate environment variable AWS_ACCOUNT_ID
-        run: echo "AWS_ACCOUNT_ID=$(aws sts get-caller-identity | jq -r .Account)" >> "$GITHUB_ENV"
+        run: |
+          #AWS_ACCOUNT_ID="$(aws sts get-caller-identity | jq -r .Account)"
+          #echo "AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID" >> "$GITHUB_ENV"
+          echo "AWS_ACCOUNT_ID=${{ steps.configure-aws-credentials.outputs.aws-account-id }}" >> "$GITHUB_ENV"
       - name: Generate environment variable AWS_ECR_REGISTRY
         run: echo "AWS_ECR_REGISTRY=${{env.AWS_ACCOUNT_ID}}.dkr.ecr.${{env.AWS_DEFAULT_REGION}}.amazonaws.com" >> "$GITHUB_ENV"
         #run: echo "AWS_ECR_REGISTRY=${{ steps.aws-ecr-login.outputs.registry }}" >> "$GITHUB_ENV"
