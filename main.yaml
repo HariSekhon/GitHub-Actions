@@ -19,6 +19,8 @@
 # MarketPlace:  https://github.com/marketplace?type=actions
 #               https://github.com/marketplace?query=publisher%3Aactions&type=actions
 
+# To get diagnostic debug logs for the workflow itself, set ACTIONS_RUNNER_DEBUG=true in the repo's secrets
+
 ---
 # XXX: Edit - badges appear with this name
 name: My Workflow
