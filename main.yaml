@@ -199,11 +199,11 @@ on:
       #    - warning
       #    - debug
     secrets:
-      aws_access_key_id:
+      AWS_ACCESS_KEY_ID:
         required: true
-      aws_secret_access_key:
+      AWS_SECRET_ACCESS_KEY:
         required: true
-      aws_default_region:
+      AWS_DEFAULT_REGION:
         required: true
 
   # https://docs.github.com/en/actions/managing-workflow-runs/manually-running-a-workflow#running-a-workflow
@@ -836,6 +836,26 @@ jobs:
           # set GIT_AUTH_TOKEN if checkout out from another repo (uses local ${{github.token}} otherwise)
           #secrets: |
           #    GIT_AUTH_TOKEN=${{ secrets.PAT_TOKEN }}
+
+        # poetry got 403 to private CodeArtifact PyPI regardless of 'build-args:
+        # but a local Docker build of the copied pasted docker command worked
+        # workaround was to deconstruct the official action to straight docker command
+        run: |
+          docker buildx build \
+            --file backend/docker/Dockerfile \
+            --build-arg CODEARTIFACT_AUTH_TOKEN="${{env.CODEARTIFACT_AUTH_TOKEN}}" \
+            --cache-to type=inline \
+            --cache-from type=registry,ref=${{env.DOCKER_IMAGE}}:latest \
+            --cache-from type=registry,ref=${{env.DOCKER_IMAGE}}:${{env.BRANCH_TAG}} \
+            --cache-from type=registry,ref=${{env.DOCKER_IMAGE}}:${{github.sha}} \
+            --tag ${{env.DOCKER_IMAGE}}:latest \
+            --tag ${{env.DOCKER_IMAGE}}:${{env.BRANCH_TAG}} \
+            --tag ${{env.DOCKER_IMAGE}}:${{github.sha}} \
+            --tag ${{env.DOCKER_IMAGE}}:${{env.EPOCH}} \
+            --tag ${{env.DOCKER_IMAGE}}:${{env.DATESTAMP}} \
+            --tag ${{env.DOCKER_IMAGE}}:${{env.TIMESTAMP}} \
+            --push \
+            backend/
 
       # ======== or inline Script =========
       # or consider using an external script to do all of the below like aws_ecr_docker_build_push.sh from DevOps Bash tools repo - https://github.com/HariSekhon/DevOps-Bash-tools
