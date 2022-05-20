@@ -288,6 +288,9 @@ jobs:
       # don't cast in calling workflow any more, reusable workflows are using debug string and handling the comparison
       #debug: ${{ github.event.inputs.debug && fromJSON(github.event.inputs.debug) || false }}
       debug: ${{ github.event.inputs.debug }}
+    # pass all secrets
+    #secrets: inherit
+    # or pass only select secrets
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
