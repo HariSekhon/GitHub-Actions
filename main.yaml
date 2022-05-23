@@ -982,6 +982,40 @@ jobs:
       - name: ArgoCD Wait
         run: argocd app wait "$APP" --grpc-web --timeout 600
 
+  elastic_beanstalk:
+    name: Elastic Beanstalk Deploy
+    runs-on: ubuntu-latest
+    container: amazonlinux:2
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        id: configure-aws-credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      # Amazon Linux comes with EB CLI pre-installed
+      #
+      #- name: Set up Python 3.9
+      #  uses: actions/setup-python@v2
+      #  with:
+      #    python-version: 3.9
+      #
+      #- name: Install EB CLI
+      #  run: python -m pip install --upgrade pip awsebcli
+
+      # Set AWS Secrets as Elastic Beanstalk Environment Variables or integrate to Secrets Manager
+      - name: Elastic Beanstalk Deploy
+        run: |
+          # the environment contains the settings
+          eb use ${{env.AWS_ELASTIC_BEANSTALK_ENVIRONMENT}} --region ${{ secrets.AWS_DEFAULT_REGION }}
+          # triggers environment update + redeployment of app
+          eb setenv AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} ...
+
+
   # ============================================================================ #
   #                               G i t   M e r g e
   # ============================================================================ #
