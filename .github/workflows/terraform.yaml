@@ -56,7 +56,26 @@ on:
         required: false
         default: false
     secrets:
+      # only if using Terraform Cloud backend
       TF_API_TOKEN:
+        required: false
+      # if managing AWS services or using an S3 backend
+      AWS_ACCESS_KEY_ID:
+        required: false
+      AWS_SECRET_ACCESS_KEY:
+        required: false
+      AWS_DEFAULT_REGION:
+        required: false
+      # if managing GCP services or using a GCS backend
+      # either supply a GCP service account credential key
+      GCP_SERVICEACCOUNT_KEY:
+        required: false
+      # OR workload identity provider and service_account, see:
+      #
+      #   https://cloud.google.com/blog/products/identity-security/enabling-keyless-authentication-from-github-actions
+      GCP_WORKLOAD_IDENTITY_PROVIDER:
+        required: false
+      GCP_SERVICE_ACCOUNT:
         required: false
 
 permissions:
@@ -85,6 +104,39 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Configure AWS credentials
+        id: configure-aws-credentials
+        if: secrets.AWS_ACCESS_KEY_ID && secrets.AWS_SECRET_ACCESS_KEY && secrets.AWS_DEFAULT_REGION
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      # adapted from my Jenkins Shared Library - https://github.com/HariSekhon/Jenkins/blob/master/vars/gcpActivateServiceAccount.groovy
+      - name: Google Cloud Activate ServiceAccount Key
+        id: google-cloud-activate-serviceaccount
+        if: secrets.GCP_SERVICEACCOUNT_KEY
+        run: |
+          base64 --decode <<< "${{ secrets.GCP_SERVICEACCOUNT_KEY }}" > credentials.json
+          gcloud auth activate-service-account --key-file=credentials.json
+          rm -f credentials.json
+          gcloud auth list
+
+      # New GCP keyless authentication:
+      #
+      #   https://cloud.google.com/blog/products/identity-security/enabling-keyless-authentication-from-github-actions
+      #
+      - name: Google Cloud Keyless Auth
+        id: google-cloud-auth
+        if: secrets.GCP_WORKLOAD_IDENTITY_PROVIDER && secrets.GCP_SERVICE_ACCOUNT
+        uses: google-github-actions/auth@v0.4.0
+        with:
+          #workload_identity_provider: 'projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
+          #service_account: 'my-service-account@my-project.iam.gserviceaccount.com'
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.secrets.GCP_SERVICE_ACCOUNT }}
+
       - name: Generate TERRAFORM_VERSION environment variable
         run: |
           if [ -n "${{ inputs.terraform-version }}" ]; then
@@ -96,6 +148,8 @@ jobs:
             echo "TERRAFORM_VERSION=$TERRAFORM_VERSION" >> "$GITHUB_ENV"
           fi
 
+      - name
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
@@ -103,6 +157,7 @@ jobs:
           # for Terraform Cloud
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
+      # force people creating pull requests to format it correctly or fail and don't show then a plan
       - name: Terraform Format
         id: fmt
         run: terraform fmt -check
