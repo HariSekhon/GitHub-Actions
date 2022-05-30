@@ -92,6 +92,7 @@ defaults:
     working-directory: ${{ inputs.dir }}
 
 env:
+  TF_IN_AUTOMATION: 1
   DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
 
 jobs:
@@ -156,6 +157,9 @@ jobs:
           # for Terraform Cloud
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
+      - name: Terraform Version
+        run: terraform version
+
       # force people creating pull requests to format it correctly or fail and don't show then a plan
       - name: Terraform Format
         id: fmt
@@ -163,7 +167,7 @@ jobs:
 
       - name: Terraform Init
         id: init
-        run: terraform init
+        run: terraform init -input=false
 
       - name: Terraform Validate
         id: validate
@@ -172,7 +176,7 @@ jobs:
       - name: Terraform Plan
         id: plan
         if: github.event_name == 'pull_request'
-        run: terraform plan -no-color
+        run: terraform plan -input=false -no-color
         continue-on-error: true
 
       - uses: actions/github-script@0.9.0
@@ -210,4 +214,4 @@ jobs:
 
       - name: Terraform Apply
         if: github.event_name == 'push' && ( github.ref_name == github.event.repository.default_branch ) # || github.ref_name == 'main' || github.ref_name == 'master' )
-        run: terraform apply -auto-approve
+        run: terraform apply -input=false -auto-approve
