@@ -82,6 +82,7 @@ on:
 
 permissions:
   contents: read
+  pull_requests: write
 
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
