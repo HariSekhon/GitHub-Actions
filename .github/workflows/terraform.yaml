@@ -89,7 +89,7 @@ concurrency:
 defaults:
   run:
     shell: bash -euxo pipefail {0}
-    working-directory: ${{ inputs.dir }}
+    working-directory: ${{ inputs.dir || null }}
 
 env:
   DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
