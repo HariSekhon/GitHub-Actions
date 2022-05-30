@@ -50,7 +50,7 @@ on:
       dir:
         description: Terraform base directory to execute in
         type: string
-        default: null
+        default: ''
         required: false
       debug:
         type: string
@@ -89,7 +89,7 @@ concurrency:
 defaults:
   run:
     shell: bash -euxo pipefail {0}
-    working-directory: ${{ inputs.dir || null }}
+    working-directory: ${{ inputs.dir }}
 
 env:
   DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
