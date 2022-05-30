@@ -1,0 +1,159 @@
+#
+#  Author: Hari Sekhon
+#  Date: 2022-03-11 17:51:59 +0000 (Fri, 11 Mar 2022)
+#
+#  vim:ts=2:sts=2:sw=2:et
+#
+#  https://github.com/HariSekhon/GitHub-Actions
+#
+#  License: see accompanying Hari Sekhon LICENSE file
+#
+#  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback to help steer this or other code I publish
+#
+#  https://www.linkedin.com/in/HariSekhon
+#
+
+# ============================================================================ #
+#                    Terraform Plan PR and Apply master/main
+# ============================================================================ #
+
+---
+name: Terraform
+
+on:
+  push:
+    branches:
+      - master
+      - main
+    paths:
+      - '**/*.tf'
+      - '**/*.tfvars'
+      - '**/.terraform.lock.hcl'
+      - .github/workflows/terraform.yaml
+      #- !'**/*.md'
+  pull_request:
+    branches:
+      - master
+      - main
+    paths:
+      - '**/*.tf'
+      - '**/*.tfvars'
+      - '**/.terraform.lock.hcl'
+      - .github/workflows/terraform.yaml
+      #- !'**/*.md'
+  workflow_call:
+    inputs:
+      terraform-version:
+        description: Terraform version to use. Will try to infer from .envrc if not given
+        type: string
+        required: false
+      dir:
+        description: Terraform base directory to execute in
+        type: string
+        required: false
+      debug:
+        type: string
+        required: false
+        default: false
+    secrets:
+      TF_API_TOKEN:
+        required: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: false  # don't interrupt Terraform runs, you may end up with stale locks
+
+defaults:
+  run:
+    shell: bash -euxo pipefail {0}
+    working-directory: ${{ inputs.dir }}
+
+env:
+  DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
+
+jobs:
+  terraform:
+    name: "Terraform"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Environment
+        run: env | sort
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Generate TERRAFORM_VERSION environment variable
+        run: |
+          if [ -n "${{ inputs.terraform-version }}" ]; then
+            TERRAFORM_VERSION="${{ inputs.terraform-version }}"
+          elif [ -f .envrc ]; then
+            source .envrc
+          fi
+          if [ -n "${TERRAFORM_VERSION:-}" ]; then
+            echo "TERRAFORM_VERSION=$TERRAFORM_VERSION" >> "$GITHUB_ENV"
+          fi
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: ${{ env.TERRAFORM_VERSION }}
+          # for Terraform Cloud
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+      - name: Terraform Format
+        id: fmt
+        run: terraform fmt -check
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate -no-color
+
+      - name: Terraform Plan
+        id: plan
+        if: github.event_name == 'pull_request'
+        run: terraform plan -no-color
+        continue-on-error: true
+
+      - uses: actions/github-script@0.9.0
+        if: github.event_name == 'pull_request'
+        env:
+          PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const output = `#### Terraform Format and Style \`${{ steps.fmt.outcome }}\`
+            #### Terraform Initialization \`${{ steps.init.outcome }}\`
+            #### Terraform Validation \`${{ steps.validate.outcome }}\`
+            #### Terraform Plan \`${{ steps.plan.outcome }}\`
+
+            <details><summary>Show Plan</summary>
+
+            \`\`\`\n
+            ${process.env.PLAN}
+            \`\`\`
+
+            </details>
+
+            *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
+
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
+
+      - name: Terraform Plan Status
+        if: steps.plan.outcome == 'failure'
+        run: exit 1
+
+      - name: Terraform Apply
+        if: github.event_name == 'push' && ( github.ref_name == github.event.repository.default_branch ) # || github.ref_name == 'main' || github.ref_name == 'master' )
+        run: terraform apply -auto-approve
