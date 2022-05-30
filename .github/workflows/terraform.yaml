@@ -50,6 +50,7 @@ on:
       dir:
         description: Terraform base directory to execute in
         type: string
+        default: null
         required: false
       debug:
         type: string
