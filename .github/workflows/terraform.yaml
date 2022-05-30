@@ -21,26 +21,27 @@
 name: Terraform
 
 on:
-  push:
-    branches:
-      - master
-      - main
-    paths:
-      - '**/*.tf'
-      - '**/*.tfvars'
-      - '**/.terraform.lock.hcl'
-      - .github/workflows/terraform.yaml
-      #- !'**/*.md'
-  pull_request:
-    branches:
-      - master
-      - main
-    paths:
-      - '**/*.tf'
-      - '**/*.tfvars'
-      - '**/.terraform.lock.hcl'
-      - .github/workflows/terraform.yaml
-      #- !'**/*.md'
+  # call from a workflow with triggers like this
+  #push:
+  #  branches:
+  #    - master
+  #    - main
+  #  paths:
+  #    - '**/*.tf'
+  #    - '**/*.tfvars'
+  #    - '**/.terraform.lock.hcl'
+  #    - .github/workflows/terraform.yaml
+  #    #- !'**/*.md'
+  #pull_request:
+  #  branches:
+  #    - master
+  #    - main
+  #  paths:
+  #    - '**/*.tf'
+  #    - '**/*.tfvars'
+  #    - '**/.terraform.lock.hcl'
+  #    - .github/workflows/terraform.yaml
+  #    #- !'**/*.md'
   workflow_call:
     inputs:
       terraform-version:
