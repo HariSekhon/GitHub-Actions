@@ -74,4 +74,7 @@ jobs:
 
       - name: ShellCheck
         run: |
+          if [ -f .envrc.shellcheck ]; then
+            . .envrc.shellcheck
+          fi
           check_shellcheck.sh
