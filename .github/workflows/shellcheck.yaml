@@ -21,12 +21,14 @@ on:
       - main
     paths:
       - '**/*.sh'
+      - .github/workflows/shellcheck.yaml
   pull_request:
     branches:
       - master
       - main
     paths:
       - '**/*.sh'
+      - .github/workflows/shellcheck.yaml
   workflow_call:
     inputs:
       debug:
