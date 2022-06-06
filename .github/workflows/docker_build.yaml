@@ -108,7 +108,7 @@ env:
   DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
 
 jobs:
-  # XXX: workaround to GitHub Actions not supporting secrets in if conditionals:
+  # XXX: workaround for GitHub Actions not supporting secrets in step conditionals:
   #
   #   https://github.com/github-community/community/discussions/17983
   #
