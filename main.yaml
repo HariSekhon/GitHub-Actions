@@ -270,6 +270,7 @@ concurrency:
 # ============================================================================ #
 
 # doesn't affect imported actions
+# cannot use contexts or expressions under defaults.run
 defaults:
   run:
     # Bash not available on Alpine
