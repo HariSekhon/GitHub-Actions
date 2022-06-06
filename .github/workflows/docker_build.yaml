@@ -108,6 +108,12 @@ env:
   DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
 
 jobs:
+  # XXX: workaround to GitHub Actions not supporting secrets in if conditionals:
+  #
+  #   https://github.com/github-community/community/discussions/17983
+  #
+  #   https://github.com/actions/runner/issues/520
+  #
   determine_registries:
     name: Determine Registries
     runs-on: ubuntu-latest
