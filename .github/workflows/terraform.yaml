@@ -90,7 +90,7 @@ permissions:
   pull-requests: write
 
 concurrency:
-  group: ${{ github.ref }}-${{ github.workflow }}
+  group: ${{ github.ref }}-${{ github.workflow }}-${{ inputs.dir }}
   cancel-in-progress: false  # don't interrupt Terraform runs, you may end up with stale locks
 
 defaults:
