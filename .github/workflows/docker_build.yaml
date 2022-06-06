@@ -136,16 +136,18 @@ jobs:
 
             echo "DockerHub registry credentials set"
             echo "::set-output name=dockerhub::true"
+          fi
 
-          elif [ -n "${{ secrets.ACR_REGISTRY }}" ]] &&
+          if [ -n "${{ secrets.ACR_REGISTRY }}" ]] &&
                [ -n "${{ secrets.AZURE_CLIENT_ID }}" ]] &&
                [ -n "${{ secrets.AZURE_CLIENT_SECRET }}" ]] &&
                grep -qi '\.azurecr\.io' <<< "$REPO_TAGS"; then
 
             echo "Azure Container Registry credentials set"
             echo "::set-output name=acr::true"
+          fi
 
-          elif [ -n "${{ secrets.AWS_ACCESS_KEY_ID }}" ]] &&
+          if [ -n "${{ secrets.AWS_ACCESS_KEY_ID }}" ]] &&
                [ -n "${{ secrets.AWS_SECRET_ACCESS_KEY }}" ]] &&
                grep -qi '\.amazonaws\.com' <<< "$REPO_TAGS"; then
 
@@ -153,29 +155,33 @@ jobs:
             echo "::set-output name=ecr::true"
             AWS_ECR_REGISTRY="$(grep -om1 '[^[:space:]]*\.amazonaws\.com' <<< "$REPO_TAGS")"
             echo "::set-output name=ecr_registry::$AWS_ECR_REGISTRY"
+          fi
 
-          elif [ -n "${{ secrets.GAR_JSON_KEY }}" ]] &&
+          if [ -n "${{ secrets.GAR_JSON_KEY }}" ]] &&
                [ -n "${{ secrets.GAR_REGISTRY }}" ]] &&
                grep -qi '\.pkg\.dev' <<< "$REPO_TAGS"; then
 
             echo "Google Artifact Registry credentials set"
             echo "::set-output name=gar::true"
+          fi
 
-          elif [ -n "${{ secrets.GCR_JSON_KEY }}" ]] &&
+          if [ -n "${{ secrets.GCR_JSON_KEY }}" ]] &&
                [ -n "${{ secrets.GCR_REGISTRY }}" ]] &&
                grep -qi '\.gcr\.io' <<< "$REPO_TAGS"; then
 
             echo "Google Container Registry credentials set"
             echo "::set-output name=gcr::true"
+          fi
 
-          elif [ -n "${{ secrets.GITLAB_USER }}" ]] &&
+          if [ -n "${{ secrets.GITLAB_USER }}" ]] &&
                [ -n "${{ secrets.GITLAB_PASSWORD }}" ]] &&
                grep -qi '\.gitlab\.com' <<< "$REPO_TAGS"; then
 
             echo "GitLab registry credentials set"
             echo "::set-output name=gitlab::true"
+          fi
 
-          elif [ -n "${{ secrets.QUAY_USER }}" ]] &&
+          if [ -n "${{ secrets.QUAY_USER }}" ]] &&
                [ -n "${{ secrets.QUAY_TOKEN }}" ]] &&
                grep -qi '\.quay\.io' <<< "$REPO_TAGS"; then
 
