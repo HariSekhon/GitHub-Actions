@@ -96,10 +96,15 @@ concurrency:
 defaults:
   run:
     shell: bash -euxo pipefail {0}
-    working-directory: ${{ inputs.dir }}
+    # cannot use contexts or expressions under defaults.run
+    #
+    #   https://github.com/github-community/community/discussions/17981
+    #
+    #working-directory: ${{ inputs.dir }}
 
 env:
   TF_IN_AUTOMATION: 1
+  WORKDIR: ${{ inputs.dir }}
   DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
 
 jobs:
@@ -115,7 +120,7 @@ jobs:
 
       - name: Configure AWS credentials
         id: configure-aws-credentials
-        if: secrets.AWS_ACCESS_KEY_ID && secrets.AWS_SECRET_ACCESS_KEY && secrets.AWS_DEFAULT_REGION
+        if: ${{ secrets.AWS_ACCESS_KEY_ID }} && ${{ secrets.AWS_SECRET_ACCESS_KEY }} && ${{ secrets.AWS_DEFAULT_REGION }}
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -125,7 +130,7 @@ jobs:
       # adapted from my Jenkins Shared Library - https://github.com/HariSekhon/Jenkins/blob/master/vars/gcpActivateServiceAccount.groovy
       - name: Google Cloud Activate ServiceAccount Key
         id: google-cloud-activate-serviceaccount
-        if: secrets.GCP_SERVICEACCOUNT_KEY
+        if: ${{ secrets.GCP_SERVICEACCOUNT_KEY }}
         run: |
           base64 --decode <<< "${{ secrets.GCP_SERVICEACCOUNT_KEY }}" > credentials.json
           gcloud auth activate-service-account --key-file=credentials.json
@@ -138,7 +143,7 @@ jobs:
       #
       - name: Google Cloud Keyless Auth
         id: google-cloud-auth
-        if: secrets.GCP_WORKLOAD_IDENTITY_PROVIDER && secrets.GCP_SERVICE_ACCOUNT
+        if: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }} && ${{ secrets.GCP_SERVICE_ACCOUNT }}
         uses: google-github-actions/auth@v0.4.0
         with:
           #workload_identity_provider: 'projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
@@ -148,6 +153,9 @@ jobs:
 
       - name: Generate TERRAFORM_VERSION environment variable
         run: |
+          if [ -n "${WORKDIR:-}" ]; then
+            cd "$WORKDIR"
+          fi
           if [ -n "${{ inputs.terraform-version }}" ]; then
             TERRAFORM_VERSION="${{ inputs.terraform-version }}"
           elif [ -f .envrc ]; then
@@ -171,21 +179,37 @@ jobs:
       # force people creating pull requests to format it correctly or fail and don't show them a plan
       - name: Terraform Format Check
         id: fmt
-        if: enforce-fmt-check == true && github.event_name == 'pull_request'
-        run: terraform fmt -check
+        if: inputs.enforce-fmt-check == true && github.event_name == 'pull_request'
+        run: |
+          if [ -n "${WORKDIR:-}" ]; then
+            cd "$WORKDIR"
+          fi
+          terraform fmt -check
 
       - name: Terraform Init
         id: init
-        run: terraform init -input=false
+        run: |
+          if [ -n "${WORKDIR:-}" ]; then
+            cd "$WORKDIR"
+          fi
+          terraform init -input=false
 
       - name: Terraform Validate
         id: validate
-        run: terraform validate -no-color
+        run: |
+          if [ -n "${WORKDIR:-}" ]; then
+            cd "$WORKDIR"
+          fi
+          terraform validate -no-color
 
       - name: Terraform Plan
         id: plan
         if: github.event_name == 'pull_request'
-        run: terraform plan -input=false -no-color
+        run: |
+          if [ -n "${WORKDIR:-}" ]; then
+            cd "$WORKDIR"
+          fi
+          terraform plan -input=false -no-color
         continue-on-error: true
 
       - uses: actions/github-script@0.9.0
@@ -223,4 +247,8 @@ jobs:
 
       - name: Terraform Apply
         if: github.event_name == 'push' && ( github.ref_name == github.event.repository.default_branch ) # || github.ref_name == 'main' || github.ref_name == 'master' )
-        run: terraform apply -input=false -auto-approve
+        run: |
+          if [ -n "${WORKDIR:-}" ]; then
+            cd "$WORKDIR"
+          fi
+          terraform apply -input=false -auto-approve
