@@ -149,7 +149,7 @@ jobs:
           fi
 
   terraform:
-    name: "Terraform"
+    name: Terraform
     needs: determine_logins
     runs-on: ubuntu-latest
     steps:
@@ -197,10 +197,11 @@ jobs:
           if [ -n "${WORKDIR:-}" ]; then
             cd "$WORKDIR"
           fi
+          if [ -f .envrc ]; then
+            source .envrc
+          fi
           if [ -n "${{ inputs.terraform-version }}" ]; then
             TERRAFORM_VERSION="${{ inputs.terraform-version }}"
-          elif [ -f .envrc ]; then
-            source .envrc
           fi
           if [ -n "${TERRAFORM_VERSION:-}" ]; then
             echo "TERRAFORM_VERSION=$TERRAFORM_VERSION" >> "$GITHUB_ENV"
