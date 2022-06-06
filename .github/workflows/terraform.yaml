@@ -108,8 +108,49 @@ env:
   DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
 
 jobs:
+  # XXX: workaround to GitHub Actions not supporting secrets in if conditionals:
+  #
+  #   https://github.com/github-community/community/discussions/17983
+  #
+  #   https://github.com/actions/runner/issues/520
+  #
+  determine_logins:
+    name: Determine Logins
+    runs-on: ubuntu-latest
+    outputs:
+      aws: ${{ steps.setvar.outputs.aws }}
+      gcp_key: ${{ steps.setvar.outputs.gcp_key }}
+      gcp_keyless: ${{ steps.setvar.outputs.gcp_keyless }}
+      # secret is passed straight to setup terraform step so don't need to determine an extra step using this
+      #terraform-cloud: ${{ steps.setvar.outputs.terraform-cloud }}
+    steps:
+      - name: Set output variables
+        id: setvar
+        run: |
+          if [ -n "${{ secrets.AWS_ACCESS_KEY_ID }}" ] &&
+             [ -n "${{ secrets.AWS_SECRET_ACCESS_KEY }}" ] &&
+             [ -n "${{ secrets.AWS_DEFAULT_REGION }}" ]; then
+
+            echo "AWS access key, secret key, and region are set"
+            echo "::set-output name=aws::true"
+          fi
+
+          if [ -n "${{ secrets.GCP_SERVICEACCOUNT_KEY }}" ]; then
+
+            echo "GCP service account key is set"
+            echo "::set-output name=gcp_key::true"
+          fi
+
+          if [ -n "${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}" ] &&
+             [ -n "${{ secrets.GCP_SERVICE_ACCOUNT }}" ]; then
+
+            echo "GCP keyless authentication identity provider and service account are set"
+            echo "::set-output name=gcp_keyless::true"
+          fi
+
   terraform:
     name: "Terraform"
+    needs: determine_logins
     runs-on: ubuntu-latest
     steps:
       - name: Environment
@@ -120,7 +161,7 @@ jobs:
 
       - name: Configure AWS credentials
         id: configure-aws-credentials
-        if: ${{ secrets.AWS_ACCESS_KEY_ID }} && ${{ secrets.AWS_SECRET_ACCESS_KEY }} && ${{ secrets.AWS_DEFAULT_REGION }}
+        if: needs.determine_logins.outputs.aws == 'true' }
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -130,7 +171,7 @@ jobs:
       # adapted from my Jenkins Shared Library - https://github.com/HariSekhon/Jenkins/blob/master/vars/gcpActivateServiceAccount.groovy
       - name: Google Cloud Activate ServiceAccount Key
         id: google-cloud-activate-serviceaccount
-        if: ${{ secrets.GCP_SERVICEACCOUNT_KEY }}
+        if: needs.determine_logins.outputs.gcp_key == 'true' }
         run: |
           base64 --decode <<< "${{ secrets.GCP_SERVICEACCOUNT_KEY }}" > credentials.json
           gcloud auth activate-service-account --key-file=credentials.json
@@ -143,7 +184,7 @@ jobs:
       #
       - name: Google Cloud Keyless Auth
         id: google-cloud-auth
-        if: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }} && ${{ secrets.GCP_SERVICE_ACCOUNT }}
+        if: needs.determine_logins.outputs.gcp_keyless == 'true' }
         uses: google-github-actions/auth@v0.4.0
         with:
           #workload_identity_provider: 'projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
