@@ -187,7 +187,6 @@ jobs:
 
             echo "Quay.io registry credentials set"
             echo "::set-output name=quay::true"
-
           fi
 
   docker_build:
