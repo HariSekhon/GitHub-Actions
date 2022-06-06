@@ -53,6 +53,11 @@ on:
         type: string
         default: ''
         required: false
+      enforce-fmt-check:
+        description: Enforce a format check on PRs - fail and do not show a plan if people don't format their code properly
+        type: boolean
+        default: true
+        required: false
       debug:
         type: string
         required: false
@@ -152,6 +157,7 @@ jobs:
             echo "TERRAFORM_VERSION=$TERRAFORM_VERSION" >> "$GITHUB_ENV"
           fi
 
+      # https://github.com/marketplace/actions/hashicorp-setup-terraform
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
@@ -162,9 +168,10 @@ jobs:
       - name: Terraform Version
         run: terraform version
 
-      # force people creating pull requests to format it correctly or fail and don't show then a plan
-      - name: Terraform Format
+      # force people creating pull requests to format it correctly or fail and don't show them a plan
+      - name: Terraform Format Check
         id: fmt
+        if: enforce-fmt-check == true && github.event_name == 'pull_request'
         run: terraform fmt -check
 
       - name: Terraform Init
