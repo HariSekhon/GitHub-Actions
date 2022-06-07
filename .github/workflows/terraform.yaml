@@ -58,7 +58,13 @@ on:
         type: boolean
         default: true
         required: false
+      env:
+        description: Environment variables in key=value pairs
+        type: string  # pass in string in export shell format eg. MYVAR=myvalue MYVAR2=myvalue2
+        default: ''
+        required: false
       debug:
+        description: Debug Mode, true or false
         type: string
         required: false
         default: false
@@ -109,9 +115,14 @@ defaults:
 
 env:
   TF_IN_AUTOMATION: 1
+  TF_LOG: ${{ inputs.debug == 'true' && 'TRACE' || '' }
+  # pass one of these via env instead for a more granular subset of debug logs, uses same verbosity levels
+  # TF_LOG_CORE
+  # TF_LOG_PROVIDER
+  ENV: ${{ inputs.env }}
   WORKDIR: ${{ inputs.dir }}
   GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-  DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
+  DEBUG: ${{ inputs.debug == 'true' || '' }}
 
 jobs:
   # XXX: workaround for GitHub Actions not supporting secrets in step conditionals:
@@ -131,6 +142,10 @@ jobs:
       #terraform-cloud: ${{ steps.terraform-cloud.outputs.terraform-cloud }}
       terraform-version: ${{ steps.terraform-version.outputs.terraform-version }}
     steps:
+      - name: Setup environment variables
+        run: |
+          echo "${{ env.INPUTS }}" >> "$GITHUB_ENV"
+
       - name: Environment
         run: env | sort
 
@@ -200,6 +215,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Setup environment variables
+        run: |
+          echo "${{ env.INPUTS }}" >> "$GITHUB_ENV"
+
+      - name: Environment
+        run: env | sort
+
       # https://github.com/marketplace/actions/hashicorp-setup-terraform
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
@@ -228,6 +250,13 @@ jobs:
       - fmt_check
     runs-on: ubuntu-latest
     steps:
+      - name: Setup environment variables
+        run: |
+          echo "${{ env.INPUTS }}" >> "$GITHUB_ENV"
+
+      - name: Environment
+        run: env | sort
+
       - name: Checkout
         uses: actions/checkout@v2
 
