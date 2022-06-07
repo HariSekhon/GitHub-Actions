@@ -86,6 +86,7 @@ on:
         required: false
       # GITHUB_TOKEN - because actions don't allow you to set GITHUB_TOKEN secret
       #              - this has to be a PAT (personal access token) if you are going to manage various repos and other aspects of GitHub via Terraform
+      #              - token must have full repo permission to update the Pull Request with the Terraform Plan output
       GH_TOKEN:
         required: false
 
@@ -262,6 +263,14 @@ jobs:
       - name: Terraform Version
         run: terraform version
 
+      - name: Terraform Format Check
+        id: fmt
+        run: |
+          if [ -n "${WORKDIR:-}" ]; then
+            cd "$WORKDIR"
+          fi
+          terraform fmt -check
+
       - name: Terraform Init
         id: init
         run: |
@@ -296,7 +305,10 @@ jobs:
       - uses: actions/github-script@0.9.0
         if: github.event_name == 'pull_request'
         env:
-          PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
+          PLAN: |
+            terraform
+            ${{ steps.plan.outputs.stderr }}
+            ${{ steps.plan.outputs.stdout }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -307,7 +319,7 @@ jobs:
 
             <details><summary>Show Plan</summary>
 
-            \`\`\`\n
+            \`\`\`
             ${process.env.PLAN}
             \`\`\`
 
