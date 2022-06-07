@@ -115,7 +115,8 @@ defaults:
 
 env:
   TF_IN_AUTOMATION: 1
-  TF_LOG: ${{ inputs.debug == 'true' && 'TRACE' || '' }}
+  # XXX: inputs.debug will need to be switched back to a Boolean at some point but secrets.ACTIONS_RUNNER_DEBUG will stay a string comparison
+  TF_LOG: ${{ ( inputs.debug == 'true' || secrets.ACTIONS_RUNNER_DEBUG == 'true' ) && 'TRACE' || '' }}
   # pass one of these via env instead for a more granular subset of debug logs, uses same verbosity levels
   # TF_LOG_CORE
   # TF_LOG_PROVIDER
@@ -144,10 +145,7 @@ jobs:
     steps:
       - name: Setup environment variables
         run: |
-          echo "${{ env.INPUTS }}" >> "$GITHUB_ENV"
-          if [ "${{ secrets.ACTIONS_RUNNER_DEBUG }}" = true ]; then
-            echo "TF_LOG=TRACE" >> "$GITHUB_ENV"
-          fi
+          echo "${{ env.ENV }}" >> "$GITHUB_ENV"
 
       - name: Environment
         run: env | sort
@@ -220,7 +218,7 @@ jobs:
 
       - name: Setup environment variables
         run: |
-          echo "${{ env.INPUTS }}" >> "$GITHUB_ENV"
+          echo "${{ env.ENV }}" >> "$GITHUB_ENV"
 
       - name: Environment
         run: env | sort
@@ -256,9 +254,6 @@ jobs:
       - name: Setup environment variables
         run: |
           echo "${{ env.INPUTS }}" >> "$GITHUB_ENV"
-          if [ "${{ secrets.ACTIONS_RUNNER_DEBUG }}" = true ]; then
-            echo "TF_LOG=TRACE" >> "$GITHUB_ENV"
-          fi
 
       - name: Environment
         run: env | sort
