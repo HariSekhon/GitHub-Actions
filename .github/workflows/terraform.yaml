@@ -115,7 +115,7 @@ defaults:
 
 env:
   TF_IN_AUTOMATION: 1
-  TF_LOG: ${{ inputs.debug == 'true' && 'TRACE' || '' }
+  TF_LOG: ${{ inputs.debug == 'true' && 'TRACE' || '' }}
   # pass one of these via env instead for a more granular subset of debug logs, uses same verbosity levels
   # TF_LOG_CORE
   # TF_LOG_PROVIDER
