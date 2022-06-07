@@ -280,10 +280,11 @@ jobs:
           if [ -n "${WORKDIR:-}" ]; then
             cd "$WORKDIR"
           fi
+          # prefer it be explicitly set in the provider.tf
           # allow to pick up important environment variables such as GITHUB_ORGANIZATION from envrc
-          if [ -f .envrc ]; then
-            source .envrc
-          fi
+          #if [ -f .envrc ]; then
+          #  source .envrc
+          #fi
           terraform plan -input=false -no-color
         continue-on-error: true
 
@@ -326,7 +327,7 @@ jobs:
           if [ -n "${WORKDIR:-}" ]; then
             cd "$WORKDIR"
           fi
-          if [ -f .envrc ]; then
-            source .envrc
-          fi
+          #if [ -f .envrc ]; then
+          #  source .envrc
+          #fi
           terraform apply -input=false -auto-approve
