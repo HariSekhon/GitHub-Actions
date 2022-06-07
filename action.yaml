@@ -1,10 +1,9 @@
-#
-#  Author: Hari Sekhon
-#  Date: 2022-06-07 12:38:18 +0100 (Tue, 07 Jun 2022)
-#
 #  vim:ts=2:sts=2:sw=2:et
 #
-#  https://github.com/HariSekhon/GitHub-Actions
+#  Author: Hari Sekhon
+#  Date: [% DATE  # 2022-06-07 12:38:18 +0100 (Tue, 07 Jun 2022) %]
+#
+#  [% URL  # https://github.com/HariSekhon/GitHub-Actions %]
 #
 #  License: see accompanying Hari Sekhon LICENSE file
 #
@@ -43,10 +42,14 @@ runs:
   #     FROM alpine:3.10
   #     COPY entrypoint.sh /
   #     ENTRYPOINT ["/entrypoint.sh"]
+  #     XXX: Do not set USER - won't be able to access $GITHUB_WORKSPACE
+  #     XXX: Do not set WORKSPACE - will be overridden by $GITHUB_WORKSPACE
+  #     https://docs.github.com/en/actions/creating-actions/dockerfile-support-for-github-actions
   #
   #using: docker
   #image: Dockerfile
-  #args:
+  #entrypoint: /entrypoint.sh  # entrypoint overrides Dockerfile's ENTRYPOINT - prefer Dockerfile
+  #args:                       # args override Dockerfile's CMD - leave sensible defaults so args aren't needed
   #  - ${{ inputs.debug }}
 
   # Composite Action - shell steps
