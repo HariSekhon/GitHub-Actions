@@ -145,7 +145,7 @@ jobs:
       - name: Setup environment variables
         run: |
           echo "${{ env.INPUTS }}" >> "$GITHUB_ENV"
-          if [ "${ACTIONS_RUNNER_DEBUG:-}" = true ]; then
+          if [ "${{ secrets.ACTIONS_RUNNER_DEBUG }}" = true ]; then
             echo "TF_LOG=TRACE" >> "$GITHUB_ENV"
           fi
 
@@ -256,7 +256,7 @@ jobs:
       - name: Setup environment variables
         run: |
           echo "${{ env.INPUTS }}" >> "$GITHUB_ENV"
-          if [ "${ACTIONS_RUNNER_DEBUG:-}" = true ]; then
+          if [ "${{ secrets.ACTIONS_RUNNER_DEBUG }}" = true ]; then
             echo "TF_LOG=TRACE" >> "$GITHUB_ENV"
           fi
 
