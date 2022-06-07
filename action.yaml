@@ -16,28 +16,40 @@
 ---
 name: NAME
 description: DESCRIPTION
+
 inputs:
   debug:
     description: Enable Debug Mode
     type: boolean
     required: false
     default: false
+
 outputs:
   random-number:
     description: "Random number"
     value: ${{ steps.random-number-generator.outputs.random-number }}
+
+# pick one of:
+#
+#   - Composite (shell steps)
+#   - Docker (entrypoint)
+#   - JavaScript action (main.js)
 runs:
-  # if using Docker action, your Dockerfile should be something like:
+
+  # Docker Action
   #
-  #   FROM alpine:3.10
-  #   COPY entrypoint.sh /
-  #   ENTRYPOINT ["/entrypoint.sh"]
+  #   Dockerfile contain something like:
+  #
+  #     FROM alpine:3.10
+  #     COPY entrypoint.sh /
+  #     ENTRYPOINT ["/entrypoint.sh"]
   #
   #using: docker
   #image: Dockerfile
   #args:
   #  - ${{ inputs.debug }}
-  #
+
+  # Composite Action - shell steps
   using: "composite"
   steps:
     - run: |
@@ -50,3 +62,8 @@ runs:
 
     - run: echo "${{ github.action_path }}" >> $GITHUB_PATH
       shell: bash
+
+  # JavaScript Action
+  #
+  #using: node16
+  #main: index.js
