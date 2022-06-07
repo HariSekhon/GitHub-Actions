@@ -128,6 +128,9 @@ jobs:
       - name: Environment
         run: env | sort
 
+      - name: Checkout
+        uses: actions/checkout@v2
+
       - name: Generate Terraform Version output
         id: terraform-version
         run: |
