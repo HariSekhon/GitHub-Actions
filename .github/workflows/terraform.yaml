@@ -171,10 +171,9 @@ jobs:
             echo "::set-output name=gcp_keyless::true"
           fi
 
-  terraform_fmt_check:
+  fmt_check:
     name: Terraform Fmt Check
     needs: setup
-    id: fmt_check
     if: inputs.enforce-fmt-check == true && github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
