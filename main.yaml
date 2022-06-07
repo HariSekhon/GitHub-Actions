@@ -190,6 +190,7 @@ on:
       #
       # use more forgiving string type instead of boolean and cast in reusable workflow
       debug:
+        description: Enable Debug Mode
         #type: boolean
         type: string
         required: false
@@ -286,6 +287,14 @@ defaults:
 # ============================================================================ #
 
 jobs:
+  call_local_action:
+    uses: ./path/to/dir  # where action.yaml is
+    with:
+      debug: ${{ github.event.inputs.debug }}
+  call_public_action:
+    uses: HariSekhon/GitHub-Actions/path/to/dir@master  # where action.yaml is
+    with:
+      debug: ${{ github.event.inputs.debug }}
   reusable_workflow:
     if: github.event.repository.fork == false
     name: NAME
