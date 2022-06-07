@@ -1,0 +1,41 @@
+#
+#  Author: Hari Sekhon
+#  Date: 2022-06-07 12:38:18 +0100 (Tue, 07 Jun 2022)
+#
+#  vim:ts=2:sts=2:sw=2:et
+#
+#  https://github.com/HariSekhon/GitHub-Actions
+#
+#  License: see accompanying Hari Sekhon LICENSE file
+#
+#  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback to help steer this or other code I publish
+#
+#  https://www.linkedin.com/in/HariSekhon
+#
+
+---
+name: NAME
+description: DESCRIPTION
+inputs:
+  debug:
+    description: Enable Debug Mode
+    type: boolean
+    required: false
+    default: false
+outputs:
+  random-number:
+    description: "Random number"
+    value: ${{ steps.random-number-generator.outputs.random-number }}
+runs:
+  using: "composite"
+  steps:
+    - run: |
+        echo "Debug mode enabled: ${{ inputs.debug }}"
+      shell: bash
+
+    - id: random-number-generator
+      run: echo "::set-output name=random-number::$(echo $RANDOM)"
+      shell: bash
+
+    - run: echo "${{ github.action_path }}" >> $GITHUB_PATH
+      shell: bash
