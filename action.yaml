@@ -27,6 +27,10 @@ outputs:
     description: "Random number"
     value: ${{ steps.random-number-generator.outputs.random-number }}
 runs:
+  #using: docker
+  #image: Dockerfile
+  #args:
+  #  - ${{ inputs.debug }}
   using: "composite"
   steps:
     - run: |
