@@ -114,18 +114,38 @@ jobs:
   #
   #   https://github.com/actions/runner/issues/520
   #
-  determine_logins:
-    name: Determine Logins
+  setup:
+    name: Setup
     runs-on: ubuntu-latest
     outputs:
-      aws: ${{ steps.setvar.outputs.aws }}
-      gcp_key: ${{ steps.setvar.outputs.gcp_key }}
-      gcp_keyless: ${{ steps.setvar.outputs.gcp_keyless }}
+      aws: ${{ steps.aws.outputs.aws }}
+      gcp_key: ${{ steps.gcp.outputs.gcp_key }}
+      gcp_keyless: ${{ steps.gcp.outputs.gcp_keyless }}
       # secret is passed straight to setup terraform step so don't need to determine an extra step using this
-      #terraform-cloud: ${{ steps.setvar.outputs.terraform-cloud }}
+      #terraform-cloud: ${{ steps.terraform-cloud.outputs.terraform-cloud }}
+      terraform-version: ${{ steps.terraform-version.outputs.terraform-version }}
     steps:
-      - name: Set output variables
-        id: setvar
+      - name: Environment
+        run: env | sort
+
+      - name: Generate Terraform Version output
+        id: terraform-version
+        run: |
+          if [ -n "${WORKDIR:-}" ]; then
+            cd "$WORKDIR"
+          fi
+          if [ -f .envrc ]; then
+            source .envrc
+          fi
+          if [ -n "${{ inputs.terraform-version }}" ]; then
+            TERRAFORM_VERSION="${{ inputs.terraform-version }}"
+          fi
+          if [ -n "${TERRAFORM_VERSION:-}" ]; then
+            echo "::set-output name=terraform-version::$TERRAFORM_VERSION"
+          fi
+
+      - name: Generate AWS output
+        id: aws
         run: |
           if [ -n "${{ secrets.AWS_ACCESS_KEY_ID }}" ] &&
              [ -n "${{ secrets.AWS_SECRET_ACCESS_KEY }}" ] &&
@@ -135,6 +155,9 @@ jobs:
             echo "::set-output name=aws::true"
           fi
 
+      - name: Generate GCP output
+        id: gcp
+        run: |
           if [ -n "${{ secrets.GCP_SERVICEACCOUNT_KEY }}" ]; then
 
             echo "GCP service account key is set"
@@ -148,20 +171,49 @@ jobs:
             echo "::set-output name=gcp_keyless::true"
           fi
 
-  terraform:
-    name: Terraform
-    needs: determine_logins
+  terraform_fmt_check:
+    name: Terraform Fmt Check
+    needs: setup
+    id: fmt_check
+    if: inputs.enforce-fmt-check == true && github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
-      - name: Environment
-        run: env | sort
+      - name: Checkout
+        uses: actions/checkout@v2
 
+      # https://github.com/marketplace/actions/hashicorp-setup-terraform
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: ${{ needs.setup.outputs.terraform-version }}
+          # for Terraform Cloud
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+      - name: Terraform Version
+        run: terraform version
+
+      # force people creating pull requests to format it correctly or fail and don't show them a plan
+      - name: Terraform Format Check
+        id: fmt
+        run: |
+          if [ -n "${WORKDIR:-}" ]; then
+            cd "$WORKDIR"
+          fi
+          terraform fmt -check
+
+  terraform:
+    name: Terraform
+    needs:
+      - setup
+      - fmt_check
+    runs-on: ubuntu-latest
+    steps:
       - name: Checkout
         uses: actions/checkout@v2
 
       - name: Configure AWS credentials
         id: configure-aws-credentials
-        if: needs.determine_logins.outputs.aws == 'true'
+        if: needs.setup.outputs.aws == 'true'
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -171,7 +223,7 @@ jobs:
       # adapted from my Jenkins Shared Library - https://github.com/HariSekhon/Jenkins/blob/master/vars/gcpActivateServiceAccount.groovy
       - name: Google Cloud Activate ServiceAccount Key
         id: google-cloud-activate-serviceaccount
-        if: needs.determine_logins.outputs.gcp_key == 'true'
+        if: needs.setup.outputs.gcp_key == 'true'
         run: |
           base64 --decode <<< "${{ secrets.GCP_SERVICEACCOUNT_KEY }}" > credentials.json
           gcloud auth activate-service-account --key-file=credentials.json
@@ -184,28 +236,13 @@ jobs:
       #
       - name: Google Cloud Keyless Auth
         id: google-cloud-auth
-        if: needs.determine_logins.outputs.gcp_keyless == 'true'
+        if: needs.setup.outputs.gcp_keyless == 'true'
         uses: google-github-actions/auth@v0.4.0
         with:
           #workload_identity_provider: 'projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
           #service_account: 'my-service-account@my-project.iam.gserviceaccount.com'
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.secrets.GCP_SERVICE_ACCOUNT }}
-
-      - name: Generate TERRAFORM_VERSION environment variable
-        run: |
-          if [ -n "${WORKDIR:-}" ]; then
-            cd "$WORKDIR"
-          fi
-          if [ -f .envrc ]; then
-            source .envrc
-          fi
-          if [ -n "${{ inputs.terraform-version }}" ]; then
-            TERRAFORM_VERSION="${{ inputs.terraform-version }}"
-          fi
-          if [ -n "${TERRAFORM_VERSION:-}" ]; then
-            echo "TERRAFORM_VERSION=$TERRAFORM_VERSION" >> "$GITHUB_ENV"
-          fi
 
       # https://github.com/marketplace/actions/hashicorp-setup-terraform
       - name: Setup Terraform
@@ -217,16 +254,6 @@ jobs:
 
       - name: Terraform Version
         run: terraform version
-
-      # force people creating pull requests to format it correctly or fail and don't show them a plan
-      - name: Terraform Format Check
-        id: fmt
-        if: inputs.enforce-fmt-check == true && github.event_name == 'pull_request'
-        run: |
-          if [ -n "${WORKDIR:-}" ]; then
-            cd "$WORKDIR"
-          fi
-          terraform fmt -check
 
       - name: Terraform Init
         id: init
