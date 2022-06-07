@@ -172,7 +172,7 @@ jobs:
           fi
 
   fmt_check:
-    name: Terraform Fmt Check
+    name: Fmt Check
     needs: setup
     if: inputs.enforce-fmt-check == true && github.event_name == 'pull_request'
     runs-on: ubuntu-latest
