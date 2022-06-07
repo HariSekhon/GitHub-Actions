@@ -27,10 +27,17 @@ outputs:
     description: "Random number"
     value: ${{ steps.random-number-generator.outputs.random-number }}
 runs:
+  # if using Docker action, your Dockerfile should be something like:
+  #
+  #   FROM alpine:3.10
+  #   COPY entrypoint.sh /
+  #   ENTRYPOINT ["/entrypoint.sh"]
+  #
   #using: docker
   #image: Dockerfile
   #args:
   #  - ${{ inputs.debug }}
+  #
   using: "composite"
   steps:
     - run: |
