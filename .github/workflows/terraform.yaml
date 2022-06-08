@@ -324,6 +324,7 @@ jobs:
       - name: Terraform Plan
         id: plan
         if: github.event_name == 'pull_request'
+        continue-on-error: true
         run: |
           if [ -n "${WORKDIR:-}" ]; then
             cd "$WORKDIR"
@@ -333,8 +334,11 @@ jobs:
           #if [ -f .envrc ]; then
           #  source .envrc
           #fi
-          terraform plan -input=false -no-color
-        continue-on-error: true
+
+          # outputs lots of 'my.resource: Refreshing state...' which pollutes the plan posted to the PR
+          #terraform plan -input=false -no-color
+          terraform plan -input=false -no-color >/dev/null -out=tfplan
+          terraform show tfplan
 
       - uses: actions/github-script@0.9.0
         if: github.event_name == 'pull_request'
