@@ -100,10 +100,6 @@ permissions:
   contents: read
   pull-requests: write
 
-concurrency:
-  group: ${{ github.ref }}-${{ github.workflow }}-${{ inputs.dir }}
-  cancel-in-progress: false  # don't interrupt Terraform runs, you may end up with stale locks
-
 defaults:
   run:
     shell: bash -euxo pipefail {0}
@@ -249,6 +245,9 @@ jobs:
     needs:
       - setup
       - fmt_check
+    concurrency:
+      group: ${{ github.ref }}-${{ github.workflow }}-${{ inputs.dir }}
+      cancel-in-progress: false  # don't interrupt Terraform runs, you may end up with stale locks
     runs-on: ubuntu-latest
     steps:
       - name: Setup environment variables
