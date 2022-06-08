@@ -132,6 +132,7 @@ jobs:
     name: Setup
     runs-on: ubuntu-latest
     outputs:
+      credentials-configured: ${{ steps.credentials-check.outputs.credentials-configured }}
       aws: ${{ steps.aws.outputs.aws }}
       gcp_key: ${{ steps.gcp.outputs.gcp_key }}
       gcp_keyless: ${{ steps.gcp.outputs.gcp_keyless }}
@@ -201,6 +202,27 @@ jobs:
             gh auth status  # don't run this unless a token is set
           fi
 
+      - name: Credentials Check
+        id: credentials-check
+        run: |
+          if [ -n "${{ secrets.TF_API_TOKEN }}" ] ||
+             [ -n "${{ steps.aws.outputs.aws }}" ] ||
+             [ -n "${{ steps.aws.outputs.gcp }}" ] ||
+             [ -n "${{ steps.aws.outputs.gcp_keyless }}" ] ||
+            echo "::set-output name=credentials-configured::true"
+          fi
+
+  credentials_check:
+    name: Credentials Configured Check
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      if [ "${{ needs.setup.outputs.terraform-version }}" ]; then
+        echo "Some credentials have been configured"
+      else
+        echo "NO credentials have been configured"
+      fi
+
 
   fmt_check:
     name: Fmt Check
@@ -246,6 +268,7 @@ jobs:
     needs:
       - setup
       - fmt_check
+      - credentials_check
     concurrency:
       group: ${{ github.workflow }}-${{ inputs.dir }}
       cancel-in-progress: false  # don't interrupt Terraform runs, you may end up with stale locks
