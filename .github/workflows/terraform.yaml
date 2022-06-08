@@ -161,8 +161,8 @@ jobs:
     # XXX: workaround for lack of native environment passing support for reusable workflows
     environment:
       name: ${{ inputs.environment }}
-      #url: ${{ inputs.environment-url }} || format('{0}/{1}/actions', ${{env.GITHUB_SERVER_URL}}, ${{env.GITHUB_REPOSITORY}} )
-      url: ${{ inputs.environment-url || format('{0}/{1}/actions', github.server_url, github.repository) }}
+      url: ${{ inputs.environment-url || format('{0}/{1}/actions', env.GITHUB_SERVER_URL, env.GITHUB_REPOSITORY) }}
+      #url: ${{ inputs.environment-url || format('{0}/{1}/actions', github.server_url, github.repository) }}
     steps:
       - name: Setup environment variables
         run: |
