@@ -206,9 +206,9 @@ jobs:
         id: credentials-check
         run: |
           if [ -n "${{ secrets.TF_API_TOKEN }}" ] ||
-             [ -n "${{ steps.aws.outputs.aws }}" ] ||
-             [ -n "${{ steps.aws.outputs.gcp }}" ] ||
-             [ -n "${{ steps.aws.outputs.gcp_keyless }}" ]; then
+             [ "${{ steps.aws.outputs.aws }}" = true ] ||
+             [ "${{ steps.aws.outputs.gcp }}" = true ] ||
+             [ "${{ steps.aws.outputs.gcp_keyless }}" = true ]; then
             echo "::set-output name=credentials-configured::true"
           fi
 
