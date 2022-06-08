@@ -58,6 +58,10 @@ on:
         type: boolean
         default: true
         required: false
+      # XXX: input parameter workaround for:
+      #
+      #   https://github.com/github-community/community/discussions/18085
+      #
       environment:
         description: Deployment environment (optional)
         type: string
@@ -130,23 +134,30 @@ env:
   DEBUG: ${{ inputs.debug == 'true' || '' }}
 
 jobs:
-  # XXX: workaround for GitHub Actions not supporting secrets in step conditionals:
+  # XXX: step outputs are a workaround for GitHub Actions not supporting testing secrets directly in step conditionals:
   #
   #   https://github.com/github-community/community/discussions/17983
   #
   #   https://github.com/actions/runner/issues/520
   #
-  setup:
-    name: Setup
+  #
+  # XXX: collapsing workflow jobs back into a single job to work around requiring multiple deployment environment approvals otherwise:
+  #
+  #   https://github.com/github-community/community/discussions/14417
+  #
+  #setup:
+  #  name: Setup
+  terraform:
+    name: Terraform
     runs-on: ubuntu-latest
-    outputs:
-      credentials-configured: ${{ steps.credentials-check.outputs.credentials-configured }}
-      aws: ${{ steps.aws.outputs.aws }}
-      gcp_key: ${{ steps.gcp.outputs.gcp_key }}
-      gcp_keyless: ${{ steps.gcp.outputs.gcp_keyless }}
-      # secret is passed straight to setup terraform step so don't need to determine an extra step using this
-      #terraform-cloud: ${{ steps.terraform-cloud.outputs.terraform-cloud }}
-      terraform-version: ${{ steps.terraform-version.outputs.terraform-version }}
+    #outputs:
+    #  credentials-configured: ${{ steps.credentials-check.outputs.credentials-configured }}
+    #  aws: ${{ steps.aws.outputs.aws }}
+    #  gcp_key: ${{ steps.gcp.outputs.gcp_key }}
+    #  gcp_keyless: ${{ steps.gcp.outputs.gcp_keyless }}
+    #  # secret is passed straight to setup terraform step so don't need to determine an extra step using this
+    #  #terraform-cloud: ${{ steps.terraform-cloud.outputs.terraform-cloud }}
+    #  terraform-version: ${{ steps.terraform-version.outputs.terraform-version }}
     # XXX: workaround for lack of native environment passing support for reusable workflows
     environment:
       name: ${{ inputs.environment }}
@@ -226,11 +237,11 @@ jobs:
             echo "::set-output name=credentials-configured::false"
           fi
 
-  credentials_check:
-    name: Credentials Configured Check
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
+  #credentials_check:
+  #  name: Credentials Configured Check
+  #  needs: setup
+  #  runs-on: ubuntu-latest
+  #  steps:
       - name: Check Credentials Configured
         run: |
           if [ "${{ needs.setup.outputs.credentials-configured }}" = true ]; then
@@ -241,14 +252,14 @@ jobs:
           fi
 
 
-  fmt_check:
-    name: Fmt Check
-    needs: setup
-    if: inputs.enforce-fmt-check == true && github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    outputs:
-      outcome: ${{ steps.fmt.outcome }}
-    steps:
+  #fmt_check:
+  #  name: Fmt Check
+  #  needs: setup
+  #  if: inputs.enforce-fmt-check == true && github.event_name == 'pull_request'
+  #  runs-on: ubuntu-latest
+  #  outputs:
+  #    outcome: ${{ steps.fmt.outcome }}
+  #  steps:
       - name: Checkout
         uses: actions/checkout@v2
 
@@ -280,30 +291,30 @@ jobs:
           terraform fmt -check
 
 
-  terraform:
-    name: Terraform
-    needs:
-      - setup
-      - fmt_check
-      - credentials_check
-    concurrency:
-      group: ${{ github.workflow }}-${{ inputs.dir }}
-      cancel-in-progress: false  # don't interrupt Terraform runs, you may end up with stale locks
-    runs-on: ubuntu-latest
-    # XXX: workaround for lack of native environment passing support for reusable workflows
-    environment:
-      name: ${{ inputs.environment }}
-      url: ${{ inputs.environment-url }}
-    steps:
-      - name: Setup environment variables
-        run: |
-          echo "${{ env.ENV }}" >> "$GITHUB_ENV"
-
-      - name: Environment
-        run: env | sort
-
-      - name: Checkout
-        uses: actions/checkout@v2
+  #terraform:
+  #  name: Terraform
+  #  needs:
+  #    - setup
+  #    - fmt_check
+  #    - credentials_check
+  #  concurrency:
+  #    group: ${{ github.workflow }}-${{ inputs.dir }}
+  #    cancel-in-progress: false  # don't interrupt Terraform runs, you may end up with stale locks
+  #  runs-on: ubuntu-latest
+  #  # XXX: workaround for lack of native environment passing support for reusable workflows
+  #  environment:
+  #    name: ${{ inputs.environment }}
+  #    url: ${{ inputs.environment-url }}
+  #  steps:
+  #    - name: Setup environment variables
+  #      run: |
+  #        echo "${{ env.ENV }}" >> "$GITHUB_ENV"
+  #
+  #    - name: Environment
+  #      run: env | sort
+  #
+  #    - name: Checkout
+  #      uses: actions/checkout@v2
 
       - name: Configure AWS credentials
         id: configure-aws-credentials
@@ -338,16 +349,16 @@ jobs:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.secrets.GCP_SERVICE_ACCOUNT }}
 
-      # https://github.com/marketplace/actions/hashicorp-setup-terraform
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
-        with:
-          terraform_version: ${{ env.TERRAFORM_VERSION }}
-          # for Terraform Cloud
-          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-
-      - name: Terraform Version
-        run: terraform version
+      ## https://github.com/marketplace/actions/hashicorp-setup-terraform
+      #- name: Setup Terraform
+      #  uses: hashicorp/setup-terraform@v1
+      #  with:
+      #    terraform_version: ${{ env.TERRAFORM_VERSION }}
+      #    # for Terraform Cloud
+      #    cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+      #
+      #- name: Terraform Version
+      #  run: terraform version
 
       - name: Terraform Init
         id: init
@@ -402,7 +413,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const output = `#### Terraform Format and Style \`${{ needs.fmt_check.outputs.outcome }}\`
+            const output = `#### Terraform Format and Style \`${{ steps.fmt_check.outcome }}\`
             #### Terraform Initialization \`${{ steps.init.outcome }}\`
             #### Terraform Validation \`${{ steps.validate.outcome }}\`
             #### Terraform Plan \`${{ steps.plan.outcome }}\`
