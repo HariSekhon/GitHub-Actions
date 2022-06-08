@@ -89,7 +89,7 @@ jobs:
       - name: Generate environment variable DOCKERFILE_CHECKOUT_PATH
         if: ${{ inputs.dockerfile-repo }}
         run: |
-          DOCKERFILE_CHECKOUT_PATH="${{ env.DOCKERFILE_REPO }}"
+          DOCKERFILE_CHECKOUT_PATH="$DOCKERFILE_REPO"
           DOCKERFILE_CHECKOUT_PATH="${DOCKERFILE_CHECKOUT_PATH##*/}"
           echo "DOCKERFILE_CHECKOUT_PATH=$DOCKERFILE_CHECKOUT_PATH" >> "$GITHUB_ENV"
 
@@ -116,7 +116,7 @@ jobs:
           echo "REPO_TAGS<<EOF" >> "$GITHUB_ENV"
             for tag in ${{ env.TAGS }}; do
               if ! [[ "$tag" =~ : ]]; then
-                echo "${{env.DOCKER_IMAGE}}:$tag" >> "$GITHUB_ENV"
+                echo "$DOCKER_IMAGE:$tag" >> "$GITHUB_ENV"
               else
                 echo "$tag" >> "$GITHUB_ENV"
               fi
@@ -126,7 +126,7 @@ jobs:
       - name: Generate CACHE_FROM environment variable
         run: |
           echo "CACHE_FROM<<EOF" >> "$GITHUB_ENV"
-            for repo_tag in $(tr '\n' ' ' <<< "${{ env.REPO_TAGS }}"); do
+            for repo_tag in $(tr '\n' ' ' <<< "$REPO_TAGS"); do
               echo "type=registry,ref=$repo_tag" >> "$GITHUB_ENV"
             done
           echo "EOF" >> "$GITHUB_ENV"
