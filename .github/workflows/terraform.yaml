@@ -217,11 +217,13 @@ jobs:
     needs: setup
     runs-on: ubuntu-latest
     steps:
-      if [ "${{ needs.setup.outputs.terraform-version }}" ]; then
-        echo "Some credentials have been configured"
-      else
-        echo "NO credentials have been configured"
-      fi
+      - name: Check Credentials Configured
+        run: |
+          if [ "${{ needs.setup.outputs.terraform-version }}" ]; then
+            echo "Some credentials have been configured"
+          else
+            echo "NO credentials have been configured"
+          fi
 
 
   fmt_check:
