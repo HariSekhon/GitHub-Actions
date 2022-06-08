@@ -244,7 +244,8 @@ jobs:
   #  steps:
       - name: Check Credentials Configured
         run: |
-          if [ "${{ needs.setup.outputs.credentials-configured }}" = true ]; then
+          #if [ "${{ needs.setup.outputs.credentials-configured }}" = true ]; then
+          if [ "${{ steps.credentials-check.credentials-configured }}" = true ]; then
             echo "Some credentials have been configured"
           else
             echo "NO credentials have been configured"
