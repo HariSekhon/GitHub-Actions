@@ -338,7 +338,7 @@ jobs:
           # outputs lots of 'my.resource: Refreshing state...' which pollutes the plan posted to the PR
           terraform plan -input=false -no-color
           #
-          # attempted workaround, but loses errors posting nothing to PR when it fails, and even accepting, the show step fails because the tfplan wasn't generated
+          # attempted workaround, but loses errors posting nothing to PR when it fails, even when ignoring plan failure code because tfplan file isn't generated
           #
           # even if the plan fails, still try to show the plan
           #exit_code=0
