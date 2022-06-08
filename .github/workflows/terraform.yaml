@@ -260,15 +260,15 @@ jobs:
   #  outputs:
   #    outcome: ${{ steps.fmt.outcome }}
   #  steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Setup environment variables
-        run: |
-          echo "${{ env.ENV }}" >> "$GITHUB_ENV"
-
-      - name: Environment
-        run: env | sort
+  #    - name: Checkout
+  #      uses: actions/checkout@v2
+  #
+  #    - name: Setup environment variables
+  #      run: |
+  #        echo "${{ env.ENV }}" >> "$GITHUB_ENV"
+  #
+  #    - name: Environment
+  #      run: env | sort
 
       # https://github.com/marketplace/actions/hashicorp-setup-terraform
       - name: Setup Terraform
@@ -318,7 +318,8 @@ jobs:
 
       - name: Configure AWS credentials
         id: configure-aws-credentials
-        if: needs.setup.outputs.aws == 'true'
+        #if: needs.setup.outputs.aws == 'true'
+        if: steps.aws.aws == 'true'
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -328,7 +329,8 @@ jobs:
       # adapted from my Jenkins Shared Library - https://github.com/HariSekhon/Jenkins/blob/master/vars/gcpActivateServiceAccount.groovy
       - name: Google Cloud Activate ServiceAccount Key
         id: google-cloud-activate-serviceaccount
-        if: needs.setup.outputs.gcp_key == 'true'
+        #if: needs.setup.outputs.gcp_key == 'true'
+        if: steps.gcp.gcp_key == 'true'
         run: |
           base64 --decode <<< "${{ secrets.GCP_SERVICEACCOUNT_KEY }}" > credentials.json
           gcloud auth activate-service-account --key-file=credentials.json
@@ -341,7 +343,8 @@ jobs:
       #
       - name: Google Cloud Keyless Auth
         id: google-cloud-auth
-        if: needs.setup.outputs.gcp_keyless == 'true'
+        #if: needs.setup.outputs.gcp_keyless == 'true'
+        if: steps.gcp.gcp_keyless == 'true'
         uses: google-github-actions/auth@v0.4.0
         with:
           #workload_identity_provider: 'projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
