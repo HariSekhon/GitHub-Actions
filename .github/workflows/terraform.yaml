@@ -219,7 +219,7 @@ jobs:
     steps:
       - name: Check Credentials Configured
         run: |
-          if [ "${{ needs.setup.outputs.terraform-version }}" ]; then
+          if [ "${{ needs.setup.outputs.credentials-configured }}" ]; then
             echo "Some credentials have been configured"
           else
             echo "NO credentials have been configured"
