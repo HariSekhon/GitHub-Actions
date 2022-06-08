@@ -59,7 +59,7 @@ on:
         default: true
         required: false
       env:
-        description: Environment variables in key=value pairs
+        description: Environment variables in key=value pairs. Can be used to pass secrets that aren't officially supported yet as environment variables
         type: string  # pass in string in export shell format eg. MYVAR=myvalue MYVAR2=myvalue2
         default: ''
         required: false
@@ -252,7 +252,7 @@ jobs:
     steps:
       - name: Setup environment variables
         run: |
-          echo "${{ env.INPUTS }}" >> "$GITHUB_ENV"
+          echo "${{ env.ENV }}" >> "$GITHUB_ENV"
 
       - name: Environment
         run: env | sort
