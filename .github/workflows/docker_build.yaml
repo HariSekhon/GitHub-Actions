@@ -105,6 +105,22 @@ defaults:
 env:
   REPO_TAGS: ${{ inputs.repo_tags }}
   BUILDCACHE: ${{ inputs.build-cache }}
+  DOCKERFILE_REPO: ${{ inputs.dockerfile-repo }}
+  DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
+  DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  ACR_REGISTRY: ${{ secrets.ACR_REGISTRY }}
+  AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+  AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  GAR_JSON_KEY: ${{ secrets.GAR_JSON_KEY }}
+  GAR_REGISTRY: ${{ secrets.GAR_JSON_KEY }}
+  GCR_JSON_KEY: ${{ secrets.GCR_JSON_KEY }}
+  GCR_REGISTRY: ${{ secrets.GCR_REGISTRY }}
+  GITLAB_USER: ${{ secrets.GITLAB_USER }}
+  GITLAB_PASSWORD: ${{ secrets.GITLAB_PASSWORD }}
+  QUAY_USER: ${{ secrets.QUAY_USER }}
+  QUAY_TOKEN: ${{ secrets.QUAY_TOKEN }}
   DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
 
 jobs:
@@ -131,25 +147,25 @@ jobs:
       - name: Set output variables
         id: setvar
         run: |
-          if [ -n "${{ secrets.DOCKERHUB_USER }}" ] &&
-             [ -n "${{ secrets.DOCKERHUB_TOKEN }}" ]; then
+          if [ -n "$DOCKERHUB_USER" ] &&
+             [ -n "$DOCKERHUB_TOKEN" ]; then
 
             echo "DockerHub registry credentials set"
             echo "::set-output name=dockerhub::true"
           fi
 
-          if [ -n "${{ secrets.ACR_REGISTRY }}" ]] &&
-               [ -n "${{ secrets.AZURE_CLIENT_ID }}" ]] &&
-               [ -n "${{ secrets.AZURE_CLIENT_SECRET }}" ]] &&
-               grep -qi '\.azurecr\.io' <<< "$REPO_TAGS"; then
+          if [ -n "$ACR_REGISTRY" ]] &&
+             [ -n "$AZURE_CLIENT_ID" ]] &&
+             [ -n "$AZURE_CLIENT_SECRET" ]] &&
+             grep -qi '\.azurecr\.io' <<< "$REPO_TAGS"; then
 
             echo "Azure Container Registry credentials set"
             echo "::set-output name=acr::true"
           fi
 
-          if [ -n "${{ secrets.AWS_ACCESS_KEY_ID }}" ]] &&
-               [ -n "${{ secrets.AWS_SECRET_ACCESS_KEY }}" ]] &&
-               grep -qi '\.amazonaws\.com' <<< "$REPO_TAGS"; then
+          if [ -n "$AWS_ACCESS_KEY_ID" ]] &&
+             [ -n "$AWS_SECRET_ACCESS_KEY" ]] &&
+             grep -qi '\.amazonaws\.com' <<< "$REPO_TAGS"; then
 
             echo "AWS ECR registry credentials set"
             echo "::set-output name=ecr::true"
@@ -157,33 +173,33 @@ jobs:
             echo "::set-output name=ecr_registry::$AWS_ECR_REGISTRY"
           fi
 
-          if [ -n "${{ secrets.GAR_JSON_KEY }}" ]] &&
-               [ -n "${{ secrets.GAR_REGISTRY }}" ]] &&
-               grep -qi '\.pkg\.dev' <<< "$REPO_TAGS"; then
+          if [ -n "$GAR_JSON_KEY" ]] &&
+             [ -n "$GAR_REGISTRY" ]] &&
+             grep -qi '\.pkg\.dev' <<< "$REPO_TAGS"; then
 
             echo "Google Artifact Registry credentials set"
             echo "::set-output name=gar::true"
           fi
 
-          if [ -n "${{ secrets.GCR_JSON_KEY }}" ]] &&
-               [ -n "${{ secrets.GCR_REGISTRY }}" ]] &&
-               grep -qi '\.gcr\.io' <<< "$REPO_TAGS"; then
+          if [ -n "$GCR_JSON_KEY" ]] &&
+             [ -n "$GCR_REGISTRY" ]] &&
+             grep -qi '\.gcr\.io' <<< "$REPO_TAGS"; then
 
             echo "Google Container Registry credentials set"
             echo "::set-output name=gcr::true"
           fi
 
-          if [ -n "${{ secrets.GITLAB_USER }}" ]] &&
-               [ -n "${{ secrets.GITLAB_PASSWORD }}" ]] &&
-               grep -qi '\.gitlab\.com' <<< "$REPO_TAGS"; then
+          if [ -n "$GITLAB_USER" ]] &&
+             [ -n "$GITLAB_PASSWORD" ]] &&
+             grep -qi '\.gitlab\.com' <<< "$REPO_TAGS"; then
 
             echo "GitLab registry credentials set"
             echo "::set-output name=gitlab::true"
           fi
 
-          if [ -n "${{ secrets.QUAY_USER }}" ]] &&
-               [ -n "${{ secrets.QUAY_TOKEN }}" ]] &&
-               grep -qi '\.quay\.io' <<< "$REPO_TAGS"; then
+          if [ -n "$QUAY_USER" ]] &&
+             [ -n "$QUAY_TOKEN" ]] &&
+             grep -qi '\.quay\.io' <<< "$REPO_TAGS"; then
 
             echo "Quay.io registry credentials set"
             echo "::set-output name=quay::true"
@@ -209,8 +225,6 @@ jobs:
           DOCKERFILE_CHECKOUT_PATH="${{ env.DOCKERFILE_REPO }}"
           DOCKERFILE_CHECKOUT_PATH="${DOCKERFILE_CHECKOUT_PATH##*/}"
           echo "DOCKERFILE_CHECKOUT_PATH=$DOCKERFILE_CHECKOUT_PATH" >> "$GITHUB_ENV"
-        env:
-          DOCKERFILE_REPO: ${{ inputs.dockerfile-repo }}
 
       - name: Generate environment variable AWS_ECR_REGISTRY
         #if: contains(inputs.repo_tags, '.amazonaws.com')
@@ -240,7 +254,7 @@ jobs:
         if: needs.determine_registries.outputs.acr == 'true'
         uses: docker/login-action@v1
         with:
-          registry: ${{ env.ACR_REGISTRY }}
+          registry: ${{ secreets.ACR_REGISTRY }}
           username: ${{ secrets.AZURE_CLIENT_ID }}
           password: ${{ secrets.AZURE_CLIENT_SECRET }}
 
@@ -287,7 +301,7 @@ jobs:
       - name: Generate environment variable CACHE_FROM
         run: |
           echo "CACHE_FROM<<EOF" >> "$GITHUB_ENV"
-            for repo_tag in $(tr '\n' ' ' <<< "${{ env.REPO_TAGS }}"); do
+            for repo_tag in $(tr '\n' ' ' <<< "$REPO_TAGS"); do
               echo "type=registry,ref=$repo_tag" >> "$GITHUB_ENV"
             done
           echo "EOF" >> "$GITHUB_ENV"
