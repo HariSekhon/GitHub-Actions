@@ -58,6 +58,7 @@ defaults:
     shell: bash -euxo pipefail {0}
 
 env:
+  REPOS: ${{ inputs.repos }}
   GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
   GITHUB_ORGANIZATION: ${{ inputs.organization }}
   GCP_SERVICEACCOUNT_KEY: ${{ secrets.GCP_SERVICEACCOUNT_KEY }}
@@ -105,4 +106,4 @@ jobs:
           gcloud auth list
 
       - name: Mirror Repos
-        run: github_mirror_repos_to_gcp_source_repos.sh ${{ inputs.repos }}
+        run: github_mirror_repos_to_gcp_source_repos.sh $REPOS
