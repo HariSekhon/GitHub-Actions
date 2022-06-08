@@ -223,6 +223,7 @@ jobs:
             echo "Some credentials have been configured"
           else
             echo "NO credentials have been configured"
+            exit 1
           fi
 
 
