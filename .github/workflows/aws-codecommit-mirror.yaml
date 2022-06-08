@@ -67,6 +67,7 @@ defaults:
     shell: bash -euxo pipefail {0}
 
 env:
+  REPOS: ${{ inputs.repos }}
   GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
   GITHUB_ORGANIZATION: ${{ inputs.organization }}
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -111,5 +112,3 @@ jobs:
 
       - name: Mirror Repos
         run: github_mirror_repos_to_aws_codecommit.sh $REPOS
-        env:
-          REPOS: ${{ inputs.repos }}
