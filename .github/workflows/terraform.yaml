@@ -208,6 +208,8 @@ jobs:
     needs: setup
     if: inputs.enforce-fmt-check == true && github.event_name == 'pull_request'
     runs-on: ubuntu-latest
+    outputs:
+      outcome: ${{ steps.fmt.outcome }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -345,7 +347,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const output = `#### Terraform Format and Style \`${{ needs.fmt_check.steps.fmt.outcome }}\`
+            const output = `#### Terraform Format and Style \`${{ needs.fmt_check.outputs.outcome }}\`
             #### Terraform Initialization \`${{ steps.init.outcome }}\`
             #### Terraform Validation \`${{ steps.validate.outcome }}\`
             #### Terraform Plan \`${{ steps.plan.outcome }}\`
