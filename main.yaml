@@ -87,7 +87,7 @@ env:
   #AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
   #
   # must generate in Steps in order to compose like this
-  #AWS_ECR_REGISTRY: ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ $AWS_DEFAULT_REGION }}.amazonaws.com  # or generate it from ${{ steps.aws-ecr-login.outputs.registry }}
+  #AWS_ECR_REGISTRY: ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_DEFAULT_REGION }}.amazonaws.com  # or generate it from ${{ steps.aws-ecr-login.outputs.registry }}
   #DOCKER_IMAGE: ${{ env.AWS_ECR_REGISTRY }}/${{ env.APP }}
   #
   #AWS_DEFAULT_OUTPUT: json
@@ -299,6 +299,9 @@ jobs:
     if: github.event.repository.fork == false
     name: NAME
     uses: HariSekhon/GitHub-Actions/.github/workflows/some-workflow.yaml@master
+    environment:
+      name: production  # use Environment with approval and different Secrets
+      url: https://domain.com/webapp  # puts a link in the GitHub Actions deployment page
     with:
       # don't cast in calling workflow any more, reusable workflows are using debug string and handling the comparison
       #debug: ${{ github.event.inputs.debug && fromJSON(github.event.inputs.debug) || false }}
@@ -317,6 +320,7 @@ jobs:
     #needs: [job1, job2]  # dependency jobs
     environment:
       name: production  # use Environment with approval and different Secrets - add this to Deploy stage to allow the build to progress
+      url: https://domain.com/webapp  # puts a link in the GitHub Actions deployment page
     timeout-minutes: 10
 
     # XXX: Conditionals must use single quotes for strings or get an error - Unexpected symbol: '"string"'
@@ -968,6 +972,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: production  # set up Environment 'production' to require approval to wait here
+      url: https://domain.com/webapp  # puts a link in the GitHub Actions deployment page
     timeout-minutes: 10
     steps:
       - name: Deploy
@@ -981,6 +986,7 @@ jobs:
     container: argoproj/argocd:v2.0.3
     environment:
       name: production  # set up Environment 'production' to require approval to wait here
+      url: https://domain.com/webapp  # puts a link in the GitHub Actions deployment page
     env:
       # or set in global env at top
       ARGOCD_SERVER: argocd.domain.com
