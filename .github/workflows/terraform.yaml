@@ -208,7 +208,7 @@ jobs:
           if [ -n "${{ secrets.TF_API_TOKEN }}" ] ||
              [ -n "${{ steps.aws.outputs.aws }}" ] ||
              [ -n "${{ steps.aws.outputs.gcp }}" ] ||
-             [ -n "${{ steps.aws.outputs.gcp_keyless }}" ] ||
+             [ -n "${{ steps.aws.outputs.gcp_keyless }}" ]; then
             echo "::set-output name=credentials-configured::true"
           fi
 
