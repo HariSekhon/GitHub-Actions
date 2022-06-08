@@ -337,8 +337,16 @@ jobs:
 
           # outputs lots of 'my.resource: Refreshing state...' which pollutes the plan posted to the PR
           #terraform plan -input=false -no-color
-          terraform plan -input=false -no-color >/dev/null -out=tfplan
+          #
+          # workaround
+          #
+          # even if the plan fails, still try to show the plan
+          exit_code=0
+          if ! terraform plan -input=false -no-color >/dev/null -out=tfplan; then
+            exit_code=1
+          fi
           terraform show tfplan
+          exit "$exit_code"
 
       - uses: actions/github-script@0.9.0
         if: github.event_name == 'pull_request'
