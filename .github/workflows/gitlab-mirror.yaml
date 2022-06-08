@@ -54,6 +54,7 @@ defaults:
     shell: bash -euxo pipefail {0}
 
 env:
+  REPOS: ${{ inputs.repos }}
   GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
   GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
   GITHUB_ORGANIZATION: ${{ inputs.organization }}
@@ -93,4 +94,4 @@ jobs:
             github-mirror-to-gitlab
 
       - name: Mirror Repos
-        run: github_mirror_repos_to_gitlab.sh ${{ inputs.repos }}
+        run: github_mirror_repos_to_gitlab.sh $REPOS
