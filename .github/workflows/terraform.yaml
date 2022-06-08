@@ -156,8 +156,8 @@ jobs:
     #  gcp_key: ${{ steps.gcp.outputs.gcp_key }}
     #  gcp_keyless: ${{ steps.gcp.outputs.gcp_keyless }}
     #  # secret is passed straight to setup terraform step so don't need to determine an extra step using this
-    #  #terraform-cloud: ${{ steps.terraform-cloud.outputs.terraform-cloud }}
-    #  terraform-version: ${{ steps.terraform-version.outputs.terraform-version }}
+    #  #terraform-cloud: ${{ steps.terraform.outputs.terraform-cloud }}
+    #  terraform-version: ${{ steps.terraform.outputs.terraform-version }}
     # XXX: workaround for lack of native environment passing support for reusable workflows
     environment:
       name: ${{ inputs.environment }}
@@ -174,7 +174,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Generate Terraform Version output
-        id: terraform-version
+        id: terraform
         run: |
           if [ -n "${WORKDIR:-}" ]; then
             cd "$WORKDIR"
@@ -216,7 +216,7 @@ jobs:
             echo "::set-output name=gcp_keyless::true"
           fi
 
-      - name: GitHub
+      - name: GitHub Auth Status
         id: github
         run: |
           if [ -n "${{ secrets.GH_TOKEN }}" ]; then
@@ -225,32 +225,32 @@ jobs:
             gh auth status  # don't run this unless a token is set
           fi
 
-      - name: Credentials Check
-        id: credentials-check
-        run: |
-          if [ -n "${{ secrets.TF_API_TOKEN }}" ] ||
-             [ "${{ steps.aws.outputs.aws }}" = true ] ||
-             [ "${{ steps.aws.outputs.gcp }}" = true ] ||
-             [ "${{ steps.aws.outputs.gcp_keyless }}" = true ]; then
-            echo "::set-output name=credentials-configured::true"
-          else
-            echo "::set-output name=credentials-configured::false"
-          fi
+      #- name: Credentials Check
+      #  id: credentials-check
+      #  run: |
+      #    if [ -n "${{ secrets.TF_API_TOKEN }}" ] ||
+      #       [ "${{ steps.aws.outputs.aws }}" = true ] ||
+      #       [ "${{ steps.aws.outputs.gcp }}" = true ] ||
+      #       [ "${{ steps.aws.outputs.gcp_keyless }}" = true ]; then
+      #      echo "::set-output name=credentials-configured::true"
+      #    else
+      #      echo "::set-output name=credentials-configured::false"
+      #    fi
 
   #credentials_check:
   #  name: Credentials Configured Check
   #  needs: setup
   #  runs-on: ubuntu-latest
   #  steps:
-      - name: Check Credentials Configured
-        run: |
-          #if [ "${{ needs.setup.outputs.credentials-configured }}" = true ]; then
-          if [ "${{ steps.credentials-check.outputs.credentials-configured }}" = true ]; then
-            echo "Some credentials have been configured"
-          else
-            echo "NO credentials have been configured"
-            exit 1
-          fi
+  #    - name: Check Credentials Configured
+  #      run: |
+  #        if [ "${{ needs.setup.outputs.credentials-configured }}" = true ]; then
+  #        if [ "${{ steps.credentials-check.outputs.credentials-configured }}" = true ]; then
+  #          echo "Some credentials have been configured"
+  #        else
+  #          echo "NO credentials have been configured"
+  #          exit 1
+  #        fi
 
 
   #fmt_check:
@@ -275,7 +275,8 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
-          terraform_version: ${{ needs.setup.outputs.terraform-version }}
+          #terraform_version: ${{ needs.setup.outputs.terraform-version }}
+          terraform_version: ${{ steps.terraform.outputs.terraform-version }}
           # for Terraform Cloud
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
@@ -320,7 +321,7 @@ jobs:
       - name: Configure AWS credentials
         id: configure-aws-credentials
         #if: needs.setup.outputs.aws == 'true'
-        if: steps.aws.aws == 'true'
+        if: steps.aws.outputs.aws == 'true'
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -331,7 +332,7 @@ jobs:
       - name: Google Cloud Activate ServiceAccount Key
         id: google-cloud-activate-serviceaccount
         #if: needs.setup.outputs.gcp_key == 'true'
-        if: steps.gcp.gcp_key == 'true'
+        if: steps.gcp.outputs.gcp_key == 'true'
         run: |
           base64 --decode <<< "${{ secrets.GCP_SERVICEACCOUNT_KEY }}" > credentials.json
           gcloud auth activate-service-account --key-file=credentials.json
@@ -345,7 +346,7 @@ jobs:
       - name: Google Cloud Keyless Auth
         id: google-cloud-auth
         #if: needs.setup.outputs.gcp_keyless == 'true'
-        if: steps.gcp.gcp_keyless == 'true'
+        if: steps.gcp.ouputs.gcp_keyless == 'true'
         uses: google-github-actions/auth@v0.4.0
         with:
           #workload_identity_provider: 'projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
