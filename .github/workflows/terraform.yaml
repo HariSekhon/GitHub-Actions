@@ -60,9 +60,11 @@ on:
         required: false
       environment:
         description: Deployment environment (optional)
+        type: string
         required: false
       environment-url:
         description: Deployment environment URL for UI display (optional)
+        type: string
         required: false
       env:
         description: Environment variables in key=value pairs. Can be used to pass secrets that aren't officially supported yet as environment variables
