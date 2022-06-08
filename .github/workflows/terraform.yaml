@@ -197,10 +197,9 @@ jobs:
         run: |
           if [ -n "${{ secrets.GH_TOKEN }}" ]; then
             echo "GitHub GH_TOKEN is set"
+            # who are we logged in as (important both for PR comments and if managing GitHub via Terraform)
+            gh auth status  # don't run this unless a token is set
           fi
-
-          # who are we logged in as (important both for PR comments and if managing GitHub via Terraform)
-          gh auth status
 
 
   fmt_check:
