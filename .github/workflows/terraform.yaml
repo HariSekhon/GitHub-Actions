@@ -222,6 +222,8 @@ jobs:
              [ "${{ steps.aws.outputs.gcp }}" = true ] ||
              [ "${{ steps.aws.outputs.gcp_keyless }}" = true ]; then
             echo "::set-output name=credentials-configured::true"
+          else
+            echo "::set-output name=credentials-configured::false"
           fi
 
   credentials_check:
@@ -231,7 +233,7 @@ jobs:
     steps:
       - name: Check Credentials Configured
         run: |
-          if [ "${{ needs.setup.outputs.credentials-configured }}" ]; then
+          if [ "${{ needs.setup.outputs.credentials-configured }}" = true ]; then
             echo "Some credentials have been configured"
           else
             echo "NO credentials have been configured"
