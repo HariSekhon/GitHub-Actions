@@ -154,6 +154,7 @@ on:
       - staging
       - production
       - '*docker*'  # glob requires quoting, only run on branches with docker in the name
+    # XXX: if the Pull Request contains any of these files, then every push will re-trigger this build, regardless of whether these files changes since the last push
     paths:
       - '*'  # only run when changes have happened on matching paths, this glob misses hidden directories though such as .github/workflows
       - 'app/**'  # any files under app/
