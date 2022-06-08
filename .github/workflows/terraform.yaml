@@ -161,7 +161,7 @@ jobs:
     # XXX: workaround for lack of native environment passing support for reusable workflows
     environment:
       name: ${{ inputs.environment }}
-      url: ${{ inputs.environment-url }}
+      url: ${{ inputs.environment-url || null }}
     steps:
       - name: Setup environment variables
         run: |
