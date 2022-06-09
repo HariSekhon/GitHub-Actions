@@ -309,7 +309,7 @@ jobs:
       - name: Generate environment variable DOCKER_IMAGE_CACHE
         if: ${{ inputs.max-cache }}
         run: echo "DOCKER_IMAGE_CACHE=ghcr.io/${{ github.repository }}" >> "$GITHUB_ENV"
-        #run: echo "DOCKER_IMAGE_CACHE=${{ env.AWS_ECR_REGISTRY }}/${{ env.APP }}-cache" >> $GITHUB_ENV  # doesn't work, ECR simply doesn't support it
+        #run: echo "DOCKER_IMAGE_CACHE=$AWS_ECR_REGISTRY/$APP-cache" >> $GITHUB_ENV  # doesn't work, ECR simply doesn't support it
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
