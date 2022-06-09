@@ -289,18 +289,12 @@ jobs:
       - name: Terraform Format Check
         id: fmt
         if: github.event_name == 'pull_request'
-        env:
-          ENFORCE_FORMAT_CHECK: ${{ inputs.enforce-fmt-check }}
+        continue-on-error: true
         run: |
           if [ -n "${WORKDIR:-}" ]; then
             cd "$WORKDIR"
           fi
-          if [ "$ENFORCE_FORMAT_CHECK" = true ]; then
-            terraform fmt -diff -check
-          else
-            terraform fmt -diff
-          fi
-
+          terraform fmt -diff -check
 
   #terraform:
   #  name: Terraform
@@ -451,6 +445,10 @@ jobs:
 
       - name: Terraform Plan Failed
         if: steps.plan.outcome == 'failure'
+        run: exit 1
+
+      - name: Terraform Format Check Failed
+        if: steps.fmt.outcome == 'failure' && inputs.enforce-fmt-check == true
         run: exit 1
 
       - name: Terraform Apply
