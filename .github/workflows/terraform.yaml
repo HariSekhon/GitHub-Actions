@@ -76,7 +76,7 @@ on:
         default: ''
         required: false
       mention:
-        description: space separated list of @person or @team to tag in the PR comment to notify
+        description: space separated list of @person or @org/team to tag in the PR comment to notify
         type: string
         required: false
       debug:
