@@ -90,8 +90,10 @@ jobs:
           submodules: recursive  # requires Git 2.18+ to be installed first
 
       - name: Setup environment variables
+        env:
+          INPUTS: ${{ env.INPUTS }}
         run: |
-          echo "${{ env.INPUTS }}" >> "$GITHUB_ENV"
+          echo "$INPUTS" >> "$GITHUB_ENV"
 
       - name: Environment
         run: env | sort
