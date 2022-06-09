@@ -439,7 +439,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const output = `### GitHub Workflow: ${{ process.env.WORKFLOW }}
+            const output = `### GitHub Workflow: ${process.env.WORKFLOW}
 
             #### Terraform Format and Style \`${{ steps.fmt.outcome }}\`
             #### Terraform Initialization \`${{ steps.init.outcome }}\`
