@@ -288,12 +288,18 @@ jobs:
       # force people creating pull requests to format it correctly or fail and don't show them a plan
       - name: Terraform Format Check
         id: fmt
-        if: inputs.enforce-fmt-check == true && github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request'
+        env:
+          ENFORCE_FORMAT_CHECK: ${{ inputs.enforce-fmt-check }}
         run: |
           if [ -n "${WORKDIR:-}" ]; then
             cd "$WORKDIR"
           fi
-          terraform fmt -diff -check
+          if [ "$ENFORCE_FORMAT_CHECK" = true ]; then
+            terraform fmt -diff -check
+          else
+            terraform fmt -diff
+          fi
 
 
   #terraform:
