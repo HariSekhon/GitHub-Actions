@@ -421,10 +421,11 @@ jobs:
           MENTION: ${{ inputs.mention }}
         run: |
           {
-            echo "MENTIONS="
+            echo -n "MENTIONS="
             for mention in $MENTION; do
               echo -n "@${mention##@} "
             done
+            echo
           } >> "$GITHUB_ENV"
 
       - uses: actions/github-script@0.9.0
