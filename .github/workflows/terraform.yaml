@@ -435,10 +435,13 @@ jobs:
             terraform
             ${{ steps.plan.outputs.stderr }}
             ${{ steps.plan.outputs.stdout }}
+          WORKFLOW_NAME: ${{ github.workflow }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const output = `#### Terraform Format and Style \`${{ steps.fmt.outcome }}\`
+            const output = `### GitHub Workflow: ${{ process.env.WORKFLOW }}
+
+            #### Terraform Format and Style \`${{ steps.fmt.outcome }}\`
             #### Terraform Initialization \`${{ steps.init.outcome }}\`
             #### Terraform Validation \`${{ steps.validate.outcome }}\`
             #### Terraform Plan \`${{ steps.plan.outcome }}\`
