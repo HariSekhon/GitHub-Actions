@@ -75,6 +75,10 @@ on:
         type: string  # pass in string in export shell format eg. MYVAR=myvalue MYVAR2=myvalue2
         default: ''
         required: false
+      mention:
+        description: space separated list of @person or @team to tag in the PR comment to notify
+        type: string
+        required: false
       debug:
         description: Debug Mode, true or false
         type: string
@@ -411,6 +415,18 @@ jobs:
           #terraform show tfplan
           #exit "$exit_code"
 
+      - name: Generate environment variable MENTIONS
+        if: github.event_name == 'pull_request' && inputs.mention != ''
+        env:
+          MENTION: ${{ inputs.mention }}
+        run: |
+          {
+            echo "MENTIONS="
+            for mention in $MENTION; do
+              echo -n "@${mention##@} "
+            done
+          } >> "$GITHUB_ENV"
+
       - uses: actions/github-script@0.9.0
         if: github.event_name == 'pull_request'
         env:
@@ -434,6 +450,7 @@ jobs:
 
             </details>
 
+            ${{ env.MENTIONS }}
             *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
 
             github.issues.createComment({
