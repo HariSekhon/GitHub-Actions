@@ -73,7 +73,7 @@ jobs:
     secrets:
       ...
 ```
-See workflows directory [README](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/README.md) for more details.
+For more sophisticated examples including approvals, secrets, branch and path selection etc. see my [Terraform repo](https://github.com/HariSekhon/Terraform)'s templates for [terraform-plan.yaml](https://github.com/HariSekhon/Terraform/blob/master/.github/workflows/terraform-plan.yaml.template) and [terraform-apply.yaml](https://github.com/HariSekhon/Terraform/blob/master/.github/workflows/terraform-apply.yaml.template)
 
 ### Docker Build and push to DockerHub
 
