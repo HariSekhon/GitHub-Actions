@@ -481,7 +481,8 @@ jobs:
         run: exit 1
 
       - name: Terraform Apply
-        if: github.event_name == 'push' && ( github.ref_name == github.event.repository.default_branch ) # || github.ref_name == 'main' || github.ref_name == 'master' )
+        # XXX: github.event isn't always populated, depending on method of trigger, which causes a lot of problems in real world, we cover this up by just applying if master or main
+        if: github.event_name == 'push' && ( github.ref_name == github.event.repository.default_branch || github.ref_name == 'main' || github.ref_name == 'master' )
         run: |
           if [ -n "${WORKDIR:-}" ]; then
             cd "$WORKDIR"
