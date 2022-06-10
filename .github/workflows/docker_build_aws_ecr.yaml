@@ -126,7 +126,7 @@ jobs:
       #    echo "AWS_ACCOUNT_ID=${{ steps.configure-aws-credentials.outputs.aws-account-id }}" >> "$GITHUB_ENV"
 
       #- name: Generate environment variable AWS_ECR_REGISTRY
-      #  #run: echo "AWS_ECR_REGISTRY=${{env.AWS_ACCOUNT_ID}}.dkr.ecr.${{env.AWS_DEFAULT_REGION}}.amazonaws.com" >> "$GITHUB_ENV"
+      #  #run: echo "AWS_ECR_REGISTRY=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com" >> "$GITHUB_ENV"
       #  run: echo "AWS_ECR_REGISTRY=${{ steps.aws-ecr-login.outputs.registry }}" >> "$GITHUB_ENV"
 
       - name: Generate environment variable DOCKER_IMAGE
