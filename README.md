@@ -57,6 +57,24 @@ jobs:
     uses: HariSekhon/Gi/tHub-Actions/.github/workflows/tfsec.yaml@master
 ```
 
+### Terraform Plan & Apply
+
+Plans - updates Pull Requests with the results of validation, format check and full Change Plan outputs
+
+Apply - applies when merged to default branch, eg. `master` or `main`
+
+```yaml
+on: [push, pull_request]
+jobs:
+  terraform:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/terraform.yaml@master
+    with:
+      dir: path/to/terraform/code
+    secrets:
+      ...
+```
+For more sophisticated examples including approvals, secrets, branch and path selection etc. see my [Terraform repo](https://github.com/HariSekhon/Terraform)'s templates for [terraform-plan.yaml](https://github.com/HariSekhon/Terraform/blob/master/.github/workflows/terraform-plan.yaml.template) and [terraform-apply.yaml](https://github.com/HariSekhon/Terraform/blob/master/.github/workflows/terraform-apply.yaml.template)
+
 ### Docker Build and push to DockerHub
 
 [![Docker Build DevOps Bash Tools (Ubuntu)](https://github.com/HariSekhon/Dockerfiles/actions/workflows/docker_build_devops_bash_tools_ubuntu.yaml/badge.svg)](https://github.com/HariSekhon/Dockerfiles/actions/workflows/docker_build_devops_bash_tools_ubuntu.yaml)
