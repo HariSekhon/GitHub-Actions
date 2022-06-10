@@ -127,10 +127,14 @@ jobs:
 
       #- name: Generate environment variable AWS_ECR_REGISTRY
       #  #run: echo "AWS_ECR_REGISTRY=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com" >> "$GITHUB_ENV"
-      #  run: echo "AWS_ECR_REGISTRY=${{ steps.aws-ecr-login.outputs.registry }}" >> "$GITHUB_ENV"
+      #  env:
+      #    REGISTRY: ${{ steps.aws-ecr-login.outputs.registry }}
+      #  run: echo "AWS_ECR_REGISTRY=$REGISTRY" >> "$GITHUB_ENV"
 
       - name: Generate environment variable DOCKER_IMAGE
-        run: echo "DOCKER_IMAGE=${{ steps.aws-ecr-login.outputs.registry }}/${{ env.AWS_ECR_REPO }}" >> "$GITHUB_ENV"
+        env:
+          REGISTRY: ${{ steps.aws-ecr-login.outputs.registry }}
+        run: echo "DOCKER_IMAGE=$REGISTRY/$AWS_ECR_REPO" >> "$GITHUB_ENV"
 
         # branches called things like feature/dockerize need to be sanitized to pass as docker tags -> feature_dockerize
       - name: Generate environment variable BRANCH_TAG
@@ -159,7 +163,9 @@ jobs:
       - name: Generate environment variable DOCKER_IMAGE_CACHE
         if: ${{ inputs.max-cache }}
         #run: echo "DOCKER_IMAGE_CACHE=$AWS_ECR_REGISTRY/$APP-cache" >> $GITHUB_ENV  # doesn't work, ECR simply doesn't support it
-        run: echo "DOCKER_IMAGE_CACHE=ghcr.io/${{ github.repository }}" >> "$GITHUB_ENV"
+        env:
+          REPO: ${{ github.repository }}
+        run: echo "DOCKER_IMAGE_CACHE=ghcr.io/$REPO" >> "$GITHUB_ENV"
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
