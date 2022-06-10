@@ -229,7 +229,9 @@ jobs:
       - name: Generate environment variable AWS_ECR_REGISTRY
         #if: contains(inputs.repo_tags, '.amazonaws.com')
         if: needs.determine_registries.outputs.ecr
-        run: echo "AWS_ECR_REGISTRY=${{ needs.determine_registries.outputs.ecr_registry }}" >> "$GITHUB_ENV"
+        env:
+          REGISTRY: needs.determine_registries.outputs.ecr_registry
+        run: echo "AWS_ECR_REGISTRY=$REGISTRY" >> "$GITHUB_ENV"
 
       - name: Git Checkout Dockerfile repo
         if: inputs.dockerfile-repo
@@ -241,7 +243,9 @@ jobs:
           path: ${{ env.DOCKERFILE_CHECKOUT_PATH }}
 
       - name: Docker Login GHCR
-        run: docker login ghcr.io -u "$GITHUB_REPOSITORY_OWNER" --password-stdin <<< "${{github.token}}"
+        env:
+          TOKEN: ${{github.token}}
+        run: docker login ghcr.io -u "$GITHUB_REPOSITORY_OWNER" --password-stdin <<< "$TOKEN"
 
       - name: Docker Login to DockerHub
         if: needs.determine_registries.outputs.dockerhub == 'true'
@@ -308,7 +312,9 @@ jobs:
 
       - name: Generate environment variable DOCKER_IMAGE_CACHE
         if: ${{ inputs.max-cache }}
-        run: echo "DOCKER_IMAGE_CACHE=ghcr.io/${{ github.repository }}" >> "$GITHUB_ENV"
+        env:
+          REPO: ${{ github.repository }}
+        run: echo "DOCKER_IMAGE_CACHE=ghcr.io/$REPO" >> "$GITHUB_ENV"
         #run: echo "DOCKER_IMAGE_CACHE=$AWS_ECR_REGISTRY/$APP-cache" >> $GITHUB_ENV  # doesn't work, ECR simply doesn't support it
 
       - name: Set up Docker Buildx
