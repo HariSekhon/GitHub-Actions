@@ -116,6 +116,15 @@ permissions:
   contents: read
   pull-requests: write
 
+concurrency:
+  # if splitting workflows to one plan and one apply workflow to work around this issue, then must lock on the dir itself:
+  #
+  #   https://github.com/github-community/community/discussions/18100
+  #
+  #group: ${{ github.workflow }}-${{ inputs.dir }}
+  group: ${{ inputs.dir }}
+  cancel-in-progress: false  # don't interrupt Terraform runs, you may end up with stale locks
+
 defaults:
   run:
     shell: bash -euxo pipefail {0}
@@ -306,9 +315,6 @@ jobs:
   #    - setup
   #    - fmt_check
   #    - credentials_check
-  #  concurrency:
-  #    group: ${{ github.workflow }}-${{ inputs.dir }}
-  #    cancel-in-progress: false  # don't interrupt Terraform runs, you may end up with stale locks
   #  runs-on: ubuntu-latest
   #  # XXX: workaround for lack of native environment passing support for reusable workflows
   #  environment:
