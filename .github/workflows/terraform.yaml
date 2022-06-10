@@ -122,7 +122,7 @@ concurrency:
   #   https://github.com/github-community/community/discussions/18100
   #
   #group: ${{ github.workflow }}-${{ inputs.dir }}
-  group: ${{ inputs.dir }}
+  group: ${{ inputs.dir || 'base' }}
   cancel-in-progress: false  # don't interrupt Terraform runs, you may end up with stale locks
 
 defaults:
