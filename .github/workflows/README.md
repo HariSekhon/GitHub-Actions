@@ -238,7 +238,7 @@ permissions:
 
 ### Creating or Commenting on Pull Requests
 
-For workflows that create or comment on PRs, such as [tfsec-pr-commenter.yaml](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/tfsec-pr-commenter.yaml) you'll need to grant:
+For workflows that create or comment on PRs, such as [terraform.yaml](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/terraform.yaml) and [tfsec-pr-commenter.yaml](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/tfsec-pr-commenter.yaml) you'll need to grant:
 ```yaml
 permissions:
   contents: read
