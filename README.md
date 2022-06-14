@@ -174,7 +174,7 @@ jobs:
       GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
 ```
 
-# Production
+## Production
 
 As per [GitHub Actions Security Best Practices](https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#using-third-party-actions), you should consider fixing your `@<ref>` to an exact immutable hashref.
 
@@ -182,7 +182,7 @@ Alternatively, you may want to fork this repo to have full control over all upda
 
 You can create environment branches in your forked repo to stage updates across dev/staging/production and enable the [fork-sync](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/fork-sync.yaml) github actions workflow in your fork to keep the master branch sync'd every few hours, and the [fork-update-pr](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/fork-update-pr.yaml) github actions workflow to raise GitHub Pull Requests for your environment branches to audit, authorize & control updates.
 
-### See Also
+## See Also
 
 - [Jenkins](https://github.com/HariSekhon/Jenkins) - Advanced Jenkinsfile & Jenkins Shared Library
 
