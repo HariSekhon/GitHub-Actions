@@ -45,7 +45,7 @@ on:
         type: string
         #default: Dockerfile  # breaks auto-pathing when specifying context, you'd have to remember to set file to $context/Dockerfile yourself, better to omit this
       max-cache:
-        type: boolean
+        description: use GHCR as a max cache external registry (ECR doesn't support this at time of writing)
         default: false
       build-cache:
         description: The build cache tag to use
