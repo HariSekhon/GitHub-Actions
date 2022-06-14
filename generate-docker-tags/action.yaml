@@ -27,7 +27,7 @@ runs:
   steps:
       # branches called things like feature/dockerize need to be sanitized to pass as docker tags -> feature_dockerize
     - name: Generate environment variable BRANCH_TAG
-      shell: sh
+      shell: bash
       run: |
         BRANCH_TAG="${GITHUB_HEAD_REF:-}"
         BRANCH_TAG="${BRANCH_TAG:-${GITHUB_REF_NAME:-}}"
@@ -36,19 +36,19 @@ runs:
         echo "BRANCH_TAG=$BRANCH_TAG" >> "$GITHUB_ENV"
 
     - name: Generate environment variable EPOCH
-      shell: sh
+      shell: bash
       run: |
         EPOCH="$(date --utc '+%s')"
         echo "EPOCH=$EPOCH" >> "$GITHUB_ENV"
 
     - name: Generate environment variable DATESTAMP
-      shell: sh
+      shell: bash
       run: |
         DATESTAMP="$(date --utc --date="@${{env.EPOCH}}" '+%FT%H%M%SZ')"
         echo "DATESTAMP=$DATESTAMP" >> "$GITHUB_ENV"
 
     - name: Generate environment variable TIMESTAMP
-      shell: sh
+      shell: bash
       run: |
         TIMESTAMP="$(date --utc --date="@${{env.EPOCH}}" '+%F')"
         echo "TIMESTAMP=$TIMESTAMP" >> "$GITHUB_ENV"
