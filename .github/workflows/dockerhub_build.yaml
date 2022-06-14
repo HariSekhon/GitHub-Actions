@@ -93,7 +93,7 @@ jobs:
       - name: Generate environment variable DOCKERFILE_CHECKOUT_PATH
         if: ${{ inputs.dockerfile-repo }}
         run: |
-          DOCKERFILE_CHECKOUT_PATH="${{ env.DOCKERFILE_REPO }}"
+          DOCKERFILE_CHECKOUT_PATH="$DOCKERFILE_REPO"
           DOCKERFILE_CHECKOUT_PATH="${DOCKERFILE_CHECKOUT_PATH##*/}"
           echo "DOCKERFILE_CHECKOUT_PATH=$DOCKERFILE_CHECKOUT_PATH" >> "$GITHUB_ENV"
         env:
