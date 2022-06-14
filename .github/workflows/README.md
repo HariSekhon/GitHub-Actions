@@ -11,14 +11,25 @@ In your GitHub repo, import these workflows by adding small yaml files to the `.
 ### Scan for Secrets and Security issues
 
 [![Semgrep](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/semgrep.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/semgrep.yaml)
-Alerts appear under Security -> Code scanning alerts.
+Alerts appear under the GitHub repo's Security tab -> Code scanning alerts.
 
-Create `.github/workflows/semgrep.yaml`:
+[![Semgrep Cloud](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/semgrep-cloud.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/semgrep-cloud.yaml) Alerts appear in the https://semgrep.dev dashboard
+
+Create `.github/workflows/semgrep.yaml` for local repo alerts:
 ```yaml
 on: [push]
 jobs:
   semgrep:
     uses: HariSekhon/GitHub-Actions/.github/workflows/semgrep.yaml@master
+```
+or `.github/workflows/semgrep-cloud.yaml` for https://semgrep.dev alerts:
+```yaml
+on: [push]
+jobs:
+  semgrep:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/semgrep-cloud.yaml@master
+    secrets:
+      SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
 ```
 
 ### Analyze your Terraform code security & best practices
