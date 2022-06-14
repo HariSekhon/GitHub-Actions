@@ -1,0 +1,76 @@
+#
+#  Author: Hari Sekhon
+#  Date: Sat Jan 15 09:35:18 2022 +0000
+#
+#  vim:ts=2:sts=2:sw=2:et
+#
+#  https://github.com/HariSekhon/GitHub-Actions
+#
+#  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback
+#
+#  https://www.linkedin.com/in/HariSekhon
+#
+
+---
+name: XML
+
+on:
+  push:
+    branches:
+      - master
+      - main
+    paths:
+      - '**/*.xml'
+  pull_request:
+    branches:
+      - master
+      - main
+    paths:
+      - '**/*.xml'
+  workflow_call:
+    inputs:
+      debug:
+        type: string
+        required: false
+        default: false
+  workflow_dispatch:
+    inputs:
+      debug:
+        type: boolean
+        required: false
+        default: false
+  #schedule:
+  #  - cron: '0 0 * * 1'
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash -euxo pipefail {0}
+
+env:
+  DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
+
+jobs:
+  check_xml:
+    name: Check XML
+    # github.event.repository.fork isn't available in scheduled workflows
+    # can't prevent forks of this repo, because also prevents caller workflows
+    #if: github.repository == 'HariSekhon/Github-Actions'
+    runs-on: ubuntu-latest
+    container: harisekhon/bash-tools:latest
+    steps:
+      - name: Environment
+        run: env | sort
+
+      - name: Git version
+        run: git --version
+
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive  # requires Git 2.18+ to be installed first
+
+      - name: Check XML
+        run: |
+          check_xml.sh
