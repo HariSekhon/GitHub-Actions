@@ -54,6 +54,8 @@ on: [push]
 jobs:
   semgrep:
     uses: HariSekhon/GitHub-Actions/.github/workflows/semgrep-cloud.yaml@master
+    secrets:
+      SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
 ```
 
 ### Analyze your Terraform code security & best practices
