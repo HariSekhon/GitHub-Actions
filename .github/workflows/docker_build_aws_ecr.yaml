@@ -136,29 +136,7 @@ jobs:
           REGISTRY: ${{ steps.aws-ecr-login.outputs.registry }}
         run: echo "DOCKER_IMAGE=$REGISTRY/$AWS_ECR_REPO" >> "$GITHUB_ENV"
 
-        # branches called things like feature/dockerize need to be sanitized to pass as docker tags -> feature_dockerize
-      - name: Generate environment variable BRANCH_TAG
-        run: |
-          BRANCH_TAG="${GITHUB_HEAD_REF:-}"
-          BRANCH_TAG="${BRANCH_TAG:-${GITHUB_REF_NAME:-}}"
-          BRANCH_TAG="${BRANCH_TAG:-${{ github.ref_name }}}"
-          BRANCH_TAG="$(sed 's/[^[:alnum:]_-]/_/g' <<< "$BRANCH_TAG")"
-          echo "BRANCH_TAG=$BRANCH_TAG" >> "$GITHUB_ENV"
-
-      - name: Generate environment variable EPOCH
-        run: |
-          EPOCH="$(date --utc '+%s')"
-          echo "EPOCH=$EPOCH">> "$GITHUB_ENV"
-
-      - name: Generate environment variable DATESTAMP
-        run: |
-          DATESTAMP="$(date --utc --date="@${{env.EPOCH}}" '+%FT%H%M%SZ')"
-          echo "DATESTAMP=$DATESTAMP" >> "$GITHUB_ENV"
-
-      - name: Generate environment variable TIMESTAMP
-        run: |
-          TIMESTAMP="$(date --utc --date="@${{env.EPOCH}}" '+%F')"
-          echo "TIMESTAMP=$TIMESTAMP" >> "$GITHUB_ENV"
+      - uses: ./generate-docker-tags@master
 
       - name: Generate environment variable DOCKER_IMAGE_CACHE
         if: ${{ inputs.max-cache }}
