@@ -43,9 +43,14 @@ name: My Workflow
 # RUNNER_ARCH
 #
 # XXX: can't reference other environment variable to compose larger ones, must be done as a step based workaround, see Steps section of build further down
+#
+#       https://github.com/github-community/community/discussions/18089
+#
 # XXX: not accessible in 'with' steps or called workflows
 #
 # XXX: Env Vars populated from secrets are automatically masked in the logs
+#
+# XXX: AVOID putting SECRETS in GLOBAL ENVIRONMENT VARIABLES - Secrets are not accessible to 3rd party actions, but environment variables are, restrict to specific steps where they're needed instead
 env:
   repo: bash-tools
   APP: myapp
