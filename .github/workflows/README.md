@@ -265,7 +265,7 @@ permissions:
   pull-requests: write
 ```
 
-# Production
+## Production
 
 As per [GitHub Actions Security Best Practices](https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#using-third-party-actions), you should consider fixing your `@<ref>` to an exact immutable hashref.
 
