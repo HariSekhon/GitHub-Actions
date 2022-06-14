@@ -52,11 +52,14 @@ runs:
   #args:                       # args override Dockerfile's CMD - leave sensible defaults so args aren't needed
   #  - ${{ inputs.debug }}
 
-  # Composite Action - shell steps
+  # Composite Action
   using: "composite"
   steps:
+    # has to use | format to avoid syntax error for having a colon in the message body
     - run: |
-        echo "Debug mode enabled: ${{ inputs.debug }}"
+        echo "Debug mode enabled: $DEBUG"
+      env:
+        DEBUG: ${{ inputs.debug }}
       shell: bash
 
     - id: random-number-generator
@@ -65,6 +68,8 @@ runs:
 
     - run: echo "${{ github.action_path }}" >> $GITHUB_PATH
       shell: bash
+
+    - run: ./script.sh  # in the actions repo
 
   # JavaScript Action
   #
