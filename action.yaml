@@ -16,6 +16,7 @@
 name: NAME
 description: DESCRIPTION
 
+# ==================
 inputs:
   debug:
     description: Enable Debug Mode
@@ -23,11 +24,22 @@ inputs:
     required: false
     default: false
 
+# ==================
 outputs:
   random-number:
     description: "Random number"
     value: ${{ steps.random-number-generator.outputs.random-number }}
 
+# ==================
+# not supported yet:
+#
+#   https://github.com/github-community/community/discussions/18597
+#
+#defaults:
+#  run:
+#    shell: bash -euxo pipefail {0}
+
+# ==================
 # pick one of:
 #
 #   - Composite (shell steps)
@@ -60,6 +72,10 @@ runs:
         echo "Debug mode enabled: $DEBUG"
       env:
         DEBUG: ${{ inputs.debug }}
+      # XXX: shell is a mandatory required parameter for now:
+      #
+      #   https://github.com/github-community/community/discussions/18597
+      #
       shell: bash
 
     - id: random-number-generator
