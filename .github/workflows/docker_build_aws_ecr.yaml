@@ -136,7 +136,7 @@ jobs:
           REGISTRY: ${{ steps.aws-ecr-login.outputs.registry }}
         run: echo "DOCKER_IMAGE=$REGISTRY/$AWS_ECR_REPO" >> "$GITHUB_ENV"
 
-      - uses: ./generate-docker-tags@master
+      - uses: HariSekhon/GitHub-Actions/generate-docker-tags@master
 
       - name: Generate environment variable DOCKER_IMAGE_CACHE
         if: ${{ inputs.max-cache }}
