@@ -38,6 +38,7 @@ on:
         type: string
         #default: Dockerfile  # breaks auto-pathing when specifying context, you'd have to remember to set file to $context/Dockerfile yourself, better to omit this
       max-cache:
+        description: Use external cache image to capture multi-stage build cache
         type: boolean
         default: false
       build-cache:
