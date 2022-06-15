@@ -498,7 +498,7 @@ jobs:
       - name: Terraform Apply
         # XXX: github.event isn't always populated (eg. in workflow_dispatch), depending on method of trigger, which causes a lot of problems in real world, we cover this up by just applying if master or main
         if: |
-          inputs.plan-only == false ||
+          inputs.plan-only == false &&
           (
             (
               github.event_name == 'push' ||
