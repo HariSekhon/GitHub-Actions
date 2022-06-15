@@ -53,6 +53,10 @@ on:
         type: string
         default: ''
         required: false
+      plan-only:
+        description: run Terraform Plan but not apply
+        type: boolean
+        required: false
       enforce-fmt-check:
         description: Enforce a format check on PRs - fail and do not show a plan if people don't format their code properly
         type: boolean
@@ -396,7 +400,7 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' || inputs.plan-only == true
         continue-on-error: true
         run: |
           if [ -n "${WORKDIR:-}" ]; then
@@ -494,15 +498,18 @@ jobs:
       - name: Terraform Apply
         # XXX: github.event isn't always populated (eg. in workflow_dispatch), depending on method of trigger, which causes a lot of problems in real world, we cover this up by just applying if master or main
         if: |
+          inputs.plan-only == false ||
           (
-            github.event_name == 'push' ||
-            github.event_name == 'workflow_dispatch'
-          )
-          &&
-          (
-            github.ref_name == github.event.repository.default_branch ||
-            github.ref_name == 'main' ||
-            github.ref_name == 'master'
+            (
+              github.event_name == 'push' ||
+              github.event_name == 'workflow_dispatch'
+            )
+            &&
+            (
+              github.ref_name == github.event.repository.default_branch ||
+              github.ref_name == 'main' ||
+              github.ref_name == 'master'
+            )
           )
         run: |
           if [ -n "${WORKDIR:-}" ]; then
