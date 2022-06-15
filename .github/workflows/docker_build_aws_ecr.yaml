@@ -28,7 +28,7 @@ on:
         type: string
         required: true
       max-cache:
-        description: use GHCR as a max cache external registry (ECR doesn't support this at time of writing)
+        description: Use external cache image to capture multi-stage build cache, uses GHCR as a max cache external registry (ECR doesn't support this at time of writing)
         type: boolean
         default: false
         required: false
