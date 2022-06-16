@@ -122,7 +122,7 @@ jobs:
       - name: configure .semgrepignore
         run: |
           if ! [ -f .semgrepignore ]; then
-            wget -O .semgrepignore https://github.com/returntocorp/semgrep/blob/develop/semgrep/semgrep/templates/.semgrepignore
+            wget -O .semgrepignore https://raw.githubusercontent.com/returntocorp/semgrep/develop/cli/src/semgrep/templates/.semgrepignore
           fi
           echo semgrep.sarif >> .semgrepignore
 
