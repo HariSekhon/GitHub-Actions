@@ -127,6 +127,7 @@ Supports building + pushing to any combination of the following, just add the re
 - GAR  - Google Artifact Registry
 - GitLab Registry
 - Quay.io Registry
+- DockerHub
 
 Create `.github/workflows/docker_build.yaml`:
 ```yaml
