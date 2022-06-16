@@ -28,10 +28,12 @@ runs:
       # branches called things like feature/dockerize need to be sanitized to pass as docker tags -> feature_dockerize
     - name: Generate environment variable BRANCH_TAG
       shell: bash
+      env:
+        REF_NAME: ${{ github.ref_name }}
       run: |
         BRANCH_TAG="${GITHUB_HEAD_REF:-}"
         BRANCH_TAG="${BRANCH_TAG:-${GITHUB_REF_NAME:-}}"
-        BRANCH_TAG="${BRANCH_TAG:-${{ github.ref_name }}}"
+        BRANCH_TAG="${BRANCH_TAG:-$REF_NAME}"
         BRANCH_TAG="$(sed 's/[^[:alnum:]_-]/_/g' <<< "$BRANCH_TAG")"
         echo "BRANCH_TAG=$BRANCH_TAG" >> "$GITHUB_ENV"
 
