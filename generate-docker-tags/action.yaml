@@ -44,11 +44,11 @@ runs:
     - name: Generate environment variable DATESTAMP
       shell: bash
       run: |
-        DATESTAMP="$(date --utc --date="@${{env.EPOCH}}" '+%FT%H%M%SZ')"
+        DATESTAMP="$(date --utc --date="@$EPOCH" '+%FT%H%M%SZ')"
         echo "DATESTAMP=$DATESTAMP" >> "$GITHUB_ENV"
 
     - name: Generate environment variable TIMESTAMP
       shell: bash
       run: |
-        TIMESTAMP="$(date --utc --date="@${{env.EPOCH}}" '+%F')"
+        TIMESTAMP="$(date --utc --date="@$EPOCH" '+%F')"
         echo "TIMESTAMP=$TIMESTAMP" >> "$GITHUB_ENV"
