@@ -120,11 +120,11 @@ Supports multi-stage build caching using GHCR for intermediate layer caching sin
 
 Supports building + pushing to any combination of the following, just add the relevant secrets, see [docker_build.yaml](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/docker_build.yaml) for details:
 
-- GHCR - GitHub Container Registry
 - ACR  - Azure Container Registry
 - ECR  - AWS Elastic Container Registry
 - GCR  - Google Container Registry
 - GAR  - Google Artifact Registry
+- GHCR - GitHub Container Registry
 - GitLab Registry
 - Quay.io Registry
 - DockerHub
