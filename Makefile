@@ -73,3 +73,6 @@ wc:
 #    @echo "Releasing $(RELEASE)"
 #    git tag --force $(RELEASE)
 #    git push --tags --force
+
+sync:
+	. .envrc; github_repo_fork_sync.sh
