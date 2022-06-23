@@ -19,7 +19,7 @@
 [![Repo on GitLab](https://img.shields.io/badge/repo-GitLab-FCA121?logo=gitlab)](https://gitlab.com/HariSekhon/GitHub-Actions)
 [![Repo on BitBucket](https://img.shields.io/badge/repo-BitBucket-0052CC?logo=bitbucket)](https://bitbucket.org/HariSekhon/GitHub-Actions)
 
-GitHub Actions master template & GitHub Actions Shared Workflows library.
+GitHub Actions master template & GitHub Actions Reusable Workflows library.
 
 - [main.yaml](https://github.com/HariSekhon/GitHub-Actions/blob/master/main.yaml) - GitHub Actions master workflow template
 - [.github/workflows/](https://github.com/HariSekhon/GitHub-Actions/tree/master/.github/workflows) - GitHub Actions Reusable Workflows Library
