@@ -58,6 +58,7 @@ jobs:
     uses: HariSekhon/GitHub-Actions/.github/workflows/terraform.yaml@master
     with:
       dir: path/to/terraform/code
+      args: -var-file=some-other.tfvars
     secrets:
       ...
 ```
