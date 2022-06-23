@@ -53,6 +53,10 @@ on:
         type: string
         default: ''
         required: false
+      args:
+        description: Terraform arguments and options for the Plan and Apply stages
+        type: string
+        required: false
       plan-only:
         description: run Terraform Plan but not apply
         type: boolean
@@ -413,7 +417,10 @@ jobs:
           #fi
 
           # outputs lots of 'my.resource: Refreshing state...' which pollutes the plan posted to the PR
-          terraform plan -input=false -no-color
+          #
+          # do not sanitize inputs.args by passing through env as we actually need full shell evaluation here and the user already has permission
+          # to execute within this environment and could do so via a different workflow if they wanted to
+          terraform plan -input=false -no-color ${{ inputs.args }}
           #
           # attempted workaround, but loses errors posting nothing to PR when it fails, even when ignoring plan failure code because tfplan file isn't generated
           #
@@ -518,4 +525,6 @@ jobs:
           #if [ -f .envrc ]; then
           #  source .envrc
           #fi
-          terraform apply -input=false -auto-approve
+          # do not sanitize inputs.args by passing through env as we actually need full shell evaluation here and the user already has permission
+          # to execute within this environment and could do so via a different workflow if they wanted to
+          terraform apply -input=false -auto-approve ${{ inputs.args }}
