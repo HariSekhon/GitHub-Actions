@@ -68,7 +68,7 @@ Create `.github/workflows/tfsec.yaml`:
 on: [push]
 jobs:
   tfsec:
-    uses: HariSekhon/Gi/tHub-Actions/.github/workflows/tfsec.yaml@master
+    uses: HariSekhon/GitHub-Actions/.github/workflows/tfsec.yaml@master
 ```
 
 ### Terraform Plan & Apply
