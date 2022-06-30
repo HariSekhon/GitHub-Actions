@@ -162,6 +162,10 @@ on:
       - production
       - '*docker*'  # glob requires quoting, only run on branches with docker in the name
     # XXX: if the Pull Request contains any of these files, then every push will re-trigger this build, regardless of whether these files changes since the last push
+    # XXX: WARNING: if this workflow is configured as a Required Check in branch protections but the paths changed in a pull request don't trigger this workflow, then the PR will be blocked indefinitely
+    #               Workaround is to create another check of the same name that does a no-op for all paths to get the PR to pass:
+    #
+    #                 https://docs.github.com/en/enterprise-cloud@latest/repositories/configuring-branches-and-merges-in-your-repository/defining-the-mergeability-of-pull-requests/troubleshooting-required-status-checks#handling-skipped-but-required-checks
     paths:
       - '*'  # only run when changes have happened on matching paths, this glob misses hidden directories though such as .github/workflows
       - 'app/**'  # any files under app/
