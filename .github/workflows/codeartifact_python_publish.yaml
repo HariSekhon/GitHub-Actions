@@ -1,0 +1,169 @@
+#  vim:ts=2:sts=2:sw=2:et
+#
+#  Author: Hari Sekhon
+#  Date: 2022-07-05 12:41:41 +0100 (Tue, 05 Jul 2022)
+#
+#  https://github.com/HariSekhon/GitHub-Actions
+#
+#  License: see accompanying Hari Sekhon LICENSE file
+#
+#  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback to help steer this or other code I publish
+#
+#  https://www.linkedin.com/in/HariSekhon
+#
+
+# https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions
+#
+---
+name: Python Publish to AWS CodeArtifact
+
+# calling workflows will want something like this:
+#on:
+#  create:
+#    tags:
+#      #- '*'
+#      - 'v*.*.*'
+
+on:
+  workflow_call:
+    inputs:
+      command:
+        description: Build and Publish commands, usually a make command or something
+        type: string
+        default: make publish_package
+        required: false
+      domain:
+        description: AWS CodeArtifact Domain
+        type: string
+        required: true
+      repo:
+        description: AWS CodeArtifact Repo
+        type: string
+        required: true
+      python-version:
+        description: Python version to use
+        type: string
+        default: '3.9'
+        required: false
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+      AWS_DEFAULT_REGION:
+        required: true
+      AWS_CODEARTIFACT_DOMAIN:
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash -euxo pipefail {0}
+
+env:
+  # used to construct URLs in commands
+  AWS_CODEARTIFACT_DOMAIN: ${{ inputs.domain }}
+  AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+
+jobs:
+  build_and_publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Environment
+        run: |
+          [ -e /.dockerenv ] && ls -l /.dockerenv
+          echo
+          cat /etc/*release
+          echo
+          echo "Environment Variables:"
+          echo
+          env | sort
+
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'true'  # requires Git 2.18+ to be installed first
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ inputs.python-version }}
+
+      - uses: aws-actions/configure-aws-credentials@v1
+        id: configure-aws-credentials
+        name: Configure AWS credentials
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      - name: AWS CLI version
+        run: aws --version
+
+      - name: AWS CLI whoami
+        run: aws sts get-caller-identity
+
+      - name: Generate AWS_ACCOUNT_ID environment variable
+        run: echo "AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID" >> "$GITHUB_ENV"
+        env:
+          AWS_ACCOUNT_ID: ${{ steps.configure-aws-credentials.outputs.aws-account-id }}
+
+      - name: Generate CODEARTIFACT_AUTH_TOKEN environment variable
+        env:
+          AWS_CODEARTIFACT_DOMAIN: ${{ secrets.AWS_CODEARTIFACT_DOMAIN }}
+        run: |
+          # don't shell trace this step because it will expose the token in the logs before we can mask it
+          set +x
+          CODEARTIFACT_AUTH_TOKEN="$(aws codeartifact get-authorization-token \
+                                                      --domain "$AWS_CODEARTIFACT_DOMAIN" \
+                                                      --domain-owner "$AWS_ACCOUNT_ID" \
+                                                      --query authorizationToken \
+                                                      --output text \
+                                                      --duration-seconds 43200)"
+                                                      # duration = 12 hours - this is the max allowed by AWS
+                                                      # https://docs.aws.amazon.com/codeartifact/latest/ug/tokens-authentication.html
+          echo "CODEARTIFACT_AUTH_TOKEN=$CODEARTIFACT_AUTH_TOKEN" >> "$GITHUB_ENV"
+          echo "::add-mask::$CODEARTIFACT_AUTH_TOKEN"
+
+      - name: Generate TWINE environment variable
+        run: |
+          if git grep -q '^[^#]*twine'; then
+            twine=1
+          else
+            twine=2
+          fi
+          echo "TWINE=$twine" >> "$GITHUB_ENV"
+
+      - name: Generate TWINE_REPOSITORY_URL environment variable
+        if: env.twine == 1
+        run: echo "TWINE_REPOSITORY_URL=https://$AWS_CODEARTIFACT_DOMAIN-$AWS_ACCOUNT_ID.d.codeartifact.$AWS_DEFAULT_REGION.amazonaws.com/pypi/$REPO/" >> "$GITHUB_ENV"
+        env:
+          REPO: ${{ inputs.repo }}
+
+      - name: Generate TWINE_USERNAME environment variable
+        if: env.twine == 1
+        run: |
+          echo "TWINE_USERNAME=aws" >> "$GITHUB_ENV"
+
+      - name: Generate TWINE_PASSWORD environment variable
+        if: env.twine == 1
+        run: |
+          # don't shell trace this step because it will expose the token in the logs before we can mask it
+          set +x
+          TWINE_PASSWORD=$(aws codeartifact get-authorization-token --domain "$AWS_CODEARTIFACT_DOMAIN" --domain-owner "$AWS_ACCOUNT_ID" --query authorizationToken --output text)"
+          echo "TWINE_PASSWORD=$TWINE_PASSWORD" >> "$GITHUB_ENV"
+          echo "::add-mask::$TWINE_PASSWORD"
+
+      - name: Tests
+        run: |
+          if grep -q '^test:' Makefile; then
+            make test
+          fi
+
+      - name: Build and Publish Package
+        run:
+          - ${{ inputs.command }}
