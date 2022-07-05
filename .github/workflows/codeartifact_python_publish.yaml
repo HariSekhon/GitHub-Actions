@@ -52,8 +52,6 @@ on:
         required: true
       AWS_DEFAULT_REGION:
         required: true
-      AWS_CODEARTIFACT_DOMAIN:
-        required: true
 
 permissions:
   contents: read
