@@ -66,8 +66,9 @@ defaults:
 
 env:
   # used to construct URLs in commands
-  AWS_CODEARTIFACT_DOMAIN: ${{ inputs.domain }}
-  AWS_CODEARTIFACT_REPO: ${{ inputs.repo }}
+  CODEARTIFACT_DOMAIN: ${{ inputs.domain }}
+  CODEARTIFACT_REPO: ${{ inputs.repo }}
+  CODEARTIFACT_USER: aws
   AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
 
 jobs:
@@ -117,7 +118,7 @@ jobs:
           # don't shell trace this step because it will expose the token in the logs before we can mask it
           set +x
           CODEARTIFACT_AUTH_TOKEN="$(aws codeartifact get-authorization-token \
-                                                      --domain "$AWS_CODEARTIFACT_DOMAIN" \
+                                                      --domain "$CODEARTIFACT_DOMAIN" \
                                                       --domain-owner "$AWS_ACCOUNT_ID" \
                                                       --query authorizationToken \
                                                       --output text \
@@ -127,32 +128,17 @@ jobs:
           echo "CODEARTIFACT_AUTH_TOKEN=$CODEARTIFACT_AUTH_TOKEN" >> "$GITHUB_ENV"
           echo "::add-mask::$CODEARTIFACT_AUTH_TOKEN"
 
-      - name: Generate TWINE environment variable
-        run: |
-          if git grep -q '^[^#]*twine'; then
-            twine=1
-          else
-            twine=2
-          fi
-          echo "TWINE=$twine" >> "$GITHUB_ENV"
-
-      - name: Generate TWINE_REPOSITORY_URL environment variable
+      - name: Generate CODEARTIFACT_REPO_URL environment variable
         if: env.twine == 1
-        run: echo "TWINE_REPOSITORY_URL=https://$AWS_CODEARTIFACT_DOMAIN-$AWS_ACCOUNT_ID.d.codeartifact.$AWS_DEFAULT_REGION.amazonaws.com/pypi/$AWS_CODEARTIFACT_REPO/" >> "$GITHUB_ENV"
+        run: echo "CODEARTIFACT_REPO_URL=https://$CODEARTIFACT_DOMAIN-$AWS_ACCOUNT_ID.d.codeartifact.$AWS_DEFAULT_REGION.amazonaws.com/pypi/$CODEARTIFACT_REPO/" >> "$GITHUB_ENV"
 
-      - name: Generate TWINE_USERNAME environment variable
-        if: env.twine == 1
-        run: |
-          echo "TWINE_USERNAME=aws" >> "$GITHUB_ENV"
-
-      - name: Generate TWINE_PASSWORD environment variable
-        if: env.twine == 1
+      - name: Generate CODEARTIFACT_TOKEN environment variable
         run: |
           # don't shell trace this step because it will expose the token in the logs before we can mask it
           set +x
-          TWINE_PASSWORD=$(aws codeartifact get-authorization-token --domain "$AWS_CODEARTIFACT_DOMAIN" --domain-owner "$AWS_ACCOUNT_ID" --query authorizationToken --output text)"
-          echo "TWINE_PASSWORD=$TWINE_PASSWORD" >> "$GITHUB_ENV"
-          echo "::add-mask::$TWINE_PASSWORD"
+          CODEARTIFACT_TOKEN=$(aws codeartifact get-authorization-token --domain "$CODEARTIFACT_DOMAIN" --domain-owner "$AWS_ACCOUNT_ID" --query authorizationToken --output text)"
+          echo "CODEARTIFACT_TOKEN=$CODEARTIFACT_TOKEN" >> "$GITHUB_ENV"
+          echo "::add-mask::$CODEARTIFACT_TOKEN"
 
       - name: Tests
         run: |
@@ -163,3 +149,7 @@ jobs:
       - name: Build and Publish Package
         run: |
           ${{ inputs.command }}
+        env:
+          TWINE_USERNAME: ${{ env.CODEARTIFACT_USER }}
+          TWINE_PASSWORD: ${{ env.CODEARTIFACT_AUTH_TOKEN }}
+          TWINE_REPOSITORY_URL: ${{ env.CODEARTIFACT_URL }}
