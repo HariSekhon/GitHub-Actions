@@ -129,16 +129,15 @@ jobs:
           echo "::add-mask::$CODEARTIFACT_AUTH_TOKEN"
 
       - name: Generate CODEARTIFACT_REPO_URL environment variable
-        if: env.twine == 1
         run: echo "CODEARTIFACT_REPO_URL=https://$CODEARTIFACT_DOMAIN-$AWS_ACCOUNT_ID.d.codeartifact.$AWS_DEFAULT_REGION.amazonaws.com/pypi/$CODEARTIFACT_REPO/" >> "$GITHUB_ENV"
 
-      - name: Generate CODEARTIFACT_TOKEN environment variable
+      - name: Generate CODEARTIFACT_AUTH_TOKEN environment variable
         run: |
           # don't shell trace this step because it will expose the token in the logs before we can mask it
           set +x
-          CODEARTIFACT_TOKEN=$(aws codeartifact get-authorization-token --domain "$CODEARTIFACT_DOMAIN" --domain-owner "$AWS_ACCOUNT_ID" --query authorizationToken --output text)"
-          echo "CODEARTIFACT_TOKEN=$CODEARTIFACT_TOKEN" >> "$GITHUB_ENV"
-          echo "::add-mask::$CODEARTIFACT_TOKEN"
+          CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain "$CODEARTIFACT_DOMAIN" --domain-owner "$AWS_ACCOUNT_ID" --query authorizationToken --output text)"
+          echo "CODEARTIFACT_AUTH_TOKEN=$CODEARTIFACT_AUTH_TOKEN" >> "$GITHUB_ENV"
+          echo "::add-mask::$CODEARTIFACT_AUTH_TOKEN"
 
       - name: Tests
         run: |
