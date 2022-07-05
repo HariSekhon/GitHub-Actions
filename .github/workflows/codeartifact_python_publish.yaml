@@ -112,8 +112,6 @@ jobs:
           AWS_ACCOUNT_ID: ${{ steps.configure-aws-credentials.outputs.aws-account-id }}
 
       - name: Generate CODEARTIFACT_AUTH_TOKEN environment variable
-        env:
-          AWS_CODEARTIFACT_DOMAIN: ${{ secrets.AWS_CODEARTIFACT_DOMAIN }}
         run: |
           # don't shell trace this step because it will expose the token in the logs before we can mask it
           set +x
