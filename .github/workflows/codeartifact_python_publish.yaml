@@ -67,6 +67,7 @@ defaults:
 env:
   # used to construct URLs in commands
   AWS_CODEARTIFACT_DOMAIN: ${{ inputs.domain }}
+  AWS_CODEARTIFACT_REPO: ${{ inputs.repo }}
   AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
 
 jobs:
@@ -137,9 +138,7 @@ jobs:
 
       - name: Generate TWINE_REPOSITORY_URL environment variable
         if: env.twine == 1
-        run: echo "TWINE_REPOSITORY_URL=https://$AWS_CODEARTIFACT_DOMAIN-$AWS_ACCOUNT_ID.d.codeartifact.$AWS_DEFAULT_REGION.amazonaws.com/pypi/$REPO/" >> "$GITHUB_ENV"
-        env:
-          REPO: ${{ inputs.repo }}
+        run: echo "TWINE_REPOSITORY_URL=https://$AWS_CODEARTIFACT_DOMAIN-$AWS_ACCOUNT_ID.d.codeartifact.$AWS_DEFAULT_REGION.amazonaws.com/pypi/$AWS_CODEARTIFACT_REPO/" >> "$GITHUB_ENV"
 
       - name: Generate TWINE_USERNAME environment variable
         if: env.twine == 1
