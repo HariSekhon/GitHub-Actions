@@ -32,8 +32,9 @@ on:
         #   https://github.com/datreeio/action-datree/issues/3
         #   https://github.com/datreeio/datree/issues/618
         #
-        #default: '**/*.y*ml'
-        default: '*.y*ml'
+        # should be fixed now
+        default: '**/*.y*ml'
+        #default: '*.y*ml'
         required: false
       # https://hub.datree.io/setup/cli-arguments
       cliArguments:
