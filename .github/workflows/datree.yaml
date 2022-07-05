@@ -81,6 +81,13 @@ jobs:
       - name: Environment
         run: env | sort
 
+      # because recursive glob will fail on Bash < 4 as per:
+      #
+      #   https://github.com/datreeio/datree/issues/618
+      #
+      - name: Bash version
+        run: bash --version
+
       - name: Datree Policy Check
         uses: datreeio/action-datree@main
         with:
