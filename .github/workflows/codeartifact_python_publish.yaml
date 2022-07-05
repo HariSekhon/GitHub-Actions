@@ -73,6 +73,7 @@ env:
 
 jobs:
   build_and_publish:
+    name: Build & Publish
     runs-on: ubuntu-latest
     steps:
       - name: Environment
