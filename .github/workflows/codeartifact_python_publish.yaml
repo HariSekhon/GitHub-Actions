@@ -164,5 +164,5 @@ jobs:
           fi
 
       - name: Build and Publish Package
-        run:
-          - ${{ inputs.command }}
+        run: |
+          ${{ inputs.command }}
