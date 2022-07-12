@@ -182,7 +182,7 @@ Import the reusable workflows from this repo as shown above, replacing `@master`
 
 ### Option 2 - Public Fork (fully automated)
 
-Fork this repo to have full control over all updates.
+Fork this repo for more control and visibility over all updates.
 
 Enable the [fork-sync](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/fork-sync.yaml) github actions workflow in your fork to keep the master branch sync'd every few hours.
 
