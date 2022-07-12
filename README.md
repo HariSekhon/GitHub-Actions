@@ -180,7 +180,7 @@ jobs:
 
 Import the reusable workflows from this repo as shown above, replacing `@master` with `@<hashref>` to fix to an immutable version (tags are not immutable). This is [GitHub Actions Security Best Practice](https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#using-third-party-actions).
 
-Option 2 - Public Fork (fully automated)
+### Option 2 - Public Fork (fully automated)
 
 Fork this repo to have full control over all updates.
 
@@ -190,7 +190,7 @@ You can then create tags or environment branches in your forked repo to stage up
 
 If using environment branches enable the [fork-update-pr](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/fork-update-pr.yaml) github actions workflow to automatically raise GitHub Pull Requests from master to your environment branches to audit, authorize & control updates.
 
-Option 3 - Private Copy (semi-automated)
+### Option 3 - Private Copy (semi-automated)
 
 Copy `.github/workflows` to a private repo. Not recommended as it's the most manual legacy approach.
 
