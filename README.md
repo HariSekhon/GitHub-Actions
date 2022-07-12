@@ -176,9 +176,13 @@ jobs:
 
 ## Production
 
-As per [GitHub Actions Security Best Practices](https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#using-third-party-actions), you should consider fixing your `@<ref>` to an exact immutable hashref.
+### Option 1 - Hashref
 
-Alternatively, you may want to fork this repo to have full control over all updates.
+Import the reusable workflows from this repo, fixing to `@<hashref>` as per [GitHub Actions Security Best Practices](https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#using-third-party-actions), as this is exact and immutable.
+
+### Option 2 - Fork
+
+Fork this repo to have full control over all updates.
 
 Enable the [fork-sync](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/fork-sync.yaml) github actions workflow in your fork to keep the master branch sync'd every few hours.
 
