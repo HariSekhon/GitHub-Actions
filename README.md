@@ -178,7 +178,7 @@ jobs:
 
 ### Option 1 - Hashref
 
-Import the reusable workflows from this repo, fixing to `@<hashref>` as per [GitHub Actions Security Best Practices](https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#using-third-party-actions), as this is exact and immutable.
+Import the reusable workflows from this repo as shown above, fixing the version to `@<hashref>` as per [GitHub Actions Security Best Practices](https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#using-third-party-actions), as this is exact and immutable.
 
 ### Option 2 - Fork
 
