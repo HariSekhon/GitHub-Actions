@@ -190,7 +190,7 @@ You can then create tags or environment branches in your forked repo to stage up
 
 If using environment branches enable the [fork-update-pr](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/fork-update-pr.yaml) github actions workflow to automatically raise GitHub Pull Requests from master to your environment branches to audit, authorize & control updates.
 
-### Option 3 - Private Copy (semi-automated)
+### Option 3 - Private Copy (manual)
 
 Copy `.github/workflows` to a private repo. Not recommended as it's the most manual legacy approach.
 
