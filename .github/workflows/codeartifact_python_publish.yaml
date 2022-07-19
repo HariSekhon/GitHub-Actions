@@ -135,7 +135,7 @@ jobs:
         run: |
           # don't shell trace this step because it will expose the token in the logs before we can mask it
           set +x
-          CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain "$CODEARTIFACT_DOMAIN" --domain-owner "$AWS_ACCOUNT_ID" --query authorizationToken --output text)"
+          CODEARTIFACT_AUTH_TOKEN="$(aws codeartifact get-authorization-token --domain "$CODEARTIFACT_DOMAIN" --domain-owner "$AWS_ACCOUNT_ID" --query authorizationToken --output text)"
           echo "CODEARTIFACT_AUTH_TOKEN=$CODEARTIFACT_AUTH_TOKEN" >> "$GITHUB_ENV"
           echo "::add-mask::$CODEARTIFACT_AUTH_TOKEN"
 
