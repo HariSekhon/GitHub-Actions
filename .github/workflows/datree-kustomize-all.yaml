@@ -1,0 +1,79 @@
+#
+#  Author: Hari Sekhon
+#  Date: 2022-05-12 16:37:55 +0100 (Thu, 12 May 2022)
+#
+#  vim:ts=2:sts=2:sw=2:et
+#
+#  https://github.com/HariSekhon/GitHub-Actions
+#
+#  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback
+#
+#  https://www.linkedin.com/in/HariSekhon
+#
+
+# ============================================================================ #
+#           D a t r e e   K u s t o m i z a t i o n   T e s t   A l l
+# ============================================================================ #
+
+# https://github.com/datreeio/action-datree
+
+# Logs results to https://app.datree.io
+
+---
+name: Datree Kustomize All
+
+on:
+  workflow_call:
+    inputs:
+      path:
+        type: string
+        default: '.'
+        required: false
+      # https://hub.datree.io/setup/cli-arguments
+      cliArguments:
+        type: string
+        default: --only-k8s-files
+        required: false
+    secrets:
+      DATREE_TOKEN:
+        required: true
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash -euxo pipefail {0}
+
+env:
+  DATREE_TOKEN: ${{ secrets.DATREE_TOKEN }}
+  DIR: ${{ inputs.path }}
+  ARGS: ${{ inputs.cliArguments }}
+
+jobs:
+  k8sPolicyCheck:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Environment
+        run: env | sort
+
+      # because recursive glob will fail on Bash < 4 as per:
+      #
+      #   https://github.com/datreeio/datree/issues/618
+      #
+      - name: Bash version
+        run: bash --version
+
+      - name: Datree Kustomize All Policy Check
+        run: |
+          set -euxo pipefail
+          find "$DIR" -type f -name 'kustomization.y*ml' |
+          while read -r kustomization; do
+            dir="$(dirname "$kustomization")"
+            datree kustomize test "$dir" ${ARGS:-} || exit 1
+            echo
+          done
