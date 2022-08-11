@@ -44,6 +44,11 @@ on:
         description: The branch from dockerfile-repo to checkout (defaults to the default branch if not specified)
         type: string
         required: false
+      dockerfile-context:
+        description: The context of the Dockerfile
+        type: string
+        required: false
+        default: .
       debug:
         type: string
         required: false
@@ -153,6 +158,7 @@ jobs:
         if: ${{ ! inputs.max-cache }}
         uses: docker/build-push-action@v2
         with:
+          context: ${{ inputs.dockerfile-context }}
           push: true
           cache-from: |
             type=registry,ref=${{env.DOCKER_IMAGE}}:latest
