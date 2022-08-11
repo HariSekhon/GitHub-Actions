@@ -39,9 +39,11 @@ on:
         type: string
         required: true
       context:
+        description: the Docker context directory for the docker build
         type: string
-        #default: .
+        default: .
       file:
+        description: the Dockerfile to build from. Defaults to Dockerfile inside the context. If specifying context, needs to include the context path prefix
         type: string
         #default: Dockerfile  # breaks auto-pathing when specifying context, you'd have to remember to set file to $context/Dockerfile yourself, better to omit this
       max-cache:
