@@ -44,11 +44,15 @@ on:
         description: The branch from dockerfile-repo to checkout (defaults to the default branch if not specified)
         type: string
         required: false
-      dockerfile-context:
-        description: The context of the Dockerfile
+      context:
+        description: the Docker context directory for the docker build
         type: string
         required: false
         default: .
+      file:
+        description: the Dockerfile to build from. Defaults to Dockerfile inside the context. If specifying context, needs to include the context path prefix
+        type: string
+        #default: Dockerfile  # breaks auto-pathing when specifying context, you'd have to remember to set file to $context/Dockerfile yourself, better to omit this
       debug:
         type: string
         required: false
@@ -158,7 +162,8 @@ jobs:
         if: ${{ ! inputs.max-cache }}
         uses: docker/build-push-action@v2
         with:
-          context: ${{ inputs.dockerfile-context }}
+          context: ${{ inputs.context }}
+          file: ${{ inputs.file }}
           push: true
           cache-from: |
             type=registry,ref=${{env.DOCKER_IMAGE}}:latest
@@ -188,6 +193,8 @@ jobs:
         if: ${{ inputs.max-cache }}
         uses: docker/build-push-action@v2
         with:
+          context: ${{ inputs.context }}
+          file: ${{ inputs.file }}
           push: true
           cache-from: |
             type=registry,ref=${{env.DOCKER_IMAGE_CACHE}}:${{env.BUILDCACHE}}
