@@ -65,7 +65,7 @@ runs:
   #  - ${{ inputs.debug }}
 
   # Composite Action
-  using: "composite"
+  using: composite
   steps:
     # has to use | format to avoid syntax error for having a colon in the message body
     - run: |
