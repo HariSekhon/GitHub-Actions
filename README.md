@@ -30,6 +30,8 @@ Fork this repo to have full control over all updates via Pull Requests. Create e
 
 Forked from [HariSekhon/Templates](https://github.com/HariSekhon/Templates), for which this is now a submodule.
 
+To see GitHub Contexts available, including undocumented fields, see [HariSekhon/GitHub-Actions-Contexts](https://github.com/HariSekhon/GitHub-Actions-Contexts).
+
 ## Examples
 
 In your GitHub repo, import these workflows by adding small yaml files to the `.github/workflows/` directory.
