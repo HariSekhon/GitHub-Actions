@@ -176,6 +176,26 @@ jobs:
       GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
 ```
 
+### AWS CodeArtifact - Publish a Python Package
+
+```
+on:
+  tags:
+    - v*
+
+jobs:
+  aws_codeartifact_python_publish:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/codeartifact_python_publish.yaml@master
+    with:
+      domain: mycompany     # your AWS CodeArtifact service domain name
+      repo: mycompany-core  # your CodeArtifact repo name
+      #command: make publish_package  # default. Can be any command you want that uses automatic CODEARTIFACT_AUTH_TOKEN and CODEARTIFACT_REPO_URL
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+```
+
 ## Production
 
 ### Option 1 - Hashref
