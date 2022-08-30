@@ -178,7 +178,7 @@ jobs:
 
 ### AWS CodeArtifact - Publish a Python Package
 
-```
+```yaml
 on:
   tags:
     - v*
