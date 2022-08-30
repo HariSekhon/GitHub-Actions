@@ -232,7 +232,7 @@ jobs:
     with:
       domain: mycompany     # your AWS CodeArtifact service domain name
       repo: mycompany-core  # your CodeArtifact repo name
-      #command: make publish_package  # default. Can be any command you want that uses automatic CODEARTIFACT_AUTH_TOKEN and CODEARTIFACT_REPO_URL
+      #command: make publish_package  # default. Can be any command using CODEARTIFACT_AUTH_TOKEN and CODEARTIFACT_REPO_URL
     secrets:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
