@@ -20,7 +20,7 @@ on:
   workflow_call:
     inputs:
       debug:
-        type: string
+        type: boolean
         required: false
         default: false
   # in calling workflow, you may want to do
@@ -36,7 +36,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
+  DEBUG: ${{ inputs.debug == true || github.event.inputs.debug == true || '' }}
 
 jobs:
   dump_contexts:

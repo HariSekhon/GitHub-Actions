@@ -39,7 +39,7 @@ on:
         default: HIGH,CRITICAL
         required: false
       debug:
-        type: string
+        type: boolean
         required: false
         default: false
   workflow_dispatch:
@@ -69,7 +69,7 @@ env:
   # ${{ inputs.* }}               is set by workflow_call
   # ${{ github.events.inputs.* }} is set by workflow_dispatch
   DOCKER_IMAGE: ${{ inputs.docker_image || github.event.inputs.docker_image || 'harisekhon/bash-tools' }}
-  DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
+  DEBUG: ${{ inputs.debug == true || github.event.inputs.debug == true || '' }}
 
 jobs:
   trivy:

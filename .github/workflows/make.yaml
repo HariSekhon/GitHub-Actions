@@ -46,7 +46,7 @@ on:
         type: string
         required: false
       debug:
-        type: string
+        type: boolean
         required: false
         default: false
 
@@ -61,7 +61,7 @@ defaults:
 env:
   BUILD_TARGETS: ${{ inputs.build-targets }}
   DEBIAN_FRONTEND: noninteractive
-  DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
+  DEBUG: ${{ inputs.debug == true || github.event.inputs.debug == true || '' }}
 
 jobs:
   make:

@@ -34,7 +34,7 @@ on:
   workflow_call:
     inputs:
       debug:
-        type: string
+        type: boolean
         required: false
         default: false
   workflow_dispatch:
@@ -55,7 +55,7 @@ defaults:
 
 env:
   GH_TOKEN: ${{ github.token }}
-  DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
+  DEBUG: ${{ inputs.debug == true || github.event.inputs.debug == true || '' }}
 
 jobs:
   validate:
