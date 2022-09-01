@@ -54,7 +54,7 @@ on:
         type: string
         #default: Dockerfile  # breaks auto-pathing when specifying context, you'd have to remember to set file to $context/Dockerfile yourself, better to omit this
       debug:
-        type: boolean
+        type: string
         required: false
         default: false
     secrets:
@@ -76,7 +76,7 @@ defaults:
 env:
   AWS_ECR_REPO: ${{ inputs.repo }}
   BUILDCACHE: ${{ inputs.build-cache }}
-  DEBUG: ${{ inputs.debug == true || github.event.inputs.debug == true || '' }}
+  DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
 
 jobs:
   docker_build:

@@ -46,7 +46,7 @@ on:
         required: false
         default: false
       debug:
-        type: boolean
+        type: string
         required: false
         default: false
 
@@ -66,7 +66,7 @@ env:
   DEBIAN_FRONTEND: noninteractive
   CLEAR_CACHE: ${{ inputs.clear_cache == 'true' || github.event.inputs.clear_cache == 'true' }}
   FORCE_MIRROR: ${{ inputs.force_mirror == 'true' || github.event.inputs.force_mirror == 'true' }}
-  DEBUG: ${{ inputs.debug == true || github.event.inputs.debug == true || '' }}
+  DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
 
 concurrency:
   group: ${{ github.workflow }}

@@ -32,7 +32,7 @@ on:
         default: HIGH,CRITICAL
         required: false
       debug:
-        type: boolean
+        type: string
         required: false
         default: false
   workflow_dispatch:
@@ -64,7 +64,7 @@ env:
   # ${{ inputs.* }}               is set by workflow_call
   # ${{ github.events.inputs.* }} is set by workflow_dispatch
   TARGET: ${{ inputs.target || github.event.inputs.target }}
-  DEBUG: ${{ inputs.debug == true || github.event.inputs.debug == true || '' }}
+  DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
 
 jobs:
   trivy:
