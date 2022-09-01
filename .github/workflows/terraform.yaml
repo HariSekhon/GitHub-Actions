@@ -145,14 +145,14 @@ defaults:
 env:
   TF_IN_AUTOMATION: 1
   # XXX: inputs.debug will need to be switched back to a Boolean at some point but secrets.ACTIONS_RUNNER_DEBUG will stay a string comparison
-  TF_LOG: ${{ ( inputs.debug == 'true' || secrets.ACTIONS_RUNNER_DEBUG == 'true' ) && 'TRACE' || '' }}
+  TF_LOG: ${{ ( inputs.debug == true || secrets.ACTIONS_RUNNER_DEBUG == 'true' ) && 'TRACE' || '' }}
   # pass one of these via env instead for a more granular subset of debug logs, uses same verbosity levels
   # TF_LOG_CORE
   # TF_LOG_PROVIDER
   ENV: ${{ inputs.env }}
   WORKDIR: ${{ inputs.dir }}
   GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-  DEBUG: ${{ inputs.debug == 'true' || '' }}
+  DEBUG: ${{ inputs.debug == true || '' }}
 
 jobs:
   # XXX: step outputs are a workaround for GitHub Actions not supporting testing secrets directly in step conditionals:

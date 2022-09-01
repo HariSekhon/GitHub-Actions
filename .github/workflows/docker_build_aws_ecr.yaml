@@ -76,7 +76,7 @@ defaults:
 env:
   AWS_ECR_REPO: ${{ inputs.repo }}
   BUILDCACHE: ${{ inputs.build-cache }}
-  DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
+  DEBUG: ${{ inputs.debug == true || github.event.inputs.debug == 'true' || '' }}
 
 jobs:
   docker_build:
