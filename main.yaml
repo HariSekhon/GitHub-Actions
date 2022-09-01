@@ -55,8 +55,7 @@ env:
   repo: bash-tools
   APP: myapp
   ENV: dev
-  # workflow_dispatch passes even boolean as string, and fromJSON() only works for true/false strings otherwise breaks whole workflow
-  DEBUG: ${{ inputs.debug != 'false' || github.event.inputs.debug != 'false' || '' }}
+  DEBUG: ${{ inputs.debug == true || github.event.inputs.debug == true || '' }}
 
   # or generate dynamic image including the registry, see step section
   DOCKER_IMAGE: myimage
@@ -192,19 +191,9 @@ on:
         description: The ECR repository, without the 'xxx.dkr.ecr.<region>.amazonaws.com' prefix
         type: string
         required: true
-      # workflow_dispatch pass through sends a string instead of boolean due to this issue:
-      #
-      #   https://github.com/actions/runner/issues/1483
-      #
-      # so to avoid forcing all calling workflows to have casting expressions such as
-      #
-      #   ${{ github.event.inputs.debug && fromJSON(github.event.inputs.debug) || false }}
-      #
-      # use more forgiving string type instead of boolean and cast in reusable workflow
       debug:
         description: Enable Debug Mode
-        #type: boolean
-        type: string
+        type: boolean
         required: false
         default: false
       #log_level:
@@ -317,8 +306,6 @@ jobs:
       name: production  # use Environment with approval and different Secrets
       url: https://domain.com/webapp  # puts a link in the GitHub Actions deployment page
     with:
-      # don't cast in calling workflow any more, reusable workflows are using debug string and handling the comparison
-      #debug: ${{ github.event.inputs.debug && fromJSON(github.event.inputs.debug) || false }}
       debug: ${{ github.event.inputs.debug }}
     # pass all secrets
     #secrets: inherit
@@ -1070,7 +1057,7 @@ jobs:
     name: Validate
     uses: HariSekhon/GitHub-Actions/.github/workflows/validate.yaml@master
     with:
-      debug: ${{ github.event.inputs.debug && fromJSON(github.event.inputs.debug) || false }}
+      debug: ${{ github.event.inputs.debug }}
 
   # ============================================================================ #
   #                               T e r r a f o r m
