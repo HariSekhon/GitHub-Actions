@@ -36,7 +36,7 @@ on:
   workflow_call:
     inputs:
       debug:
-        type: string
+        type: boolean
         required: false
         default: false
     secrets:
@@ -59,7 +59,7 @@ defaults:
     shell: bash -euxo pipefail {0}
 
 env:
-  DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
+  DEBUG: ${{ inputs.debug == true || github.event.inputs.debug == true || '' }}
 
 jobs:
   semgrep:
