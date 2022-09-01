@@ -34,7 +34,7 @@ on:
         required: false
         default: recursive
       debug:
-        type: boolean
+        type: string
         required: false
         default: false
   workflow_dispatch:
@@ -58,7 +58,7 @@ defaults:
     shell: bash -euxo pipefail {0}
 
 env:
-  DEBUG: ${{ inputs.debug == true || github.event.inputs.debug == true || '' }}
+  DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
 
 jobs:
   check_xml:

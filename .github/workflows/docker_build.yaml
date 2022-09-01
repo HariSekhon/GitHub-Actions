@@ -63,7 +63,7 @@ on:
         type: string
         required: false
       debug:
-        type: boolean
+        type: string
         required: false
         default: false
     secrets:
@@ -124,7 +124,7 @@ env:
   GITLAB_PASSWORD: ${{ secrets.GITLAB_PASSWORD }}
   QUAY_USER: ${{ secrets.QUAY_USER }}
   QUAY_TOKEN: ${{ secrets.QUAY_TOKEN }}
-  DEBUG: ${{ inputs.debug == true || github.event.inputs.debug == true || '' }}
+  DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
 
 jobs:
   # XXX: workaround for GitHub Actions not supporting secrets in step conditionals:

@@ -20,7 +20,7 @@ on:
   workflow_call:
     inputs:
       debug:
-        type: boolean
+        type: string
         required: false
         default: false
 
@@ -33,7 +33,7 @@ defaults:
     shell: bash -euxo pipefail {0}
 
 env:
-  DEBUG: ${{ inputs.debug == true || github.event.inputs.debug == true || '' }}
+  DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
 
 jobs:
   reviewdog:
