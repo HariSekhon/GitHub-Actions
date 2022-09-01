@@ -41,7 +41,7 @@ defaults:
     shell: sh -eux {0}
 
 env:
-  DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
+  DEBUG: ${{ inputs.debug == true || github.event.inputs.debug == 'true' || '' }}
 
 jobs:
   format-write:

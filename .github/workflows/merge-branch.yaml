@@ -59,7 +59,7 @@ env:
   GH_NO_UPDATE_NOTIFIER: 1
   HEAD: ${{ inputs.head || github.event.inputs.head }}
   BASE: ${{ inputs.base || github.event.inputs.base }}
-  DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
+  DEBUG: ${{ inputs.debug == true || github.event.inputs.debug == 'true' || '' }}
 
 concurrency:
   group: ${{ github.workflow }}

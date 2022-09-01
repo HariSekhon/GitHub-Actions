@@ -71,7 +71,7 @@ defaults:
 env:
   CONFIG: ${{ inputs.config }}
   CONFIG_FILE: ''
-  DEBUG: ${{ inputs.debug == 'true' || github.event.inputs.debug == 'true' || '' }}
+  DEBUG: ${{ inputs.debug == true || github.event.inputs.debug == 'true' || '' }}
 
 jobs:
   kics:
