@@ -460,10 +460,14 @@ jobs:
       - uses: actions/github-script@0.9.0
         if: github.event_name == 'pull_request'
         env:
-          PLAN: |
-            terraform
-            ${{ steps.plan.outputs.stderr }}
-            ${{ steps.plan.outputs.stdout }}
+          # XXX: long terraform plan outputs result in this error:
+          #
+          #   Error: An error occurred trying to start process '/home/runner/runners/2.296.2/externals/node12/bin/node' with working directory '/home/runner/work/myrepo/myrepo'. Argument list too long
+          #
+          #PLAN: |
+          #  terraform
+          #  ${{ steps.plan.outputs.stderr }}
+          #  ${{ steps.plan.outputs.stdout }}
           WORKFLOW_NAME: ${{ github.workflow }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -488,6 +492,7 @@ jobs:
             <details><summary>Show Plan</summary>
 
             \`\`\`
+            terraform
             ${plan}
             \`\`\`
 
