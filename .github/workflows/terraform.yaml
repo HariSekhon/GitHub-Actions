@@ -476,6 +476,8 @@ jobs:
             //
             //    An error occurred trying to start process '/home/runner/runners/2.296.1/externals/node12/bin/node' with working directory '/home/runner/work/myrepo/myrepo'. Argument list too long
             //
+            //      https://github.com/actions/github-script/issues/266
+            //
             const run_url = process.env.GITHUB_SERVER_URL + '/' + process.env.GITHUB_REPOSITORY + '/actions/runs/' + process.env.GITHUB_RUN_ID
             const run_link = '<a href="' + run_url + '">workflow run</a>'
             const fs = require('fs')
