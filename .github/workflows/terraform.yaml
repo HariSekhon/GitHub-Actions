@@ -151,6 +151,7 @@ env:
   # TF_LOG_PROVIDER
   ENV: ${{ inputs.env }}
   WORKDIR: ${{ inputs.dir }}
+  TERRAFORM_PLAN_TMPFILE: /tmp/terraform-plan.${{ github.sha }}.zip
   GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
   DEBUG: ${{ inputs.debug == true || '' }}
 
@@ -420,7 +421,7 @@ jobs:
           #
           # do not sanitize inputs.args by passing through env as we actually need full shell evaluation here and the user already has permission
           # to execute within this environment and could do so via a different workflow if they wanted to
-          terraform plan -input=false -no-color ${{ inputs.args }}
+          terraform plan -input=false -no-color ${{ inputs.args }} | tee "$TERRAFORM_PLAN_TMPFILE"
           #
           # attempted workaround, but loses errors posting nothing to PR when it fails, even when ignoring plan failure code because tfplan file isn't generated
           #
@@ -467,6 +468,16 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
+            // XXX: workaround to avoid:
+            //
+            //    An error occurred trying to start process '/home/runner/runners/2.296.1/externals/node12/bin/node' with working directory '/home/runner/work/myrepo/myrepo'. Argument list too long
+            //
+            const run_url = process.env.GITHUB_SERVER_URL + '/' + process.env.GITHUB_REPOSITORY + '/actions/runs/' + process.env.GITHUB_RUN_ID
+            const run_link = '<a href="' + run_url + '">workflow run</a>'
+            const fs = require('fs')
+            const plan_file = fs.readFileSync(process.env.TERRAFORM_PLAN_TMPFILE, 'utf8')
+            const plan = plan_file.length > 65000 ? plan_file.toString().substring(0, 65000) + " ..." : plan_file
+            const truncated_message = plan_file.length > 65000 ? `Output is too long and was truncated. You can see the full Plan in the ${run_link}<br /><br />` : ""
             const output = `### GitHub Workflow: ${process.env.WORKFLOW_NAME}
 
             #### Terraform Format and Style \`${{ steps.fmt.outcome }}\`
@@ -477,10 +488,11 @@ jobs:
             <details><summary>Show Plan</summary>
 
             \`\`\`
-            ${process.env.PLAN}
+            ${plan}
             \`\`\`
 
             </details>
+            ${truncated_message}
 
             *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*
 
