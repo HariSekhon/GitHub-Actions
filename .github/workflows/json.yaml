@@ -75,7 +75,7 @@ jobs:
       - name: Git version
         run: git --version
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: ${{ inputs.recursive }}  # 'recursive' default requires Git 2.18+ to be installed first
 
