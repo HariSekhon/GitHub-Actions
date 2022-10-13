@@ -50,7 +50,7 @@ jobs:
       - name: Environment
         run: env | sort
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: tfsec
         #uses: aquasecurity/tfsec-sarif-action@9a83b5c3524f825c020e356335855741fd02745f

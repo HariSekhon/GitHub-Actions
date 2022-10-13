@@ -60,11 +60,11 @@ jobs:
       #
       # can't set GITHUB_WORKSPACE to path: /var/_jenkins_home outside of it due to actions/checkout validation
       #
-      #- uses: actions/checkout@v2
+      #- uses: actions/checkout@v3
       #  with:
       #    submodules: recursive  # requires Git 2.18+ to be installed first
       #
-      #- uses: actions/checkout@v2
+      #- uses: actions/checkout@v3
       #  with:
       #    repository: HariSekhon/DevOps-Bash-tools
       #    #ref: master         # unset for default branch in case it changes in future

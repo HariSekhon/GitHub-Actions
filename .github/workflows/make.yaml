@@ -149,7 +149,7 @@ jobs:
 
       - name: Git Checkout
         # git version too old to support recursive submodules checkout on older version Debian and Ubuntu <= 18
-        #uses: actions/checkout@v2
+        #uses: actions/checkout@v3
         #with:
         #  submodules: recursive  # requires Git 2.18+ to be installed first
         env:

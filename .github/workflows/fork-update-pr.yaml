@@ -99,7 +99,7 @@ jobs:
       #   Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
       #   /usr/bin/git: exit status 128
       #
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: GH CLI auth status
         run: |

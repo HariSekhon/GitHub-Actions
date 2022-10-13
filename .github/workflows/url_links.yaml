@@ -70,11 +70,11 @@ jobs:
       - name: Git version
         run: git --version
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: ${{ inputs.submodules }}  # 'recursive' default requires Git 2.18+ to be installed first
 
-      #- uses: actions/checkout@v2
+      #- uses: actions/checkout@v3
       #  with:
       #    repository: HariSekhon/DevOps-Bash-tools
       #    #ref: master            # unset for default branch in case it changes in future

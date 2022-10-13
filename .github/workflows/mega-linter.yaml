@@ -69,7 +69,7 @@ jobs:
       - name: Environment
         run: env | sort
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           token: ${{ secrets.PAT || secrets.GITHUB_TOKEN }}
           fetch-depth: 0

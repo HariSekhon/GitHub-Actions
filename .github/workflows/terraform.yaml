@@ -195,7 +195,7 @@ jobs:
         run: env | sort
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Generate Terraform Version output
         id: terraform
@@ -286,7 +286,7 @@ jobs:
   #    outcome: ${{ steps.fmt.outcome }}
   #  steps:
   #    - name: Checkout
-  #      uses: actions/checkout@v2
+  #      uses: actions/checkout@v3
   #
   #    - name: Setup environment variables
   #      run: |
@@ -338,7 +338,7 @@ jobs:
   #      run: env | sort
   #
   #    - name: Checkout
-  #      uses: actions/checkout@v2
+  #      uses: actions/checkout@v3
 
       - name: Configure AWS credentials
         id: configure-aws-credentials
