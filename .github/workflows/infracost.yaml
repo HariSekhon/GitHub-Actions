@@ -118,7 +118,7 @@ jobs:
         run: |
             infracost comment github --path=/tmp/infracost.json \
                                      --repo="$GITHUB_REPOSITORY" \
-                                     --github-token="${ {github.token }}" \
+                                     --github-token="${{ github.token }}" \
                                      --pull-request="${{ github.event.pull_request.number }}" \
                                      --behavior=update
                                      # 'update' behaviour updates the comment upon any change, see https://www.infracost.io/docs/features/cli_commands/#comment-on-pull-requests
