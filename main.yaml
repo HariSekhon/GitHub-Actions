@@ -33,7 +33,7 @@ name: My Workflow
 
 # XXX: You can now set default environment variables at the repo or organization level:
 #
-# https://docs.github.com/en/actions/learn-github-actions/variables
+# https://docs.github.com/en/actions/learn-github-actions/variables#defining-configuration-variables-for-multiple-workflows
 
 # https://docs.github.com/en/actions/learn-github-actions/contexts#github-context
 #
