@@ -311,8 +311,6 @@ jobs:
       url: https://domain.com/webapp  # puts a link in the GitHub Actions deployment page
     with:
       debug: ${{ github.event.inputs.debug }}
-      # pass through new global repo/org environment variable default
-      AWS_DEFAULT_REGION: ${{ env.AWS_DEFAULT_REGION }}
     # pass all secrets
     #secrets: inherit
     # or pass only select secrets
