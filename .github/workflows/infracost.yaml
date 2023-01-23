@@ -115,6 +115,7 @@ jobs:
                          --out-file=/tmp/infracost.json
 
       - name: Post Infracost comment to the calling GitHub Pull Request
+        if: github.event.pull_request.number
         run: |
             infracost comment github --path=/tmp/infracost.json \
                                      --repo="$GITHUB_REPOSITORY" \
