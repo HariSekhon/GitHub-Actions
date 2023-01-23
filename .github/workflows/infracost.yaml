@@ -69,6 +69,7 @@ defaults:
 
 env:
   CONFIG: ${{ inputs.config }}
+  TF_ROOT: ${{ inputs.tf_root }}
 
 jobs:
   infracost:
