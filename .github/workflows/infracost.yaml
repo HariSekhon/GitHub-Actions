@@ -38,6 +38,7 @@ on:
   #    - main
   #  paths:
   #    - terraform/**
+  #    - **/*.tf
   workflow_call:
     inputs:
       tf_root:
