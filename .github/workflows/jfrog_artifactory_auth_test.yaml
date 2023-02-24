@@ -42,7 +42,7 @@ on:
       #
       # or
       #
-      JFROG_ACCESS_TOKEN:
+      JF_ACCESS_TOKEN:
         required: false
 
 permissions:
