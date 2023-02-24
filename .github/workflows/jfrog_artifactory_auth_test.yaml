@@ -32,7 +32,7 @@ on:
         type: string
         required: false
     secrets:
-      JF_USER:
+      JF_URL:
         required: false
       #
       # Either
