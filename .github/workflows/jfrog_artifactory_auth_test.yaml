@@ -21,7 +21,7 @@
 #   https://firstmode.jfrog.io/ui/admin/artifactory/user_profile
 
 ---
-name: JFrog Artifactory Sample
+name: JFrog Cloud Artifactory Auth Test
 
 on:
   workflow_call:
