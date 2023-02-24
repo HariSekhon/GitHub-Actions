@@ -30,8 +30,10 @@ on:
       JF_URL:
         description: 'JFrog platform url (for example: https://acme.jfrog.io)'
         type: string
-        required: true
+        required: false
     secrets:
+      JF_USER:
+        required: false
       #
       # Either
       #
@@ -58,7 +60,7 @@ defaults:
 
 env:
   # https://github.com/marketplace/actions/setup-jfrog-cli
-  JF_URL: ${{ inputs.JF_URL }}
+  JF_URL: ${{ inputs.JF_URL || secrets.JF_URL }}
   JF_USER: ${{ secrets.JF_USER }}
   JF_PASSWORD: ${{ secrets.JF_PASSWORD }}
   JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
