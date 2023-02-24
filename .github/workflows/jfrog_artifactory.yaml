@@ -74,5 +74,24 @@ jobs:
       - name: JFrog CLI version
         run: jf --version
 
+      # this tests the authentication token works, otherwise you'll get this error from the CLI:
+      #
+      #   02:45:14 [🚨Error] server response: 401 Unauthorized
+      #   {
+      #     "errors": [
+      #       {
+      #         "status": 401,
+      #         "message": "Props Authentication Token not found"
+      #       }
+      #     ]
+      #   }
+      #   {
+      #     "errors": [
+      #       {
+      #         "status": 401,
+      #         "message": "Props Authentication Token not found"
+      #       }
+      #     ]
+      #   }
       - name: JFrog CLI artifactory ping
         run: jf rt ping
