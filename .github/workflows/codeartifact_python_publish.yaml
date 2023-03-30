@@ -94,7 +94,7 @@ jobs:
         with:
           python-version: ${{ inputs.python-version }}
 
-      - uses: aws-actions/configure-aws-credentials@v1
+      - uses: aws-actions/configure-aws-credentials@v2
         id: configure-aws-credentials
         name: Configure AWS credentials
         with:
