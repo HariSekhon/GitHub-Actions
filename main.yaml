@@ -467,7 +467,7 @@ jobs:
                      #    Error: Repository path '/var/jenkins_home/jenkins' is not under '/__w/Jenkins/Jenkins'
 
       # https://github.com/aws-actions/configure-aws-credentials#configure-aws-credentials-action-for-github-actions
-      - uses: aws-actions/configure-aws-credentials@v1
+      - uses: aws-actions/configure-aws-credentials@v2
         #name: Configure AWS credentials
         id: configure-aws-credentials  # id is necessary to extract AWS_ACCOUNT_ID further down
         with:
@@ -900,7 +900,7 @@ jobs:
       # or consider using an external script to do all of the below like aws_ecr_docker_build_push.sh from DevOps Bash tools repo - https://github.com/HariSekhon/DevOps-Bash-tools
       #
       # see Setup section above for more info
-      - uses: aws-actions/configure-aws-credentials@v1
+      - uses: aws-actions/configure-aws-credentials@v2
         #name: Configure AWS credentials
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -1016,7 +1016,7 @@ jobs:
 
       - name: Configure AWS credentials
         id: configure-aws-credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
