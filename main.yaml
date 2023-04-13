@@ -226,6 +226,7 @@ on:
         type: string
         required: true
       debug:
+        # XXX: this still only works as a string comparison ${{ gitihub.events.inputs.debug == 'true' }}
         type: boolean
         required: false
         default: false
