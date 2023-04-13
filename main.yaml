@@ -438,7 +438,7 @@ jobs:
       #
       # do checkout first so we can generate dynamic environment variables for branch, tags, SHA etc.
       # https://github.com/marketplace/actions/checkout
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         #name: Git Checkout  # better to show the action@version
         with:
           submodules: 'true'  # requires Git 2.18+ to be installed first
@@ -457,7 +457,7 @@ jobs:
         run: git config --global --add safe.directory "${GITHUB_WORKSPACE:-$PWD}"
 
       # checkout another repo
-      #- uses: actions/checkout@v2
+      #- uses: actions/checkout@v3
       #  with:
       #    repository: owner/repo
       #    ref: master
@@ -657,7 +657,7 @@ jobs:
       AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
     steps:
       # docker/build-push-action does the checkout for you, but if you want to dynamically generate extra tags you need this checkout first
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: 'true'  # requires Git 2.18+ to be installed first
 
@@ -1012,7 +1012,7 @@ jobs:
     runs-on: ubuntu-latest
     container: amazonlinux:2
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Configure AWS credentials
         id: configure-aws-credentials
