@@ -154,7 +154,7 @@ jobs:
              [ -n "$DOCKERHUB_TOKEN" ]; then
 
             echo "DockerHub registry credentials set"
-            echo "::set-output name=dockerhub::true"
+            echo "dockerhub=true" >> $GITHUB_OUTPUT
           fi
 
           if [ -n "$ACR_REGISTRY" ]] &&
@@ -163,7 +163,7 @@ jobs:
              grep -qi '\.azurecr\.io' <<< "$REPO_TAGS"; then
 
             echo "Azure Container Registry credentials set"
-            echo "::set-output name=acr::true"
+            echo "acr=true" >> $GITHUB_OUTPUT
           fi
 
           if [ -n "$AWS_ACCESS_KEY_ID" ]] &&
@@ -171,9 +171,9 @@ jobs:
              grep -qi '\.amazonaws\.com' <<< "$REPO_TAGS"; then
 
             echo "AWS ECR registry credentials set"
-            echo "::set-output name=ecr::true"
+            echo "ecr=true" >> $GITHUB_OUTPUT
             AWS_ECR_REGISTRY="$(grep -om1 '[^[:space:]]*\.amazonaws\.com' <<< "$REPO_TAGS")"
-            echo "::set-output name=ecr_registry::$AWS_ECR_REGISTRY"
+            echo "ecr_registry=$AWS_ECR_REGISTRY" >> $GITHUB_OUTPUT
           fi
 
           if [ -n "$GAR_JSON_KEY" ]] &&
@@ -181,7 +181,7 @@ jobs:
              grep -qi '\.pkg\.dev' <<< "$REPO_TAGS"; then
 
             echo "Google Artifact Registry credentials set"
-            echo "::set-output name=gar::true"
+            echo "gar=true" >> $GITHUB_OUTPUT
           fi
 
           if [ -n "$GCR_JSON_KEY" ]] &&
@@ -189,7 +189,7 @@ jobs:
              grep -qi '\.gcr\.io' <<< "$REPO_TAGS"; then
 
             echo "Google Container Registry credentials set"
-            echo "::set-output name=gcr::true"
+            echo "gcr=true" >> $GITHUB_OUTPUT
           fi
 
           if [ -n "$GITLAB_USER" ]] &&
@@ -197,7 +197,7 @@ jobs:
              grep -qi '\.gitlab\.com' <<< "$REPO_TAGS"; then
 
             echo "GitLab registry credentials set"
-            echo "::set-output name=gitlab::true"
+            echo "gitlab=true" >> $GITHUB_OUTPUT
           fi
 
           if [ -n "$QUAY_USER" ]] &&
@@ -205,7 +205,7 @@ jobs:
              grep -qi '\.quay\.io' <<< "$REPO_TAGS"; then
 
             echo "Quay.io registry credentials set"
-            echo "::set-output name=quay::true"
+            echo "quay=true" >> $GITHUB_OUTPUT
           fi
 
   docker_build:
