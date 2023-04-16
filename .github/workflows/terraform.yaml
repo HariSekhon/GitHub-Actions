@@ -210,7 +210,7 @@ jobs:
             TERRAFORM_VERSION="${{ inputs.terraform-version }}"
           fi
           if [ -n "${TERRAFORM_VERSION:-}" ]; then
-            echo "::set-output name=terraform-version::$TERRAFORM_VERSION"
+            echo "terraform-version=$TERRAFORM_VERSION" >> $GITHUB_OUTPUT
           fi
 
       - name: Generate AWS output
@@ -221,7 +221,7 @@ jobs:
              [ -n "${{ secrets.AWS_DEFAULT_REGION }}" ]; then
 
             echo "AWS access key, secret key, and region are set"
-            echo "::set-output name=aws::true"
+            echo "aws=true" >> $GITHUB_OUTPUT
           fi
 
       - name: Generate GCP output
@@ -230,14 +230,14 @@ jobs:
           if [ -n "${{ secrets.GCP_SERVICEACCOUNT_KEY }}" ]; then
 
             echo "GCP service account key is set"
-            echo "::set-output name=gcp_key::true"
+            echo "gcp_key=true" >> $GITHUB_OUTPUT
           fi
 
           if [ -n "${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}" ] &&
              [ -n "${{ secrets.GCP_SERVICE_ACCOUNT }}" ]; then
 
             echo "GCP keyless authentication identity provider and service account are set"
-            echo "::set-output name=gcp_keyless::true"
+            echo "gcp_keyless=true" >> $GITHUB_OUTPUT
           fi
 
       - name: GitHub Auth Status
@@ -256,9 +256,9 @@ jobs:
       #       [ "${{ steps.aws.outputs.aws }}" = true ] ||
       #       [ "${{ steps.aws.outputs.gcp }}" = true ] ||
       #       [ "${{ steps.aws.outputs.gcp_keyless }}" = true ]; then
-      #      echo "::set-output name=credentials-configured::true"
+      #      echo "credentials-configured=true" >> $GITHUB_OUTPUT
       #    else
-      #      echo "::set-output name=credentials-configured::false"
+      #      echo "credentials-configured=false" >> $GITHUB_OUTPUT
       #    fi
 
   #credentials_check:
