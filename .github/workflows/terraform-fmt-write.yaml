@@ -89,7 +89,7 @@ jobs:
 
           git commit --message "Terraform Fmt fixes - GitHub Actions Workflow: $GITHUB_WORKFLOW" .
 
-          echo "::set-output name=new_commits::true"
+          echo "new_commits=true" >> $GITHUB_OUTPUT
 
       - name: Git Push
         if: steps.commit.outputs.new_commits == 'true'
