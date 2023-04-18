@@ -16,23 +16,28 @@
 ---
 name: SonarCloud
 on:
-  push:
-    branches:
-      - master
-      - main
-    ignore-paths:
-      - '**/README.md'
-  pull_request:
-    branches:
-      - master
-      - main
-    ignore-paths:
-      - '**/README.md'
-    types:
-      - opened
-      - synchronize
-      - reopened
+  #push:
+  #  branches:
+  #    - master
+  #    - main
+  #  ignore-paths:
+  #    - '**/README.md'
+  #pull_request:
+  #  branches:
+  #    - master
+  #    - main
+  #  ignore-paths:
+  #    - '**/README.md'
+  #  types:
+  #    - opened
+  #    - synchronize
+  #    - reopened
   workflow_call:
+    secrets:
+      GITHUB_TOKEN:
+        required: true
+      SONAR_TOKEN:
+        required: true
   workflow_dispatch:
 
 permissions:
