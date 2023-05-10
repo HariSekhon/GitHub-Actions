@@ -92,4 +92,4 @@ jobs:
             popd >/dev/null
           done
           # XXX: doesn't support --enable-helm yet needed for my Kubernetes-configs repo
-          datree test ${ARGS:-}
+          datree test "$DIR"/**.yaml ${ARGS:-}
