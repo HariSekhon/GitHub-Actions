@@ -86,6 +86,7 @@ jobs:
           find "$DIR" -type f -name 'kustomization.y*ml' |
           while read -r kustomization; do
             dir="$(dirname "$kustomization")"
+            # XXX: doesn't support --enable-helm yet needed for my Kubernetes-configs repo
             datree kustomize test "$dir" ${ARGS:-} || exit 1
             echo
           done
