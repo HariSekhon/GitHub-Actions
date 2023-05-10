@@ -85,8 +85,11 @@ jobs:
           set -euxo pipefail
           find "$DIR" -type f -name 'kustomization.y*ml' |
           while read -r kustomization; do
+            echo "Materializing $kustomization -> $kustomization.materialized"
             dir="$(dirname "$kustomization")"
-            # XXX: doesn't support --enable-helm yet needed for my Kubernetes-configs repo
-            datree kustomize test "$dir" ${ARGS:-} || exit 1
-            echo
+            pushd "$dir" >/dev/null
+            kustomize build --enable-helm > kustomization.yaml.materialized
+            popd >/dev/null
           done
+          # XXX: doesn't support --enable-helm yet needed for my Kubernetes-configs repo
+          datree test ${ARGS:-}
