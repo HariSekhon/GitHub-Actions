@@ -114,4 +114,4 @@ jobs:
       - name: Validate Jenkinsfiles
         run: |
           cd "$JENKINS_HOME/repo"
-          ../bash-tools/check_jenkinsfiles.sh
+          ../bash-tools/checks/check_jenkinsfiles.sh
