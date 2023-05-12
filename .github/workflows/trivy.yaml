@@ -11,8 +11,6 @@
 #  https://www.linkedin.com/in/HariSekhon
 #
 
-# Old style of using AquaSecurity's docker image
-
 ---
 name: Trivy Filesystem Scan
 
@@ -22,7 +20,7 @@ on:
       - master
       - main
     paths:
-      - .github/workflows/trivy_fs.yaml
+      - .github/workflows/trivy.yaml
     #ignore-paths:
     #  - '**/README.md'
   pull_request:
@@ -30,7 +28,7 @@ on:
       - master
       - main
     paths:
-      - .github/workflows/trivy_fs.yaml
+      - .github/workflows/trivy.yaml
     #ignore-paths:
     #  - '**/README.md'
   workflow_call:
@@ -90,15 +88,115 @@ jobs:
 
       - uses: actions/checkout@v3
 
-      - name: Trivy (Full Informational)
+      - name: Trivy FS
         run: |
           # informational to see all issues
           trivy fs --no-progress "$SCAN_PATH"
 
-      - name: Trivy (with Severity Error Out)
+  trivy_severity:
+    name: Trivy Filesystem Scan severity
+    runs-on: ubuntu-latest
+    container: aquasec/trivy:latest
+    steps:
+      - name: Environment
+        run: env | sort
+
+      - uses: actions/checkout@v3
+
+      - name: Trivy FS severity exit 1
         if: ${{ inputs.severity || github.event.inputs.severity }}
         env:
           SEVERITY: ${{ inputs.severity || github.event.inputs.severity }}
         run: |
           # fail the pipeline if any of the issues are in $SEVERITY eg. HIGH,CRITICAL
           trivy fs --no-progress --exit-code 1 --severity "$SEVERITY" "$SCAN_PATH"
+
+  # ============================================================================ #
+  trivy_config:
+    name: Trivy Config Scan
+    runs-on: ubuntu-latest
+    container: aquasec/trivy:latest
+    steps:
+      - name: Environment
+        run: env | sort
+
+      - uses: actions/checkout@v3
+
+      - name: Trivy Config
+        run: |
+          # informational to see all issues
+          trivy config --no-progress "$SCAN_PATH"
+
+  trivy_config_severity:
+    name: Trivy Config Scan severity
+    runs-on: ubuntu-latest
+    container: aquasec/trivy:latest
+    steps:
+      - name: Environment
+        run: env | sort
+
+      - uses: actions/checkout@v3
+
+      - name: Trivy Config severity exit 1
+        if: ${{ inputs.severity || github.event.inputs.severity }}
+        env:
+          SEVERITY: ${{ inputs.severity || github.event.inputs.severity }}
+        run: |
+          # fail the pipeline if any of the issues are in $SEVERITY eg. HIGH,CRITICAL
+          trivy config --no-progress --exit-code 1 --severity "$SEVERITY" "$SCAN_PATH"
+
+  # ============================================================================ #
+
+  trivy_github:
+    name: Trivy Filesystem Scan GitHub Security tab
+    runs-on: ubuntu-latest
+    steps:
+      - name: Environment
+        run: env | sort
+
+      - uses: actions/checkout@v3
+
+      - name: Trivy Filesystem Scan sarif
+        #if: ${{ ! ( inputs.no_sarif || github.event.inputs.sarif ) }}
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: fs
+          scan-ref: ${{ env.SCAN_PATH }}
+          #format: template
+          #template: '@/contrib/sarif.tpl'
+          format: sarif
+          output: trivy-results.sarif
+
+      - name: Upload Trivy sarif to GitHub Security tab
+        #if: ${{ ! ( inputs.no_sarif || github.event.inputs.sarif ) }}
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: trivy-results.sarif
+
+  # ============================================================================ #
+
+  trivy_config_github:
+    name: Trivy Config Scan GitHub Security tab
+    runs-on: ubuntu-latest
+    steps:
+      - name: Environment
+        run: env | sort
+
+      - uses: actions/checkout@v3
+
+      - name: Trivy Config Scan sarif
+        #if: ${{ ! ( inputs.no_sarif || github.event.inputs.sarif ) }}
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: config
+          hide-progress: false
+          #format: template
+          #template: '@/contrib/sarif.tpl'
+          format: sarif
+          output: trivy-results.sarif
+
+      - name: Upload Trivy sarif to GitHub Security tab
+        #if: ${{ ! ( inputs.no_sarif || github.event.inputs.sarif ) }}
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: trivy-results.sarif
