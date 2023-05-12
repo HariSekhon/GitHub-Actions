@@ -1,0 +1,93 @@
+#
+#  Author: Hari Sekhon
+#  Date: 2022-01-31 16:49:05 +0000 (Mon, 31 Jan 2022)
+#
+#  vim:ts=2:sts=2:sw=2:et
+#
+#  https://github.com/HariSekhon/GitHub-Actions
+#
+#  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback
+#
+#  https://www.linkedin.com/in/HariSekhon
+#
+
+# Split from trivy.yaml because differing versions between aquasec/trivy:latest docker image and aquasecurity/trivy-action@master github action cause breakage:
+#
+#   2022-02-02T11:58:59.840Z  ERROR Trivy version (0.22.0) is old. Update to the latest version.
+#   2022-02-02T11:58:59.840Z  FATAL DB error: database error: the version of DB schema doesn't match. Local DB: 2, Expected: 1
+
+---
+name: Trivy Image GitHub Security Alerts
+
+on:
+  workflow_call:
+    inputs:
+      image:
+        description: The container image to scan
+        type: string
+        required: true
+      severity:
+        description: Set a severity to trigger CI workflow failure
+        type: string
+        default: HIGH,CRITICAL
+        required: false
+      debug:
+        type: string
+        default: true
+  workflow_dispatch:
+    inputs:
+      image:
+        description: The container image to scan
+        type: string
+        required: true
+      severity:
+        description: Set a severity to trigger CI workflow failure
+        type: string
+        default: HIGH,CRITICAL
+        required: false
+      debug:
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  actions: read
+  contents: read
+  security-events: write
+
+defaults:
+  run:
+    shell: sh -eux {0}
+
+env:
+  # ${{ inputs.* }}               is set by workflow_call
+  # ${{ github.events.inputs.* }} is set by workflow_dispatch
+  IMAGE: ${{ inputs.image || github.event.inputs.image }}
+  DEBUG: ${{ inputs.debug == true || github.event.inputs.debug == 'true' || '' }}
+
+jobs:
+  trivy:
+    name: Trivy GitHub Security Alerts
+    runs-on: ubuntu-latest
+    #container: aquasec/trivy:latest
+    steps:
+      - name: Environment
+        run: env | sort
+
+      - uses: actions/checkout@v3
+
+      - name: Run Trivy vulnerability scanner to generate sarif
+        if: ${{ ! ( inputs.no_sarif || github.event.inputs.sarif ) }}
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.IMAGE }}
+          #format: template
+          #template: '@/contrib/sarif.tpl'
+          format: sarif
+          output: trivy-results.sarif
+
+      - name: Upload Trivy sarif scan results to GitHub Security tab
+        if: ${{ ! ( inputs.no_sarif || github.event.inputs.sarif ) }}
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: trivy-results.sarif
