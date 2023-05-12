@@ -23,9 +23,10 @@ on:
   workflow_call:
     inputs:
       target:
-        description: The Trivy target to analyze, usually a docker image:tag
+        description: The Trivy target to analyze, usually a docker image:tag or file path. Defaults to '.'
         type: string
-        required: true
+        default: .
+        required: false
       severity:
         description: Set a severity to trigger CI workflow failure
         type: string
@@ -70,7 +71,7 @@ jobs:
   trivy:
     name: Trivy GitHub Security Alerts
     runs-on: ubuntu-latest
-    container: aquasec/trivy:latest
+    #container: aquasec/trivy:latest
     steps:
       - name: Environment
         run: env | sort
