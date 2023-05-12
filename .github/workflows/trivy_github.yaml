@@ -11,6 +11,8 @@
 #  https://www.linkedin.com/in/HariSekhon
 #
 
+# https://github.com/aquasecurity/trivy-action
+
 # Split from trivy.yaml because differing versions between aquasec/trivy:latest docker image and aquasecurity/trivy-action@master github action cause breakage:
 #
 #   2022-02-02T11:58:59.840Z  ERROR Trivy version (0.22.0) is old. Update to the latest version.
