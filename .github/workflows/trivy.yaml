@@ -17,7 +17,7 @@
 #   2022-02-02T11:58:59.840Z  FATAL DB error: database error: the version of DB schema doesn't match. Local DB: 2, Expected: 1
 
 ---
-name: Trivy GitHub Security Alerts
+name: Trivy FS GitHub Security Alerts
 
 on:
   workflow_call:
