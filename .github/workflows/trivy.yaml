@@ -84,7 +84,7 @@ jobs:
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: fs
-          sacn-ref: ${{ env.TARGET }}
+          scan-ref: ${{ env.TARGET }}
           #format: template
           #template: '@/contrib/sarif.tpl'
           format: sarif
