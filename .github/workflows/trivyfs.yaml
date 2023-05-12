@@ -11,6 +11,8 @@
 #  https://www.linkedin.com/in/HariSekhon
 #
 
+# Old style of using AquaSecurity's docker image
+
 ---
 name: Trivy Filesystem Scan
 
