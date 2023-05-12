@@ -65,7 +65,7 @@ defaults:
 env:
   # ${{ inputs.* }}               is set by workflow_call
   # ${{ github.events.inputs.* }} is set by workflow_dispatch
-  TARGET: ${{ inputs.target || github.event.inputs.target }}
+  TARGET: ${{ inputs.path || github.event.inputs.path }}
   DEBUG: ${{ inputs.debug == true || github.event.inputs.debug == 'true' || '' }}
 
 jobs:
@@ -83,9 +83,8 @@ jobs:
         if: ${{ ! ( inputs.no_sarif || github.event.inputs.sarif ) }}
         uses: aquasecurity/trivy-action@master
         with:
-          #image-ref: ${{ env.TARGET }}
           scan-type: fs
-          sacn-ref: .
+          sacn-ref: ${{ env.TARGET }}
           #format: template
           #template: '@/contrib/sarif.tpl'
           format: sarif
