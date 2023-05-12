@@ -126,7 +126,7 @@ jobs:
       - name: Trivy Config
         run: |
           # informational to see all issues
-          trivy config "$SCAN_PATH" --no-progress
+          trivy config "$SCAN_PATH"
 
   trivy_config_severity:
     name: Trivy Config Scan severity
@@ -144,7 +144,7 @@ jobs:
           SEVERITY: ${{ inputs.severity || github.event.inputs.severity }}
         run: |
           # fail the pipeline if any of the issues are in $SEVERITY eg. HIGH,CRITICAL
-          trivy config "$SCAN_PATH" --no-progress --exit-code 1 --severity "$SEVERITY"
+          trivy config "$SCAN_PATH" --exit-code 1 --severity "$SEVERITY"
 
   # ============================================================================ #
 
