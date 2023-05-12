@@ -66,6 +66,7 @@ on:
 
 permissions:
   contents: read
+  security: write
 
 defaults:
   run:
@@ -91,7 +92,7 @@ jobs:
       - name: Trivy FS
         run: |
           # informational to see all issues
-          trivy fs --no-progress "$SCAN_PATH"
+          trivy fs "$SCAN_PATH" --no-progress
 
   trivy_severity:
     name: Trivy Filesystem Scan severity
@@ -109,7 +110,7 @@ jobs:
           SEVERITY: ${{ inputs.severity || github.event.inputs.severity }}
         run: |
           # fail the pipeline if any of the issues are in $SEVERITY eg. HIGH,CRITICAL
-          trivy fs --no-progress --exit-code 1 --severity "$SEVERITY" "$SCAN_PATH"
+          trivy fs "$SCAN_PATH" --no-progress --exit-code 1 --severity "$SEVERITY"
 
   # ============================================================================ #
   trivy_config:
@@ -125,7 +126,7 @@ jobs:
       - name: Trivy Config
         run: |
           # informational to see all issues
-          trivy config --no-progress "$SCAN_PATH"
+          trivy config "$SCAN_PATH" --no-progress
 
   trivy_config_severity:
     name: Trivy Config Scan severity
@@ -143,7 +144,7 @@ jobs:
           SEVERITY: ${{ inputs.severity || github.event.inputs.severity }}
         run: |
           # fail the pipeline if any of the issues are in $SEVERITY eg. HIGH,CRITICAL
-          trivy config --no-progress --exit-code 1 --severity "$SEVERITY" "$SCAN_PATH"
+          trivy config "$SCAN_PATH" --no-progress --exit-code 1 --severity "$SEVERITY"
 
   # ============================================================================ #
 
