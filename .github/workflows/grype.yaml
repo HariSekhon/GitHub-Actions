@@ -93,6 +93,7 @@ jobs:
         with:
           path: ${{ env.SCAN_PATH }}
           fail-build: false
+          output-format: table
 
   # ============================================================================ #
 
@@ -112,6 +113,7 @@ jobs:
           path: ${{ env.SCAN_PATH }}
           fail-build: true
           severity-cutoff: ${{ inputs.severity || github.event.inputs.severity }}
+          output-format: table
 
   # ============================================================================ #
 
