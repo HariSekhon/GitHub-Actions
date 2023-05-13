@@ -90,6 +90,7 @@ jobs:
 
       - name: Grype Filsystem Scan
         if: ${{ inputs.severity || github.event.inputs.severity }}
+        # https://github.com/anchore/scan-action
         uses: anchore/scan-action@v3
         with:
           path: ${{ env.SCAN_PATH }}
@@ -111,6 +112,7 @@ jobs:
       - name: Grype Generate Sarif
         if: ${{ inputs.severity || github.event.inputs.severity }}
         id: scan
+        # https://github.com/anchore/scan-action
         uses: anchore/scan-action@v3
         with:
           path: ${{ env.SCAN_PATH }}
