@@ -80,7 +80,7 @@ env:
 
 jobs:
   trivy:
-    name: Trivy Filesystem Scan
+    name: Filesystem Scan
     runs-on: ubuntu-latest
     container: aquasec/trivy:latest
     steps:
@@ -95,7 +95,7 @@ jobs:
           trivy fs "$SCAN_PATH" --no-progress
 
   trivy_severity:
-    name: Trivy Filesystem Scan severity
+    name: Filesystem Scan severity
     runs-on: ubuntu-latest
     container: aquasec/trivy:latest
     steps:
@@ -114,7 +114,7 @@ jobs:
 
   # ============================================================================ #
   trivy_config:
-    name: Trivy Config Scan
+    name: Config Scan
     runs-on: ubuntu-latest
     container: aquasec/trivy:latest
     steps:
@@ -129,7 +129,7 @@ jobs:
           trivy config "$SCAN_PATH"
 
   trivy_config_severity:
-    name: Trivy Config Scan severity
+    name: Config Scan severity
     runs-on: ubuntu-latest
     container: aquasec/trivy:latest
     steps:
@@ -149,7 +149,7 @@ jobs:
   # ============================================================================ #
 
   trivy_github:
-    name: Trivy Filesystem Scan GitHub Security tab
+    name: Filesystem Scan GitHub Security tab
     runs-on: ubuntu-latest
     steps:
       - name: Environment
@@ -177,7 +177,7 @@ jobs:
   # ============================================================================ #
 
   trivy_config_github:
-    name: Trivy Config Scan GitHub Security tab
+    name: Config Scan GitHub Security tab
     runs-on: ubuntu-latest
     steps:
       - name: Environment
