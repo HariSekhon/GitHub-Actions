@@ -1,0 +1,137 @@
+#
+#  Author: Hari Sekhon
+#  Date: 2022-01-31 16:49:05 +0000 (Mon, 31 Jan 2022)
+#
+#  vim:ts=2:sts=2:sw=2:et
+#
+#  https://github.com/HariSekhon/GitHub-Actions
+#
+#  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback
+#
+#  https://www.linkedin.com/in/HariSekhon
+#
+
+---
+name: Grype
+
+on:
+  push:
+    branches:
+      - master
+      - main
+    paths:
+      - .github/workflows/grype.yaml
+    #ignore-paths:
+    #  - '**/README.md'
+  pull_request:
+    branches:
+      - master
+      - main
+    paths:
+      - .github/workflows/grype.yaml
+    #ignore-paths:
+    #  - '**/README.md'
+  workflow_call:
+    inputs:
+      path:
+        description: The filesystem path for Grype to analyze
+        type: string
+        default: .
+        required: false
+      severity:
+        description: Set a severity to trigger CI workflow failure
+        type: string
+        default: high
+        required: false
+      debug:
+        type: string
+        required: false
+        default: false
+  workflow_dispatch:
+    inputs:
+      path:
+        description: The filesystem path for Grype to analyze
+        type: string
+        default: .
+        required: false
+      severity:
+        description: Set a severity to trigger CI workflow failure
+        type: string
+        default: high
+        required: false
+      debug:
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: read
+  security-events: write
+
+defaults:
+  run:
+    shell: sh -eux {0}
+
+env:
+  # ${{ inputs.* }}               is set by workflow_call
+  # ${{ github.events.inputs.* }} is set by workflow_dispatch
+  SCAN_PATH: ${{ inputs.path || github.event.inputs.path || '.' }}
+  DEBUG: ${{ inputs.debug == true || github.event.inputs.debug == 'true' || '' }}
+
+jobs:
+  grype:
+    name: Grype Filesystem Scan
+    runs-on: ubuntu-latest
+    container: aquasec/grype:latest
+    steps:
+      - name: Environment
+        run: env | sort
+
+      - uses: actions/checkout@v3
+
+      - name: Grype FS
+        uses: anchore/scan-action@v3
+        with:
+          path: ${{ env.SCAN_PATH }}
+
+  grype_severity:
+    name: Grype Filesystem Scan severity
+    runs-on: ubuntu-latest
+    container: aquasec/grype:latest
+    steps:
+      - name: Environment
+        run: env | sort
+
+      - uses: actions/checkout@v3
+
+      - name: Grype FS severity exit 1
+        if: ${{ inputs.severity || github.event.inputs.severity }}
+        uses: anchore/scan-action@v3
+        with:
+          path: ${{ env.SCAN_PATH }}
+          fail-build: true
+          severity-cutoff: ${{ env.SEVERITY }}
+
+  # ============================================================================ #
+
+  grype_github:
+    name: Grype Filesystem Scan GitHub Security tab
+    runs-on: ubuntu-latest
+    steps:
+      - name: Environment
+        run: env | sort
+
+      - uses: actions/checkout@v3
+
+      - name: Grype sarif
+        if: ${{ inputs.severity || github.event.inputs.severity }}
+        uses: anchore/scan-action@v3
+        with:
+          path: ${{ env.SCAN_PATH }}
+          output-file: grype-results.sarif
+
+      - name: Upload Grype sarif to GitHub Security tab
+        #if: ${{ ! ( inputs.no_sarif || github.event.inputs.sarif ) }}
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: grype-results.sarif
