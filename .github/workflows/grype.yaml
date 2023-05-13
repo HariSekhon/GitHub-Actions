@@ -80,7 +80,7 @@ env:
 
 jobs:
   grype:
-    name: Grype Filesystem Scan
+    name: Filesystem Scan
     runs-on: ubuntu-latest
     container: aquasec/grype:latest
     steps:
@@ -94,8 +94,10 @@ jobs:
         with:
           path: ${{ env.SCAN_PATH }}
 
+  # ============================================================================ #
+
   grype_severity:
-    name: Grype Filesystem Scan severity
+    name: Filesystem Scan severity
     runs-on: ubuntu-latest
     container: aquasec/grype:latest
     steps:
@@ -115,7 +117,7 @@ jobs:
   # ============================================================================ #
 
   grype_github:
-    name: Grype Filesystem Scan GitHub Security tab
+    name: Filesystem Scan GitHub Security tab
     runs-on: ubuntu-latest
     steps:
       - name: Environment
