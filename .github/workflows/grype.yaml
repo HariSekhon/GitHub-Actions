@@ -88,25 +88,7 @@ jobs:
 
       - uses: actions/checkout@v3
 
-      - name: Grype FS
-        uses: anchore/scan-action@v3
-        with:
-          path: ${{ env.SCAN_PATH }}
-          fail-build: false
-          output-format: table
-
-  # ============================================================================ #
-
-  grype_severity:
-    name: Filesystem Scan severity
-    runs-on: ubuntu-latest
-    steps:
-      - name: Environment
-        run: env | sort
-
-      - uses: actions/checkout@v3
-
-      - name: Grype FS severity exit 1
+      - name: Grype Filsystem Scan
         if: ${{ inputs.severity || github.event.inputs.severity }}
         uses: anchore/scan-action@v3
         with:
@@ -126,7 +108,7 @@ jobs:
 
       - uses: actions/checkout@v3
 
-      - name: Grype sarif
+      - name: Grype Generate Sarif
         if: ${{ inputs.severity || github.event.inputs.severity }}
         id: scan
         uses: anchore/scan-action@v3
