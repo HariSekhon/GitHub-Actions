@@ -17,7 +17,7 @@
 #   2022-02-02T11:58:59.840Z  FATAL DB error: database error: the version of DB schema doesn't match. Local DB: 2, Expected: 1
 
 ---
-name: Trivy Image GitHub Security Alerts
+name: Trivy Image Scan GitHub Security Alerts
 
 on:
   workflow_call:
@@ -67,27 +67,27 @@ env:
 
 jobs:
   trivy:
-    name: Trivy Image
+    name: Scan Image
     runs-on: ubuntu-latest
     container: aquasec/trivy:latest
     steps:
       - name: Environment
         run: env | sort
 
-      - name: Trivy Image
+      - name: Trivy Image Scan
         run: |
           # informational to see all issues
           trivy image --no-progress "$IMAGE"
 
   trivy_severity:
-    name: Trivy Image severity
+    name: Scan Image Action
     runs-on: ubuntu-latest
     container: aquasec/trivy:latest
     steps:
       - name: Environment
         run: env | sort
 
-      - name: Trivy Image severity exit 1
+      - name: Trivy Image Scan severity exit 1
         if: ${{ inputs.severity || github.event.inputs.severity }}
         env:
           SEVERITY: ${{ inputs.severity || github.event.inputs.severity }}
