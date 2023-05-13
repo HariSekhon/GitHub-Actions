@@ -82,7 +82,6 @@ jobs:
   grype:
     name: Filesystem Scan
     runs-on: ubuntu-latest
-    container: aquasec/grype:latest
     steps:
       - name: Environment
         run: env | sort
@@ -93,13 +92,13 @@ jobs:
         uses: anchore/scan-action@v3
         with:
           path: ${{ env.SCAN_PATH }}
+          fail-build: false
 
   # ============================================================================ #
 
   grype_severity:
     name: Filesystem Scan severity
     runs-on: ubuntu-latest
-    container: aquasec/grype:latest
     steps:
       - name: Environment
         run: env | sort
@@ -130,7 +129,9 @@ jobs:
         uses: anchore/scan-action@v3
         with:
           path: ${{ env.SCAN_PATH }}
-          output-file: grype-results.sarif
+          fail-build: false
+          output-format: sarif
+          sarif: grype-results.sarif
 
       - name: Upload Grype sarif to GitHub Security tab
         #if: ${{ ! ( inputs.no_sarif || github.event.inputs.sarif ) }}
