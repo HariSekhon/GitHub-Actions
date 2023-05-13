@@ -76,7 +76,6 @@ env:
   # ${{ inputs.* }}               is set by workflow_call
   # ${{ github.events.inputs.* }} is set by workflow_dispatch
   SCAN_PATH: ${{ inputs.path || github.event.inputs.path || '.' }}
-  SEVERITY: ${{ inputs.path.severity || github.event.inputs.severity }}
   DEBUG: ${{ inputs.debug == true || github.event.inputs.debug == 'true' || '' }}
 
 jobs:
@@ -112,7 +111,7 @@ jobs:
         with:
           path: ${{ env.SCAN_PATH }}
           fail-build: true
-          severity-cutoff: ${{ env.SEVERITY }}
+          severity-cutoff: ${{ inputs.severity || github.event.inputs.severity }}
 
   # ============================================================================ #
 
