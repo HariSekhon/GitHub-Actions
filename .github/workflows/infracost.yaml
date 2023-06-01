@@ -32,7 +32,7 @@
 name: Infrastructure Cost Estimation
 
 on:
-  # calling workflows show use something like this pull_request:
+  # calling workflows should use something like this pull_request:
   #pull_request:
   #  branches:
   #    - main
