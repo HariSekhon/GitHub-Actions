@@ -25,7 +25,7 @@ on:
         description: The Ubuntu AutoInstaller Cloud-Init user-data file path
         type: string
         required: false
-        default: autoinstaller-user-data
+        default: autoinstall-user-data
 
 permissions:
   contents: read
