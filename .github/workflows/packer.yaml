@@ -25,7 +25,8 @@ on:
       files:
         description: The Packer .pkr.hcl file paths to validate, separated by spaces
         type: string
-        required: true
+        required: false
+        default: *.pkr.hcl
 
 permissions:
   contents: read
