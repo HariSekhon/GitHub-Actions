@@ -22,8 +22,8 @@ name: Ubuntu AutoInstaller Cloud-Init
 on:
   workflow_call:
     inputs:
-      file:
-        description: The Ubuntu AutoInstaller Cloud-Init user-data file path
+      files:
+        description: The Ubuntu AutoInstaller Cloud-Init user-data file paths to validate, separate by spaces
         type: string
         required: false
         default: autoinstall-user-data
@@ -58,4 +58,10 @@ jobs:
           apt-get install cloud-init -y
 
       - name: Validate AutoInstall User Data
-        run: cloud-init schema --config-file ${{ inputs.file }}
+        run: |
+          for file in ${{ inputs.files }}; do
+            echo "Validating $file"
+            echo
+            cloud-init schema --config-file "$file"
+            echo
+          done
