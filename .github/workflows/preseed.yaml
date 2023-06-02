@@ -22,8 +22,8 @@ name: Debian Preseed
 on:
   workflow_call:
     inputs:
-      file:
-        description: The preseed.cfg file path
+      files:
+        description: The preseed.cfg file paths to validate, separated by spaces
         type: string
         required: false
         default: preseed.cfg
@@ -58,4 +58,10 @@ jobs:
           apt-get install debconf -y
 
       - name: Validate Preseed
-        run: debconf-set-selections -c ${{ inputs.file }}
+        run: |
+          for file in ${{ inputs.files }}; do
+            echo "Validating $file"
+            echo
+            debconf-set-selections -c "$file"
+            echo
+          done
