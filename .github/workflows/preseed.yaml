@@ -25,7 +25,7 @@ on:
       file:
         description: The preseed.cfg file path
         type: string
-        required: true
+        required: false
         default: preseed.cfg
 
 permissions:
