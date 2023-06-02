@@ -22,8 +22,8 @@ name: HashiCorp Packer
 on:
   workflow_call:
     inputs:
-      file:
-        description: The Packer .pkr.hcl file path
+      files:
+        description: The Packer .pkr.hcl file paths to validate, separated by spaces
         type: string
         required: true
 
@@ -50,5 +50,10 @@ jobs:
 
       - name: Validate template.pkr.hcl
         run: |
-          packer init     ${{ inputs.file }}
-          packer validate ${{ inputs.file }}
+          for file in ${{ inputs.files }}; do
+            echo "Validating $file"
+            echo
+            packer init     "$file"
+            packer validate "$file"
+            echo
+          done
