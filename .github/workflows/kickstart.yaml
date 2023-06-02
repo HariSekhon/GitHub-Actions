@@ -22,8 +22,8 @@ name: Redhat Kickstart
 on:
   workflow_call:
     inputs:
-      file:
-        description: The Redhat Kickstart file path
+      files:
+        description: The Redhat Kickstart file paths to validate, separated by spaces
         type: string
         required: false
         default: anaconda-ks.cfg
@@ -53,4 +53,10 @@ jobs:
         run: dnf install pykickstart -y
 
       - name: Validate Kickstart
-        run: ksvalidator ${{ inputs.file }}
+        run: |
+          for file in ${{ inputs.files }}; do
+            echo "Validating $file"
+            echo
+            ksvalidator "$file"
+            echo
+          done
