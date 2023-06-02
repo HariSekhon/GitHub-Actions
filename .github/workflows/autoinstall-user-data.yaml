@@ -21,11 +21,11 @@ name: Ubuntu AutoInstaller Cloud-Init
 
 on:
   workflow_call:
-      file:
-        description: The Ubuntu AutoInstaller Cloud-Init user-data file path
-        type: string
-        required: false
-        default: autoinstall-user-data
+    file:
+      description: The Ubuntu AutoInstaller Cloud-Init user-data file path
+      type: string
+      required: false
+      default: autoinstall-user-data
 
 permissions:
   contents: read
