@@ -52,6 +52,10 @@ jobs:
       - name: Validate Packer HCL
         run: |
           for file in ${{ inputs.files }}; do
+            if [[ "$file" =~ \.tart\. ]]; then
+              # ignoring invalid remote binary packer-plugin-tart_v1.3.1_x5.0_darwin_arm64.zip: wrong system, expected linux_amd64
+              continue
+            fi
             echo "Validating $file"
             echo
             packer init     "$file"
