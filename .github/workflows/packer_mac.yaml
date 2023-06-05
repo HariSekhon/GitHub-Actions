@@ -41,9 +41,8 @@ defaults:
 
 jobs:
   packer:
-    name: Pacmacos-13
-    runs-on: macos-latest
-    container: hashicorp/packer:light
+    name: Packer
+    runs-on: macos-13
     steps:
       - uses: actions/checkout@v3
         #name: Git Checkout  # better to show the action@version
