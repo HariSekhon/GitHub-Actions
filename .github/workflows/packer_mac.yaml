@@ -16,6 +16,8 @@
 #                 H a s h i C o r p   P a c k e r   o n   M a c
 # ============================================================================ #
 
+# There are not M1/M2 Mac runners yet, have to wait before we can use this
+
 ---
 name: HashiCorp Packer Mac
 
@@ -50,7 +52,7 @@ jobs:
       - name: Validate Packer HCL
         run: |
           for file in ${{ inputs.files }}; do
-            if ! [[ "$file" =~ \.tart\. ]]; then
+            if ! [[ "$file" =~ arm64|aarch64 ]]; then
               continue
             fi
             echo "Validating $file"
