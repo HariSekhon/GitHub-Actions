@@ -148,7 +148,8 @@ jobs:
 ```
 See [README](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/README.md) for details on ignoring inaccessible / partially constructed links or those containing variables
 
-### Auto-Merge Production hotfixes back to Staging
+
+## Auto-Merge Production hotfixes back to Staging
 
 Merges via a Pull Request for full auditing.
 
