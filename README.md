@@ -34,11 +34,13 @@ Forked from [HariSekhon/Templates](https://github.com/HariSekhon/Templates), for
 
 To see GitHub Contexts available, including undocumented fields, see [HariSekhon/GitHub-Actions-Contexts](https://github.com/HariSekhon/GitHub-Actions-Contexts).
 
+
 ## Examples
 
 In your GitHub repo, import these workflows by adding small yaml files to the `.github/workflows/` directory.
 
-### Scan for Secrets and Security issues
+
+## Scan for Secrets and Security issues
 
 [![Semgrep](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/semgrep.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/semgrep.yaml)
 Alerts appear under the GitHub repo's Security tab -> Code scanning alerts.
@@ -62,7 +64,8 @@ jobs:
       SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
 ```
 
-### Analyze your Terraform code security & best practices
+
+## Analyze your Terraform code security & best practices
 
 [![tfsec](https://github.com/HariSekhon/Terraform/actions/workflows/tfsec.yaml/badge.svg)](https://github.com/HariSekhon/Terraform/actions/workflows/tfsec.yaml)
 Alerts appear under Security -> Code scanning alerts.
@@ -75,7 +78,8 @@ jobs:
     uses: HariSekhon/GitHub-Actions/.github/workflows/tfsec.yaml@master
 ```
 
-### Terraform Plan & Apply
+
+## Terraform Plan & Apply
 
 Plans - updates Pull Requests with the results of validation, format check and full Change Plan outputs
 
@@ -93,7 +97,8 @@ jobs:
 ```
 For more sophisticated examples including approvals, secrets, branch and path selection etc. see my [Terraform repo](https://github.com/HariSekhon/Terraform)'s templates for [terraform-plan.yaml](https://github.com/HariSekhon/Terraform/blob/master/.github/workflows/terraform-plan.yaml.template) and [terraform-apply.yaml](https://github.com/HariSekhon/Terraform/blob/master/.github/workflows/terraform-apply.yaml.template)
 
-### Docker Build and push to DockerHub
+
+## Docker Build and push to DockerHub
 
 [![Docker Build DevOps Bash Tools (Ubuntu)](https://github.com/HariSekhon/Dockerfiles/actions/workflows/docker_build_devops_bash_tools_ubuntu.yaml/badge.svg)](https://github.com/HariSekhon/Dockerfiles/actions/workflows/docker_build_devops_bash_tools_ubuntu.yaml)
 
@@ -111,7 +116,8 @@ jobs:
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 ```
 
-### Docker Build and push to AWS ECR
+
+## Docker Build and push to AWS ECR
 
 Create `.github/workflows/docker_build_aws_ecr.yaml`:
 ```yaml
@@ -128,7 +134,8 @@ jobs:
 ```
 Creates several useful tags, supports multi-stage build caching, see [README](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/README.md) for details.
 
-### Check for Broken URL Links
+
+## Check for Broken URL Links
 
 [![URL Links](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/url_links.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/url_links.yaml)
 
@@ -157,7 +164,8 @@ jobs:
       base: staging     # to
 ```
 
-### Mirror Repos to GitLab for DR Backups
+
+## Mirror Repos to GitLab for DR Backups
 
 Mirrors all/given GitHub repos to GitLab - including all branches and tags, and GitHub repo description
 
@@ -178,7 +186,8 @@ jobs:
       GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
 ```
 
-### AWS CodeArtifact - Publish a Python Package
+
+## AWS CodeArtifact - Publish a Python Package
 
 ```yaml
 on:
@@ -197,6 +206,7 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
 ```
+
 
 ## Production
 
@@ -219,6 +229,7 @@ If using environment branches enable the [fork-update-pr](https://github.com/Har
 Copy `.github/workflows` to a private repo. Not recommended as it's the most manual legacy approach.
 
 You will be responsible for committing and reconciling any divergences in your local copies.
+
 
 ## Related Repositories
 
