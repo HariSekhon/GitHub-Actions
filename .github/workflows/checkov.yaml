@@ -112,7 +112,7 @@ jobs:
           #framework: terraform # optional: run only on a specific infrastructure {cloudformation,terraform,kubernetes,all}
           framework: ${{ inputs.framework }}
           output_format: sarif # optional: the output format, one of: cli, json, junitxml, github_failed_only, or sarif. Default: sarif
-          compact: true  # avoids output length related errors like "An error occurred trying to start process '/home/runner/runners/2.294.0/externals/node12/bin/node' with working directory '/home/runner/work/terraform/terraform'. Argument list too long"
+          compact: true  # avoids output length related errors like "An error occurred trying to start process '/home/runner/runners/2.294.0/externals/node12/bin/node' with working directory '/home/runner/work/harisekhon/terraform'. Argument list too long"
           download_external_modules: true # optional: download external terraform modules from public git repositories and terraform registry
           #log_level: DEBUG # optional: set log level. Default WARNING
           log_level: ${{ env.LOG_LEVEL }}
