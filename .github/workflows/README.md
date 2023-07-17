@@ -269,7 +269,7 @@ These 3 permissions are needed for workflows that report to GitHub Security tab,
 - [kics.yaml](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/kics.yaml)
 - [semgrep.yaml](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/semgrep.yaml)
 - [tfsec.yaml](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/tfsec.yaml)
-- [trivy_github.yaml](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/trivy_github.yaml)
+- [trivy.yaml](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/trivy.yaml)
 
 
 ## Linting Auto-fixers
