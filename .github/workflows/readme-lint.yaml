@@ -19,10 +19,16 @@ on:
     branches:
       - master
       - main
+    paths:
+      - README.md
+      - .github/workflows/readme-lint.yaml
   pull_request:
     branches:
       - master
       - main
+    paths:
+      - README.md
+      - .github/workflows/readme-lint.yaml
   workflow_call:
   workflow_dispatch:
   schedule:
