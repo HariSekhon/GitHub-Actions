@@ -21,14 +21,14 @@ on:
       - main
     paths:
       - '**.md'
-      - .github/workflows/readme.yaml
+      - .github/workflows/markdown.yaml
   pull_request:
     branches:
       - master
       - main
     paths:
       - '**.md'
-      - .github/workflows/readme.yaml
+      - .github/workflows/markdown.yaml
   workflow_call:
   workflow_dispatch:
   schedule:
