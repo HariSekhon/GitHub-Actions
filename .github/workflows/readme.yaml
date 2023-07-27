@@ -12,7 +12,7 @@
 #
 
 ---
-name: Readme lint
+name: Markdown Lint
 
 on:
   push:
@@ -20,15 +20,15 @@ on:
       - master
       - main
     paths:
-      - README.md
-      - .github/workflows/readme-lint.yaml
+      - '**.md'
+      - .github/workflows/readme.yaml
   pull_request:
     branches:
       - master
       - main
     paths:
-      - README.md
-      - .github/workflows/readme-lint.yaml
+      - '**.md'
+      - .github/workflows/readme.yaml
   workflow_call:
   workflow_dispatch:
   schedule:
