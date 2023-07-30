@@ -15,6 +15,13 @@
 #
 # See adjacent counterpart workflow unlock_brn
 
+# XXX: Requires a PAT token to avoid this error:
+#
+#        {
+#          "message": "Resource not accessible by integration",
+#          "documentation_url": "https://docs.github.com/rest/branches/branch-protection#update-branch-protection"
+#        }
+
 ---
 name: Lock Branch
 
@@ -40,7 +47,8 @@ defaults:
 env:
   BRANCH: ${{ inputs.branch || github.event.inputs.branch }}
   REPO: ${{ github.repository }}
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  # XXX: Requires PAT loaded to Secrets for permission
+  GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
   # XXX: API requires these fields but this is bad - could wipe out existing values
   PAYLOAD: '{"required_status_checks": null, "enforce_admins": false, "required_pull_request_reviews": null, "restrictions": null, "lock_branch": true}'
 
