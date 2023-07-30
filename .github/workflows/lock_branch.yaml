@@ -47,11 +47,19 @@ defaults:
 env:
   BRANCH: ${{ inputs.branch || github.event.inputs.branch }}
   REPO: ${{ github.repository }}
+
   # XXX: Requires PAT loaded to Secrets for permission
   GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
   # XXX: API requires these fields but this is bad - could wipe out existing values
-  PAYLOAD: '{"lock_branch": true}'
-  #PAYLOAD: '{"required_status_checks": null, "enforce_admins": false, "required_pull_request_reviews": null, "restrictions": null, "lock_branch": true}'
+  #
+  #   {
+  #     "message": "Invalid request.\n\n\"enforce_admins\", \"required_pull_request_reviews\", \"required_status_checks\", \"restrictions\" weren't supplied.",
+  #     "documentation_url": "https://docs.github.com/rest/branches/branch-protection#update-branch-protection"
+  #   }
+  #
+  #PAYLOAD: '{"lock_branch": true}'
+  PAYLOAD: '{"required_status_checks": null, "enforce_admins": false, "required_pull_request_reviews": null, "restrictions": null, "lock_branch": true}'
 
 jobs:
   lock_branch:
