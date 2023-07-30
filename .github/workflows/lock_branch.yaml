@@ -50,7 +50,8 @@ env:
   # XXX: Requires PAT loaded to Secrets for permission
   GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
   # XXX: API requires these fields but this is bad - could wipe out existing values
-  PAYLOAD: '{"required_status_checks": null, "enforce_admins": false, "required_pull_request_reviews": null, "restrictions": null, "lock_branch": true}'
+  PAYLOAD: '{"lock_branch": true}'
+  #PAYLOAD: '{"required_status_checks": null, "enforce_admins": false, "required_pull_request_reviews": null, "restrictions": null, "lock_branch": true}'
 
 jobs:
   lock_branch:
