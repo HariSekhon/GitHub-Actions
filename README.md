@@ -4,6 +4,7 @@
 [![GitHub forks](https://img.shields.io/github/forks/HariSekhon/GitHub-Actions?logo=github)](https://github.com/HariSekhon/GitHub-Actions/network)
 [![Lines of Code](https://img.shields.io/badge/lines%20of%20code-6.5k-lightgrey?logo=codecademy)](https://github.com/HariSekhon/GitHub-Actions)
 [![License](https://img.shields.io/github/license/HariSekhon/GitHub-Actions)](https://github.com/HariSekhon/GitHub-Actions/blob/master/LICENSE)
+[![My LinkedIn](https://img.shields.io/badge/LinkedIn%20Profile-HariSekhon-blue?logo=linkedin)](https://www.linkedin.com/in/HariSekhon/)
 [![GitHub Last Commit](https://img.shields.io/github/last-commit/HariSekhon/GitHub-Actions?logo=github)](https://github.com/HariSekhon/GitHub-Actions/commits/master)
 
 [![CI Builds Overview](https://img.shields.io/badge/CI%20Builds-Overview%20Page-blue?logo=circleci)](https://harisekhon.github.io/CI-CD/)
