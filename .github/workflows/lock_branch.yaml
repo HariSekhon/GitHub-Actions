@@ -31,7 +31,7 @@ on:
         required: true
 
 permissions:
-  contents: read
+  contents: write
 
 defaults:
   run:
