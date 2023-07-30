@@ -31,17 +31,11 @@ on:
       branch:
         type: string
         required: true
-      unlock:
-        type: boolean
-        default: false
   workflow_dispatch:
     inputs:
       branch:
         type: string
         required: true
-      unlock:
-        type: boolean
-        default: false
 
 permissions:
   contents: read
@@ -65,11 +59,10 @@ env:
   #   }
   #
   #PAYLOAD: '{"lock_branch": true}'
-  #PAYLOAD: '{"required_status_checks": null, "enforce_admins": false, "required_pull_request_reviews": null, "restrictions": null, "lock_branch": true}'
+  PAYLOAD: '{"required_status_checks": null, "enforce_admins": false, "required_pull_request_reviews": null, "restrictions": null, "lock_branch": true}'
 
 jobs:
   lock_branch:
-    if: ${{ ! ( inputs.unlock || github.event.inputs.unlock ) }}
     name: Lock Branch
     runs-on: ubuntu-latest
     steps:
@@ -79,37 +72,6 @@ jobs:
       - name: Lock Branch
         run: |
           PAYLOAD='{"required_status_checks": null, "enforce_admins": false, "required_pull_request_reviews": null, "restrictions": null, "lock_branch": true}'
-          if ! \
-            curl -sSL --fail \
-            -X PUT \
-            -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer $GITHUB_TOKEN" \
-            -d "$PAYLOAD" \
-            "https://api.github.com/repos/$REPO/branches/$BRANCH/protection"; then
-
-            # re-run it without --fail hiding the content output containing the error message details, so we can debug it at a glance
-            curl -sSL \
-            -X PUT \
-            -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer $GITHUB_TOKEN" \
-            -d "$PAYLOAD" \
-            "https://api.github.com/repos/$REPO/branches/$BRANCH/protection"
-
-            exit 1
-
-          fi
-
-  unlock_branch:
-    if: ${{ inputs.unlock || github.event.inputs.unlock }}
-    name: Unlock Branch
-    runs-on: ubuntu-latest
-    steps:
-      - name: Environment
-        run: env | sort
-
-      - name: Unlock Branch
-        run: |
-          PAYLOAD='{"required_status_checks": null, "enforce_admins": false, "required_pull_request_reviews": null, "restrictions": null, "lock_branch": false}'
           if ! \
             curl -sSL --fail \
             -X PUT \
