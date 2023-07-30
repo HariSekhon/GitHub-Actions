@@ -60,9 +60,18 @@ jobs:
 
       - name: Lock Branch
         run: |
-          curl -sSL \
+          if ! \
+            curl -sSLf \
             -X PUT \
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer $GITHUB_TOKEN"\
             -d "$PAYLOAD" \
-            "https://api.github.com/repos/$REPO/branches/$BRANCH/protection"
+            "https://api.github.com/repos/$REPO/branches/$BRANCH/protection"; then
+            curl -L \
+            -X PUT \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GITHUB_TOKEN"\
+            -d "$PAYLOAD" \
+            "https://api.github.com/repos/$REPO/branches/$BRANCH/protection"; then
+            exit 1
+          fi
