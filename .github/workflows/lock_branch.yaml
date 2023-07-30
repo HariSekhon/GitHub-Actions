@@ -13,7 +13,7 @@
 
 # Useful to implement code freezes on branches - call ad-hoc or on a recurring 'schedule' in the calling workflow
 #
-# See adjacent counterpart workflow unlock_brn
+# See adjacent counterpart workflow unlock_branch.yaml
 
 # XXX: Requires a PAT token to avoid this error:
 #
