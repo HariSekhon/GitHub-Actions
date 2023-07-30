@@ -65,7 +65,7 @@ jobs:
             curl -sSL --fail \
             -X PUT \
             -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer $GITHUB_TOKEN"\
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
             -d "$PAYLOAD" \
             "https://api.github.com/repos/$REPO/branches/$BRANCH/protection"; then
 
@@ -73,7 +73,7 @@ jobs:
             curl -sSL \
             -X PUT \
             -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer $GITHUB_TOKEN"\
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
             -d "$PAYLOAD" \
             "https://api.github.com/repos/$REPO/branches/$BRANCH/protection"
 
