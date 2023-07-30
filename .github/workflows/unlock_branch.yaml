@@ -1,0 +1,92 @@
+#
+#  Author: Hari Sekhon
+#  Date: 2023-07-30 01:26:06 +0100 (Sun, 30 Jul 2023)
+#
+#  vim:ts=2:sts=2:sw=2:et
+#
+#  https://github.com/HariSekhon/GitHub-Actions
+#
+#  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback
+#
+#  https://www.linkedin.com/in/HariSekhon
+#
+
+# Useful to implement code freezes on branches - call ad-hoc or on a recurring 'schedule' in the calling workflow
+#
+# See adjacent counterpart workflow lock_branch.yaml
+
+# XXX: Requires a PAT token to avoid this error:
+#
+#        {
+#          "message": "Resource not accessible by integration",
+#          "documentation_url": "https://docs.github.com/rest/branches/branch-protection#update-branch-protection"
+#        }
+
+---
+name: Unlock Branch
+
+on:
+  workflow_call:
+    inputs:
+      branch:
+        type: string
+        required: true
+  workflow_dispatch:
+    inputs:
+      branch:
+        type: string
+        required: true
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash -euxo pipefail {0}
+
+env:
+  BRANCH: ${{ inputs.branch || github.event.inputs.branch }}
+  REPO: ${{ github.repository }}
+
+  # XXX: Requires PAT loaded to Secrets for permission
+  GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
+  # XXX: API requires these fields but this is bad - could wipe out existing values
+  #
+  #   {
+  #     "message": "Invalid request.\n\n\"enforce_admins\", \"required_pull_request_reviews\", \"required_status_checks\", \"restrictions\" weren't supplied.",
+  #     "documentation_url": "https://docs.github.com/rest/branches/branch-protection#update-branch-protection"
+  #   }
+  #
+  #PAYLOAD: '{"lock_branch": true}'
+  PAYLOAD: '{"required_status_checks": null, "enforce_admins": false, "required_pull_request_reviews": null, "restrictions": null, "lock_branch": false}'
+
+jobs:
+  unlock_branch:
+    name: Unlock Branch
+    runs-on: ubuntu-latest
+    steps:
+      - name: Environment
+        run: env | sort
+
+      - name: Unlock Branch
+        run: |
+          if ! \
+            curl -sSL --fail \
+            -X PUT \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -d "$PAYLOAD" \
+            "https://api.github.com/repos/$REPO/branches/$BRANCH/protection"; then
+
+            # re-run it without --fail hiding the content output containing the error message details, so we can debug it at a glance
+            curl -sSL \
+            -X PUT \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -d "$PAYLOAD" \
+            "https://api.github.com/repos/$REPO/branches/$BRANCH/protection"
+
+            exit 1
+
+          fi
