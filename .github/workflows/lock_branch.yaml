@@ -60,7 +60,7 @@ jobs:
 
       - name: Lock Branch
         run: |
-          curl -sSLf \
+          curl -sSL \
             -X PUT \
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer $GITHUB_TOKEN"\
