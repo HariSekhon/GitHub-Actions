@@ -30,8 +30,8 @@ on:
         type: string
         required: true
 
-permissions:
-  contents: write
+#permissions:
+#  contents: write
 
 defaults:
   run:
