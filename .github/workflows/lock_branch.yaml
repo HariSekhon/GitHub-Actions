@@ -67,11 +67,14 @@ jobs:
             -H "Authorization: Bearer $GITHUB_TOKEN"\
             -d "$PAYLOAD" \
             "https://api.github.com/repos/$REPO/branches/$BRANCH/protection"; then
+
+            # re-run it without hiding the actual error output so we can debug it at a glance
             curl -L \
             -X PUT \
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer $GITHUB_TOKEN"\
             -d "$PAYLOAD" \
-            "https://api.github.com/repos/$REPO/branches/$BRANCH/protection"; then
+            "https://api.github.com/repos/$REPO/branches/$BRANCH/protection"
             exit 1
+
           fi
