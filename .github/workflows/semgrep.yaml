@@ -65,10 +65,10 @@ on:
     #     #p/nodejsscan
     #     #p/eslint-plugin-security
     #     #p/phpcs-security-audit
-    #  debug:
-    #    type: string
-    #    required: false
-    #    default: false
+      debug:
+        type: string
+        required: false
+        default: false
   workflow_dispatch:
     inputs:
       #config:
