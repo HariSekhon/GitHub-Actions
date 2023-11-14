@@ -163,6 +163,7 @@ jobs:
       #  #env:
       #    #SEMGREP_AGENT_DEBUG: 1
       #    #SEMGREP_TIMEOUT: 300
+
       - run: semgrep ci --sarif > semgrep.sarif
         env:
           # Connect to Semgrep Cloud Platform through your SEMGREP_APP_TOKEN.
