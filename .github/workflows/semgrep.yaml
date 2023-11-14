@@ -36,7 +36,7 @@ on:
     ignore-paths:
       - '**/README.md'
   workflow_call:
-    #inputs:
+    inputs:
     #  # https://semgrep.dev/explore
     #  # https://semgrep.dev/r  # full rule list
     #  config:
