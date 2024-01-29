@@ -210,7 +210,7 @@ jobs:
             TERRAFORM_VERSION="${{ inputs.terraform-version }}"
           fi
           if [ -n "${TERRAFORM_VERSION:-}" ]; then
-            echo "::set-output name=terraform-version::$TERRAFORM_VERSION"
+            echo "terraform-version=$TERRAFORM_VERSION" >> $GITHUB_OUTPUT
           fi
 
       - name: Generate AWS output
@@ -221,7 +221,7 @@ jobs:
              [ -n "${{ secrets.AWS_DEFAULT_REGION }}" ]; then
 
             echo "AWS access key, secret key, and region are set"
-            echo "::set-output name=aws::true"
+            echo "aws=true" >> $GITHUB_OUTPUT
           fi
 
       - name: Generate GCP output
@@ -230,14 +230,14 @@ jobs:
           if [ -n "${{ secrets.GCP_SERVICEACCOUNT_KEY }}" ]; then
 
             echo "GCP service account key is set"
-            echo "::set-output name=gcp_key::true"
+            echo "gcp_key=true" >> $GITHUB_OUTPUT
           fi
 
           if [ -n "${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}" ] &&
              [ -n "${{ secrets.GCP_SERVICE_ACCOUNT }}" ]; then
 
             echo "GCP keyless authentication identity provider and service account are set"
-            echo "::set-output name=gcp_keyless::true"
+            echo "gcp_keyless=true" >> $GITHUB_OUTPUT
           fi
 
       - name: GitHub Auth Status
@@ -256,9 +256,9 @@ jobs:
       #       [ "${{ steps.aws.outputs.aws }}" = true ] ||
       #       [ "${{ steps.aws.outputs.gcp }}" = true ] ||
       #       [ "${{ steps.aws.outputs.gcp_keyless }}" = true ]; then
-      #      echo "::set-output name=credentials-configured::true"
+      #      echo "credentials-configured=true" >> $GITHUB_OUTPUT
       #    else
-      #      echo "::set-output name=credentials-configured::false"
+      #      echo "credentials-configured=false" >> $GITHUB_OUTPUT
       #    fi
 
   #credentials_check:
@@ -344,7 +344,7 @@ jobs:
         id: configure-aws-credentials
         #if: needs.setup.outputs.aws == 'true'
         if: steps.aws.outputs.aws == 'true'
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -482,7 +482,7 @@ jobs:
             const run_link = '<a href="' + run_url + '">workflow run</a>'
             const fs = require('fs')
             const plan_file = fs.readFileSync(process.env.TERRAFORM_PLAN_TMPFILE, 'utf8')
-            const plan = plan_file.length > 65000 ? plan_file.toString().substring(0, 65000) + " ..." : plan_file
+            const plan = plan_file.length > 65000 ? "...\n..." + plan_file.toString().substring(plan_file.length - 65000, plan_file.length).split("%0A").join("\n") : plan_file
             const truncated_message = plan_file.length > 65000 ? `Output is too long and was truncated. You can see the full Plan in the ${run_link}<br /><br />` : ""
             const output = `### GitHub Workflow: ${process.env.WORKFLOW_NAME}
 

@@ -1,0 +1,99 @@
+#  vim:ts=2:sts=2:sw=2:et
+#
+#  Author: Hari Sekhon
+#  Date: 2023-02-24 01:57:17 +0000 (Fri, 24 Feb 2023)
+#
+#  https://github.com/HariSekhon/GitHub-Actions
+#
+#  License: see accompanying Hari Sekhon LICENSE file
+#
+#  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback to help steer this or other code I publish
+#
+#  https://www.linkedin.com/in/HariSekhon
+#
+
+# JFrog CLI - GitHub Action
+#
+#   https://github.com/marketplace/actions/setup-jfrog-cli
+
+# Generate a token on JFrog Cloud access token here:
+#
+#   https://firstmode.jfrog.io/ui/admin/artifactory/user_profile
+
+---
+name: JFrog Cloud Artifactory Auth Test
+
+on:
+  workflow_call:
+    # https://github.com/marketplace/actions/setup-jfrog-cli
+    inputs:
+      JF_URL:
+        description: 'JFrog platform url (for example: https://acme.jfrog.io)'
+        type: string
+        required: false
+    secrets:
+      JF_URL:
+        required: false
+      #
+      # Either
+      #
+      JF_USER:
+        required: false
+      JF_PASSWORD:
+        required: false
+      #
+      # or
+      #
+      JF_ACCESS_TOKEN:
+        required: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash -euxo pipefail {0}
+
+env:
+  # https://github.com/marketplace/actions/setup-jfrog-cli
+  JF_URL: ${{ inputs.JF_URL || secrets.JF_URL }}
+  JF_USER: ${{ secrets.JF_USER }}
+  JF_PASSWORD: ${{ secrets.JF_PASSWORD }}
+  JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
+
+jobs:
+  jfrog_cli_test:
+    name: JFrog CLI Authentication Test
+    runs-on: ubuntu-latest
+    steps:
+      # https://github.com/marketplace/actions/setup-jfrog-cli
+      - uses: jfrog/setup-jfrog-cli@v3
+
+      - name: JFrog CLI version
+        run: jf --version
+
+      # this tests the authentication token works, otherwise you'll get this error from the CLI:
+      #
+      #   02:45:14 [🚨Error] server response: 401 Unauthorized
+      #   {
+      #     "errors": [
+      #       {
+      #         "status": 401,
+      #         "message": "Props Authentication Token not found"
+      #       }
+      #     ]
+      #   }
+      #   {
+      #     "errors": [
+      #       {
+      #         "status": 401,
+      #         "message": "Props Authentication Token not found"
+      #       }
+      #     ]
+      #   }
+      - name: JFrog CLI artifactory ping
+        run: jf rt ping

@@ -58,6 +58,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - uses: actions/checkout@v3
+        with:
+          repository: HariSekhon/DevOps-Bash-tools
+          submodules: 'true'  # requires Git 2.18+ to be installed first
+          path: bash-tools
+
       - name: Environment
         run: env | sort
 
@@ -68,12 +74,22 @@ jobs:
       - name: Bash version
         run: bash --version
 
+      - name: Install Datree
+        run: bash-tools/setup/install_datree.sh
+
+      - name: Datree version
+        run: datree version
+
       - name: Datree Kustomize All Policy Check
         run: |
           set -euxo pipefail
           find "$DIR" -type f -name 'kustomization.y*ml' |
           while read -r kustomization; do
+            echo "Materializing $kustomization -> $kustomization.materialized"
             dir="$(dirname "$kustomization")"
-            datree kustomize test "$dir" ${ARGS:-} || exit 1
-            echo
+            pushd "$dir" >/dev/null
+            kustomize build --enable-helm > kustomization.yaml.materialized
+            popd >/dev/null
           done
+          # XXX: doesn't support --enable-helm yet needed for my Kubernetes-configs repo
+          datree test "$DIR"/**.yaml ${ARGS:-}

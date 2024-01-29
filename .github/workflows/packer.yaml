@@ -1,0 +1,66 @@
+#  vim:ts=2:sts=2:sw=2:et
+#
+#  Author: Hari Sekhon
+#  Date: 2023-05-31 01:49:54 +0100 (Wed, 31 May 2023)
+#
+#  https://github.com/HariSekhon/Templates
+#
+#  License: see accompanying Hari Sekhon LICENSE file
+#
+#  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback to help steer this or other code I publish
+#
+#  https://www.linkedin.com/in/HariSekhon
+#
+
+# ============================================================================ #
+#                        H a s h i C o r p   P a c k e r
+# ============================================================================ #
+
+---
+name: HashiCorp Packer
+
+on:
+  workflow_call:
+    inputs:
+      files:
+        description: The Packer .pkr.hcl file paths to validate, separated by spaces
+        type: string
+        required: false
+        default: '*.pkr.hcl'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash -euxo pipefail {0}
+
+jobs:
+  packer:
+    name: Packer
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    container: hashicorp/packer:light
+    steps:
+      - uses: actions/checkout@v3
+        #name: Git Checkout  # better to show the action@version
+
+      - name: Validate Packer HCL
+        run: |
+          for file in ${{ inputs.files }}; do
+            # Tart is only for Apple Silicon chips and assumes to install an arm64 darwin plugin which fails on GitHub's runners which are x86_64
+            #if [[ "$file" =~ \.tart\. ]]; then
+            if [[ "$file" =~ arm64|aarch64 ]]; then
+              # ignoring invalid remote binary packer-plugin-tart_v1.3.1_x5.0_darwin_arm64.zip: wrong system, expected linux_amd64
+              continue
+            fi
+            echo "Validating $file"
+            echo
+            packer init     "$file"
+            packer validate "$file"
+            echo
+          done

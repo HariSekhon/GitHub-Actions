@@ -1,0 +1,67 @@
+#  vim:ts=2:sts=2:sw=2:et
+#
+#  Author: Hari Sekhon
+#  Date: 2023-05-31 01:49:54 +0100 (Wed, 31 May 2023)
+#
+#  https://github.com/HariSekhon/Templates
+#
+#  License: see accompanying Hari Sekhon LICENSE file
+#
+#  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback to help steer this or other code I publish
+#
+#  https://www.linkedin.com/in/HariSekhon
+#
+
+# ============================================================================ #
+#       U b u n t u   A u t o I n s t a l l e r   /   C l o u d - I n i t
+# ============================================================================ #
+
+---
+name: Ubuntu AutoInstaller Cloud-Init
+
+on:
+  workflow_call:
+    inputs:
+      files:
+        description: The Ubuntu AutoInstaller Cloud-Init user-data file paths to validate, separate by spaces
+        type: string
+        required: false
+        default: autoinstall-user-data
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash -euxo pipefail {0}
+
+env:
+  DEBIAN_FRONTEND: noninteractive
+
+jobs:
+  cloudinit:
+    name: Cloud-Init
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    container: ubuntu
+    steps:
+      - uses: actions/checkout@v3
+        #name: Git Checkout  # better to show the action@version
+
+      - name: Install Cloud-Init
+        run: |
+          apt-get update
+          apt-get install cloud-init -y
+
+      - name: Validate AutoInstall User Data
+        run: |
+          for file in ${{ inputs.files }}; do
+            echo "Validating $file"
+            echo
+            cloud-init schema --config-file "$file"
+            echo
+          done

@@ -70,6 +70,8 @@ jobs:
     #if: github.repository == 'HariSekhon/Github-Actions'
 
     runs-on: ubuntu-latest
+    container:
+      image: returntocorp/semgrep
     steps:
       - name: Environment
         run: env | sort
@@ -81,12 +83,20 @@ jobs:
         with:
           submodules: recursive  # requires Git 2.18+ to be installed first
 
-      - uses: returntocorp/semgrep-action@v1
-        with:
-          publishToken: ${{ secrets.SEMGREP_APP_TOKEN }}
-          # does not accept config key - must use semgrep.dev to configure rules to run
-          config: >- # more at semgrep.dev/explore
-        # Change job timeout (default is 1800 seconds; set to 0 to disable)
-        #env:
-          #SEMGREP_AGENT_DEBUG: 1
-          #SEMGREP_TIMEOUT: 300
+      # Removed
+      #- uses: returntocorp/semgrep-action@v1
+      #  with:
+      #    publishToken: ${{ secrets.SEMGREP_APP_TOKEN }}
+      #    # does not accept config key - must use semgrep.dev to configure rules to run
+      #    config: >- # more at semgrep.dev/explore
+      #  # Change job timeout (default is 1800 seconds; set to 0 to disable)
+      #  #env:
+      #    #SEMGREP_AGENT_DEBUG: 1
+      #    #SEMGREP_TIMEOUT: 300
+
+      - run: semgrep ci
+        env:
+          # Connect to Semgrep Cloud Platform through your SEMGREP_APP_TOKEN.
+          # Generate a token from Semgrep Cloud Platform > Settings
+          # and add it to your GitHub secrets.
+          SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}

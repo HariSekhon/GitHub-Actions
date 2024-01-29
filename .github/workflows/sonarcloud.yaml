@@ -1,0 +1,68 @@
+#
+#  Author: Hari Sekhon
+#  Date: 2023-04-14 23:53:43 +0100 (Fri, 14 Apr 2023)
+#
+#  vim:ts=2:sts=2:sw=2:et
+#
+#  https://github.com/HariSekhon/GitHub-Actions
+#
+#  License: see accompanying Hari Sekhon LICENSE file
+#
+#  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback to help steer this or other code I publish
+#
+#  https://www.linkedin.com/in/HariSekhon
+#
+
+# ============================================================================ #
+#                              S o n a r C l o u d
+# ============================================================================ #
+
+---
+name: SonarCloud
+on:
+  #push:
+  #  branches:
+  #    - master
+  #    - main
+  #  ignore-paths:
+  #    - '**/README.md'
+  #pull_request:
+  #  branches:
+  #    - master
+  #    - main
+  #  ignore-paths:
+  #    - '**/README.md'
+  #  types:
+  #    - opened
+  #    - synchronize
+  #    - reopened
+  workflow_call:
+    secrets:
+      #GITHUB_TOKEN:
+      #  required: true
+      SONAR_TOKEN:
+        required: true
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  SonarCloud:
+    name: SonarCloud
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

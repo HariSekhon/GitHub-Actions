@@ -30,7 +30,11 @@ name: My Workflow
 # ============================================================================ #
 
 # https://docs.github.com/en/actions/learn-github-actions/environment-variables#default-environment-variables
+
+# XXX: You can now set default environment variables at the repo or organization level:
 #
+# https://docs.github.com/en/actions/learn-github-actions/variables#defining-configuration-variables-for-multiple-workflows
+
 # https://docs.github.com/en/actions/learn-github-actions/contexts#github-context
 #
 # GITHUB_WORKFLOW = name of the workflow (set at top of this file)
@@ -222,6 +226,7 @@ on:
         type: string
         required: true
       debug:
+        # XXX: this still only works as a string comparison ${{ gitihub.events.inputs.debug == 'true' }}
         type: boolean
         required: false
         default: false
@@ -433,7 +438,7 @@ jobs:
       #
       # do checkout first so we can generate dynamic environment variables for branch, tags, SHA etc.
       # https://github.com/marketplace/actions/checkout
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         #name: Git Checkout  # better to show the action@version
         with:
           submodules: 'true'  # requires Git 2.18+ to be installed first
@@ -452,7 +457,7 @@ jobs:
         run: git config --global --add safe.directory "${GITHUB_WORKSPACE:-$PWD}"
 
       # checkout another repo
-      #- uses: actions/checkout@v2
+      #- uses: actions/checkout@v3
       #  with:
       #    repository: owner/repo
       #    ref: master
@@ -462,7 +467,7 @@ jobs:
                      #    Error: Repository path '/var/jenkins_home/jenkins' is not under '/__w/Jenkins/Jenkins'
 
       # https://github.com/aws-actions/configure-aws-credentials#configure-aws-credentials-action-for-github-actions
-      - uses: aws-actions/configure-aws-credentials@v1
+      - uses: aws-actions/configure-aws-credentials@v2
         #name: Configure AWS credentials
         id: configure-aws-credentials  # id is necessary to extract AWS_ACCOUNT_ID further down
         with:
@@ -652,7 +657,7 @@ jobs:
       AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
     steps:
       # docker/build-push-action does the checkout for you, but if you want to dynamically generate extra tags you need this checkout first
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: 'true'  # requires Git 2.18+ to be installed first
 
@@ -895,7 +900,7 @@ jobs:
       # or consider using an external script to do all of the below like aws_ecr_docker_build_push.sh from DevOps Bash tools repo - https://github.com/HariSekhon/DevOps-Bash-tools
       #
       # see Setup section above for more info
-      - uses: aws-actions/configure-aws-credentials@v1
+      - uses: aws-actions/configure-aws-credentials@v2
         #name: Configure AWS credentials
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -1007,11 +1012,11 @@ jobs:
     runs-on: ubuntu-latest
     container: amazonlinux:2
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Configure AWS credentials
         id: configure-aws-credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

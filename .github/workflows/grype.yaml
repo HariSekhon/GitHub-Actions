@@ -12,7 +12,7 @@
 #
 
 ---
-name: Trivy Filesystem Scan
+name: Grype
 
 on:
   push:
@@ -20,7 +20,7 @@ on:
       - master
       - main
     paths:
-      - .github/workflows/trivy_fs.yaml
+      - .github/workflows/grype.yaml
     #ignore-paths:
     #  - '**/README.md'
   pull_request:
@@ -28,20 +28,20 @@ on:
       - master
       - main
     paths:
-      - .github/workflows/trivy_fs.yaml
+      - .github/workflows/grype.yaml
     #ignore-paths:
     #  - '**/README.md'
   workflow_call:
     inputs:
       path:
-        description: The filesystem path for Trivy to analyze
+        description: The filesystem path for Grype to analyze
         type: string
         default: .
         required: false
       severity:
         description: Set a severity to trigger CI workflow failure
         type: string
-        default: HIGH,CRITICAL
+        default: high
         required: false
       debug:
         type: string
@@ -50,14 +50,14 @@ on:
   workflow_dispatch:
     inputs:
       path:
-        description: The filesystem path for Trivy to analyze
+        description: The filesystem path for Grype to analyze
         type: string
         default: .
         required: false
       severity:
         description: Set a severity to trigger CI workflow failure
         type: string
-        default: HIGH,CRITICAL
+        default: high
         required: false
       debug:
         type: boolean
@@ -66,6 +66,7 @@ on:
 
 permissions:
   contents: read
+  security-events: write
 
 defaults:
   run:
@@ -78,25 +79,48 @@ env:
   DEBUG: ${{ inputs.debug == true || github.event.inputs.debug == 'true' || '' }}
 
 jobs:
-  trivy:
-    name: Trivy Filesystem Scan
+  grype:
+    name: Filesystem Scan
     runs-on: ubuntu-latest
-    container: aquasec/trivy:latest
     steps:
       - name: Environment
         run: env | sort
 
       - uses: actions/checkout@v3
 
-      - name: Trivy (Full Informational)
-        run: |
-          # informational to see all issues
-          trivy fs --no-progress "$SCAN_PATH"
-
-      - name: Trivy (with Severity Error Out)
+      - name: Grype Filsystem Scan
         if: ${{ inputs.severity || github.event.inputs.severity }}
-        env:
-          SEVERITY: ${{ inputs.severity || github.event.inputs.severity }}
-        run: |
-          # fail the pipeline if any of the issues are in $SEVERITY eg. HIGH,CRITICAL
-          trivy fs --no-progress --exit-code 1 --severity "$SEVERITY" "$SCAN_PATH"
+        # https://github.com/anchore/scan-action
+        uses: anchore/scan-action@v3
+        with:
+          path: ${{ env.SCAN_PATH }}
+          fail-build: true
+          severity-cutoff: ${{ inputs.severity || github.event.inputs.severity }}
+          output-format: table
+
+  # ============================================================================ #
+
+  grype_github:
+    name: Filesystem Scan GitHub Security tab
+    runs-on: ubuntu-latest
+    steps:
+      - name: Environment
+        run: env | sort
+
+      - uses: actions/checkout@v3
+
+      - name: Grype Generate Sarif
+        #if: ${{ inputs.severity || github.event.inputs.severity }}
+        id: scan
+        # https://github.com/anchore/scan-action
+        uses: anchore/scan-action@v3
+        with:
+          path: ${{ env.SCAN_PATH }}
+          fail-build: false
+          output-format: sarif
+
+      - name: Upload Grype sarif to GitHub Security tab
+        #if: ${{ ! ( inputs.no_sarif || github.event.inputs.sarif ) }}
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: ${{ steps.scan.outputs.sarif }}

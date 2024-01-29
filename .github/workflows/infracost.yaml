@@ -1,0 +1,126 @@
+#  vim:ts=2:sts=2:sw=2:et
+#
+#  Author: Hari Sekhon
+#  Date: 2023-01-16 14:18:50 +0000 (Mon, 16 Jan 2023)
+#
+#  https://github.com/HariSekhon/GitHub-Actions
+#
+#  License: see accompanying Hari Sekhon LICENSE file
+#
+#  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback to help steer this or other code I publish
+#
+#  https://www.linkedin.com/in/HariSekhon
+#
+
+# ============================================================================ #
+#                               I n f r a C o s t
+# ============================================================================ #
+
+# Runs Infracost to show Cloud cost estimates for changes in Pull Requests
+
+# https://dashboard.infracost.io/
+
+# https://www.infracost.io/docs/
+
+# https://github.com/infracost/actions
+
+# If you've got the paid version of InfraCost cloud you should use this instead:
+#
+# https://www.infracost.io/docs/integrations/github_app/
+
+---
+name: Infrastructure Cost Estimation
+
+on:
+  # calling workflows should use something like this pull_request:
+  #pull_request:
+  #  branches:
+  #    - main
+  #  paths:
+  #    - 'terraform/**'
+  #    - '**/*.tf'
+  workflow_call:
+    inputs:
+      tf_root:
+        description: Terraform root where an infracost.yml config file should be found
+        type: string
+        default: .
+        required: false
+      # running set -x for all runs
+      #debug:
+      #  description: Enable Debug Mode
+      #  type: boolean
+      #  required: false
+      #  default: false
+    secrets:
+      INFRACOST_API_KEY:
+        required: true
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash -euxo pipefail {0}
+
+env:
+  CONFIG: ${{ inputs.config }}
+  TF_ROOT: ${{ inputs.tf_root }}
+
+jobs:
+  infracost:
+    name: Infracost
+    runs-on: ubuntu-latest
+    steps:
+      #- name: Install Infracost
+      #  run: curl -fsSL https://raw.githubusercontent.com/infracost/infracost/master/scripts/install.sh | sh -x
+
+      #- name: Configure Infracost
+      #  run: infracost configure set api_key "${{ secrets.INFRACOST_API_KEY }}"
+
+      - name: Setup Infracost
+        uses: infracost/actions/setup@v2
+        # See https://github.com/infracost/actions/tree/master/setup for other inputs
+        # If you can't use this action, see Docker images in https://infracost.io/cicd
+        with:
+          api-key: ${{ secrets.INFRACOST_API_KEY }}
+
+      # check out the base branch to generate a baseline to compare the pull request to
+      - name: Checkout base branch
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.base.ref }}
+
+      # generate Infracost JSON file as the baseline
+      - name: Generate Infracost cost estimate baseline
+        run: |
+          infracost breakdown --path="$TF_ROOT" \
+                              --format=json \
+                              --out-file=/tmp/infracost-base.json
+
+      # check out the current PR branch so we can create a diff
+      - name: Checkout PR branch
+        uses: actions/checkout@v3
+
+      # generate an Infracost diff and save it to a JSON file
+      - name: Generate Infracost diff
+        run: |
+          infracost diff --path="$TF_ROOT" \
+                         --format=json \
+                         --compare-to=/tmp/infracost-base.json \
+                         --out-file=/tmp/infracost.json
+
+      - name: Post Infracost comment to the calling GitHub Pull Request
+        if: github.event.pull_request.number
+        run: |
+            infracost comment github --path=/tmp/infracost.json \
+                                     --repo="$GITHUB_REPOSITORY" \
+                                     --github-token="${{ github.token }}" \
+                                     --pull-request="${{ github.event.pull_request.number }}" \
+                                     --behavior=update
+                                     # 'update' behaviour updates the comment upon any change, see https://www.infracost.io/docs/features/cli_commands/#comment-on-pull-requests
