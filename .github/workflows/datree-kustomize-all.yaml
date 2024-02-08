@@ -75,7 +75,7 @@ jobs:
         run: bash --version
 
       - name: Install Datree
-        run: bash-tools/setup/install_datree.sh
+        run: bash-tools/install/install_datree.sh
 
       - name: Datree version
         run: datree version
