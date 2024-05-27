@@ -53,6 +53,9 @@ jobs:
         run: git --version
 
       - uses: actions/checkout@v3
+        #name: Git Checkout  # better to show the action@version
+        with:
+          submodules: 'true'  # requires Git 2.18+ to be installed first
 
       # create .mdlrc at the root of your repo to ignore some things like long lines,
       # see https://github.com/HariSekhon/DevOps-Bash-tools/blob/master/configs/.mdlrc
