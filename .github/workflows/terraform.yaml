@@ -146,6 +146,7 @@ env:
   TF_INPUT: "false"
   TF_IN_AUTOMATION: 1
   TERRAGRUNT_NON_INTERACTIVE: "true"
+  #TERRAGRUNT_NO_COLOR: "true"
   # XXX: inputs.debug will need to be switched back to a Boolean at some point but secrets.ACTIONS_RUNNER_DEBUG will stay a string comparison
   TF_LOG: ${{ ( inputs.debug == true || secrets.ACTIONS_RUNNER_DEBUG == 'true' ) && 'TRACE' || '' }}
   # pass one of these via env instead for a more granular subset of debug logs, uses same verbosity levels
