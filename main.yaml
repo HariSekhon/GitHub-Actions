@@ -125,7 +125,9 @@ env:
   #SELENIUM_HUB_URL: https://x.x.x.x/wd/hub/
 
   TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
-  TF_IN_AUTOMATION: "1"
+  TF_INPUT = "false"  # run Terraform non-interactively - don't prompt for any inputs
+  TF_IN_AUTOMATION: "1"  # don't output next command suggestions
+  TERRAGRUNT_NON_INTERACTIVE = "true"
   TF_WORKSPACE: ${{ env.ENV }}  # run same code against multiple environments
 
   # prevent script injection from inputs - https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#using-an-intermediate-environment-variable
