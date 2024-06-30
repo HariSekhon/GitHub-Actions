@@ -356,6 +356,26 @@ jobs:
     # ============================================================================ #
 
     runs-on: ubuntu-latest
+
+    #runs-on: # AND'd criteria when given list
+    #  - self-hosted
+    #  - linux
+
+    #runs-on:
+    #  - "${{ inputs.chosen-os }}"  # quotes required for expression
+    #
+    # Then add this to the on section near the top to give manual calling users the choice of OS to execute on:
+    #
+    #  on:
+    #    workflow_dispatch:
+    #      inputs:
+    #        chosen-os:
+    #          required: true
+    #          type: choice
+    #          options:
+    #            - Ubuntu
+    #            - macOS
+
 #    runs-on: ${{ matrix.os }}
 #    strategy:
 #      matrix:
