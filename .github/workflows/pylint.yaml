@@ -47,10 +47,10 @@ on:
         type: string
         required: true
         default: .
-      no-pip-install:
-        type: string
-        required: false
-        default: false
+      #no-pip-install:
+      #  type: string
+      #  required: false
+      #  default: false
       submodules:
         type: string
         required: false
@@ -73,10 +73,10 @@ on:
         type: string
         required: false
         default: recursive
-      no-pip-install:
-        type: boolean
-        required: false
-        default: false
+      #no-pip-install:
+      #  type: boolean
+      #  required: false
+      #  default: false
       debug:
         type: boolean
         required: false
@@ -121,7 +121,8 @@ jobs:
 
       - name: Install PyPI modules
         working-directory: ${{ inputs.working-directory }}
-        if: ${{ hashFiles('${{ inputs.working-directory }}/requirements.txt') != '' }}
+        #if: ${{ hashFiles('${{ inputs.working-directory }}/requirements.txt') != '' }}
+        #if: ! ${{ inputs.no-pip-install ! = 'true' }}
         run: pip install -r requirements.txt
 
       - name: Pylint
