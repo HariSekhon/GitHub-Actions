@@ -126,4 +126,4 @@ jobs:
 
       - name: Pylint
         working-directory: ${{ inputs.working-directory }}
-        run: pylint *.py  # should have a .pylintrc committed in the local repo working directory for customizing the checks
+        run: pylint ./*.py  # should have a .pylintrc committed in the local repo working directory for customizing the checks
