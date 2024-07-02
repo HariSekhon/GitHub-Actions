@@ -15,7 +15,15 @@
 #                                  P y L i n t
 # ============================================================================ #
 
-# should have a .pylintrc committed in the local repo working directory for customizing the checks
+# Should have a .pylintrc committed in the local repo working directory for customizing the checks
+#
+# See templates here:
+#
+#   https://github.com/HariSekhon/Templates/blob/master/.pylintrc
+#
+#   https://github.com/HariSekhon/DevOps-Python-tools/blob/master/.pylintrc
+#
+#   https://github.com/HariSekhon/pylib/blob/master/.pylintrc
 
 ---
 name: Pylint
