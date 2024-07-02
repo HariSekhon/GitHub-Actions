@@ -43,6 +43,10 @@ on:
         type: string
         required: true
         default: .
+      no-pip-install:
+        type: string
+        required: false
+        default: false
       submodules:
         type: string
         required: false
@@ -65,6 +69,10 @@ on:
         type: string
         required: false
         default: recursive
+      no-pip-install:
+        type: boolean
+        required: false
+        default: false
       debug:
         type: boolean
         required: false
@@ -107,6 +115,11 @@ jobs:
       - name: Install Pylint
         run: pip install pylint
 
-      - name: Pylint
-        run: pylint *.py  # should have a .pylintrc committed in the local repo working directory for customizing the checks
+      - name: Install PyPI modules
         working-directory: ${{ inputs.working-directory }}
+        if: ${{ hashFiles('requirements.txt') != '' }}
+        run: pip install -r requirements.txt
+
+      - name: Pylint
+        working-directory: ${{ inputs.working-directory }}
+        run: pylint *.py  # should have a .pylintrc committed in the local repo working directory for customizing the checks
