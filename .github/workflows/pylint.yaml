@@ -38,6 +38,10 @@ on:
       python-version:
         type: string
         required: true
+        # XXX: Python version 3.10 will need to be passed by the calling workflow as quoted '3.10' otherwise will evaluate to '3.1' and break with this error:
+        #
+        #   Error: The version '3.1' with architecture 'x64' was not found for Ubuntu 22.04.
+        #
         default: 3.10
       working-directory:
         type: string
