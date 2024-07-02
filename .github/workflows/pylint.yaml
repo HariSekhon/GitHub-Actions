@@ -121,7 +121,7 @@ jobs:
 
       - name: Install PyPI modules
         working-directory: ${{ inputs.working-directory }}
-        if: ${{ hashFiles('requirements.txt') != '' }}
+        if: ${{ hashFiles('${{ inputs.working-directory }}/requirements.txt') != '' }}
         run: pip install -r requirements.txt
 
       - name: Pylint
