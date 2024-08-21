@@ -61,6 +61,9 @@ env:
   ENV: dev
   DEBUG: ${{ inputs.debug == true || github.event.inputs.debug == true || '' }}
 
+  # ${{ env.PATH }} is not available in this context, but this works at the step-level env key
+  #PATH: ${{ env.PATH }}:bash-tools
+
   # or generate dynamic image including the registry, see step section
   DOCKER_IMAGE: myimage
   # must generate in Steps
