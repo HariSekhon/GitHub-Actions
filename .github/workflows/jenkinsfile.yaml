@@ -54,7 +54,7 @@ jobs:
       - name: Environment
         run: env | sort
 
-      # Workaround for actions/checkout now being able to checkout outside of $GITHUB_WORKSPACE and not being able to set GITHUB_WORKSPACE
+      # Workaround for actions/checkout not being able to checkout outside of $GITHUB_WORKSPACE and not being able to set GITHUB_WORKSPACE
       #
       #   https://github.com/actions/checkout/issues/197
       #
