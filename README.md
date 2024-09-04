@@ -35,27 +35,28 @@ Forked from [HariSekhon/Templates](https://github.com/HariSekhon/Templates), for
 
 To see GitHub Contexts available, including undocumented fields, see [HariSekhon/GitHub-Actions-Contexts](https://github.com/HariSekhon/GitHub-Actions-Contexts).
 
-
 ## Examples
 
 In your GitHub repo, import these workflows by adding small yaml files to the `.github/workflows/` directory.
-
 
 ## Scan for Secrets and Security issues
 
 [![Semgrep](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/semgrep.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/semgrep.yaml)
 Alerts appear under the GitHub repo's Security tab -> Code scanning alerts.
 
-[![Semgrep Cloud](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/semgrep-cloud.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/semgrep-cloud.yaml) Alerts appear in the https://semgrep.dev dashboard
+[![Semgrep Cloud](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/semgrep-cloud.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/semgrep-cloud.yaml) Alerts appear in the <https://semgrep.dev> dashboard
 
 Create `.github/workflows/semgrep.yaml` for local repo alerts:
+
 ```yaml
 on: [push]
 jobs:
   semgrep:
     uses: HariSekhon/GitHub-Actions/.github/workflows/semgrep.yaml@master
 ```
-or `.github/workflows/semgrep-cloud.yaml` for https://semgrep.dev alerts:
+
+or `.github/workflows/semgrep-cloud.yaml` for <https://semgrep.dev> alerts:
+
 ```yaml
 on: [push]
 jobs:
@@ -65,20 +66,19 @@ jobs:
       SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
 ```
 
-
 ## Analyze your Terraform code security & best practices
 
 [![tfsec](https://github.com/HariSekhon/Terraform/actions/workflows/tfsec.yaml/badge.svg)](https://github.com/HariSekhon/Terraform/actions/workflows/tfsec.yaml)
 Alerts appear under Security -> Code scanning alerts.
 
 Create `.github/workflows/tfsec.yaml`:
+
 ```yaml
 on: [push]
 jobs:
   tfsec:
     uses: HariSekhon/GitHub-Actions/.github/workflows/tfsec.yaml@master
 ```
-
 
 ## Terraform Plan & Apply
 
@@ -96,14 +96,15 @@ jobs:
     secrets:
       ...
 ```
-For more sophisticated examples including approvals, secrets, branch and path selection etc. see my [Terraform repo](https://github.com/HariSekhon/Terraform)'s templates for [terraform-plan.yaml](https://github.com/HariSekhon/Terraform/blob/master/.github/workflows/terraform-plan.yaml.template) and [terraform-apply.yaml](https://github.com/HariSekhon/Terraform/blob/master/.github/workflows/terraform-apply.yaml.template)
 
+For more sophisticated examples including approvals, secrets, branch and path selection etc. see my [Terraform repo](https://github.com/HariSekhon/Terraform)'s templates for [terraform-plan.yaml](https://github.com/HariSekhon/Terraform/blob/master/.github/workflows/terraform-plan.yaml.template) and [terraform-apply.yaml](https://github.com/HariSekhon/Terraform/blob/master/.github/workflows/terraform-apply.yaml.template)
 
 ## Docker Build and push to DockerHub
 
 [![Docker Build DevOps Bash Tools (Ubuntu)](https://github.com/HariSekhon/Dockerfiles/actions/workflows/docker_build_devops_bash_tools_ubuntu.yaml/badge.svg)](https://github.com/HariSekhon/Dockerfiles/actions/workflows/docker_build_devops_bash_tools_ubuntu.yaml)
 
 Create `.github/workflows/dockerhub_build.yaml`:
+
 ```yaml
 on: [push]
 jobs:
@@ -117,10 +118,10 @@ jobs:
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 ```
 
-
 ## Docker Build and push to AWS ECR
 
 Create `.github/workflows/docker_build_aws_ecr.yaml`:
+
 ```yaml
 on: [push]
 jobs:
@@ -133,28 +134,30 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
 ```
-Creates several useful tags, supports multi-stage build caching, see [README](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/README.md) for details.
 
+Creates several useful tags, supports multi-stage build caching, see [README](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/README.md) for details.
 
 ## Check for Broken URL Links
 
 [![URL Links](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/url_links.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/url_links.yaml)
 
 Create `.github/workflows/url_links.yaml`:
+
 ```yaml
 on: [push]
 jobs:
   url_links:
     uses: HariSekhon/GitHub-Actions/.github/workflows/url_links.yaml@master
 ```
-See [README](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/README.md) for details on ignoring inaccessible / partially constructed links or those containing variables
 
+See [README](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/README.md) for details on ignoring inaccessible / partially constructed links or those containing variables
 
 ## Auto-Merge Production hotfixes back to Staging
 
 Merges via a Pull Request for full auditing.
 
 Create `.github/workflows/merge_production_to_staging.yaml`:
+
 ```yaml
 on: [push]
 jobs:
@@ -165,7 +168,6 @@ jobs:
       head: production  # from
       base: staging     # to
 ```
-
 
 ## Mirror Repos to GitLab for DR Backups
 
@@ -188,7 +190,6 @@ jobs:
       GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
 ```
 
-
 ## AWS CodeArtifact - Publish a Python Package
 
 ```yaml
@@ -208,7 +209,6 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
 ```
-
 
 ## Production
 
@@ -232,41 +232,77 @@ Copy `.github/workflows` to a private repo. Not recommended as it's the most man
 
 You will be responsible for committing and reconciling any divergences in your local copies.
 
-
-## Related Repositories
-
-- [Jenkins](https://github.com/HariSekhon/Jenkins) - Advanced Jenkinsfile & Jenkins Groovy Shared Library
-
-- [Templates](https://github.com/HariSekhon/Templates) - Code & Config templates for many popular DevOps technologies
-
-- [DevOps Bash Tools](https://github.com/HariSekhon/DevOps-Bash-tools) - 1000+ DevOps Bash Scripts, Advanced `.bashrc`, `.vimrc`, `.screenrc`, `.tmux.conf`, `.gitconfig`, CI configs & Utility Code Library - AWS, GCP, Kubernetes, Docker, Kafka, Hadoop, SQL, BigQuery, Hive, Impala, PostgreSQL, MySQL, LDAP, DockerHub, Jenkins, Spotify API & MP3 tools, Git tricks, GitHub API, GitLab API, BitBucket API, Code & build linting, package management for Linux / Mac / Python / Perl / Ruby / NodeJS / Golang, and lots more random goodies
-
-- [SQL Scripts](https://github.com/HariSekhon/SQL-scripts) - 100+ SQL Scripts - PostgreSQL, MySQL, AWS Athena, Google BigQuery
-
-- [Kubernetes configs](https://github.com/HariSekhon/Kubernetes-configs) - Kubernetes YAML configs - Best Practices, Tips & Tricks are baked right into the templates for future deployments
-
-- [Terraform](https://github.com/HariSekhon/Terraform) - Terraform templates for AWS / GCP / Azure / GitHub management
-
-- [DevOps Python Tools](https://github.com/HariSekhon/DevOps-Python-tools) - 80+ DevOps CLI tools for AWS, GCP, Hadoop, HBase, Spark, Log Anonymizer, Ambari Blueprints, AWS CloudFormation, Linux, Docker, Spark Data Converters & Validators (Avro / Parquet / JSON / CSV / INI / XML / YAML), Elasticsearch, Solr, Travis CI, Pig, IPython
-
-- [DevOps Perl Tools](https://github.com/harisekhon/perl-tools) - 25+ DevOps CLI tools for Hadoop, HDFS, Hive, Solr/SolrCloud CLI, Log Anonymizer, Nginx stats & HTTP(S) URL watchers for load balanced web farms, Dockerfiles & SQL ReCaser (MySQL, PostgreSQL, AWS Redshift, Snowflake, Apache Drill, Hive, Impala, Cassandra CQL, Microsoft SQL Server, Oracle, Couchbase N1QL, Dockerfiles, Pig Latin, Neo4j, InfluxDB), Ambari FreeIPA Kerberos, Datameer, Linux...
-
-- [The Advanced Nagios Plugins Collection](https://github.com/HariSekhon/Nagios-Plugins) - 450+ programs for Nagios monitoring your Hadoop & NoSQL clusters. Covers every Hadoop vendor's management API and every major NoSQL technology (HBase, Cassandra, MongoDB, Elasticsearch, Solr, Riak, Redis etc.) as well as message queues (Kafka, RabbitMQ), continuous integration (Jenkins, Travis CI) and traditional infrastructure (SSL, Whois, DNS, Linux)
-
-- [Nagios Plugin Kafka](https://github.com/HariSekhon/Nagios-Plugin-Kafka) - Kafka API pub/sub Nagios Plugin written in Scala with Kerberos support
-
-- [The Advanced Nagios Plugins Collection](https://github.com/HariSekhon/Nagios-Plugins) - 450+ programs for Nagios monitoring your Hadoop & NoSQL clusters. Covers every Hadoop vendor's management API and every major NoSQL technology (HBase, Cassandra, MongoDB, Elasticsearch, Solr, Riak, Redis etc.) as well as message queues (Kafka, RabbitMQ), continuous integration (Jenkins, Travis CI) and traditional infrastructure (SSL, Whois, DNS, Linux)
-
-- [HAProxy Configs](https://github.com/HariSekhon/HAProxy-configs) - 80+ HAProxy Configs for Hadoop, Big Data, NoSQL, Docker, Elasticsearch, SolrCloud, HBase, Cloudera, Hortonworks, MapR, MySQL, PostgreSQL, Apache Drill, Hive, Presto, Impala, ZooKeeper, OpenTSDB, InfluxDB, Prometheus, Kibana, Graphite, SSH, RabbitMQ, Redis, Riak, Rancher etc.
-
-- [Dockerfiles](https://github.com/HariSekhon/Dockerfiles) - 50+ DockerHub public images for Docker & Kubernetes - Hadoop, Kafka, ZooKeeper, HBase, Cassandra, Solr, SolrCloud, Presto, Apache Drill, Nifi, Spark, Mesos, Consul, Riak, OpenTSDB, Jython, Advanced Nagios Plugins & DevOps Tools repos on Alpine, CentOS, Debian, Fedora, Ubuntu, Superset, H2O, Serf, Alluxio / Tachyon, FakeS3
-
-- [HashiCorp Packer templates](https://github.com/HariSekhon/Packer-templates) - Linux automated bare-metal installs and portable virtual machines OVA format appliances using HashiCorp Packer, Redhat Kickstart, Debian Preseed and Ubuntu AutoInstaller / Cloud-Init
-
-- [Diagrams-as-Code](https://github.com/HariSekhon/Diagrams-as-Code) - Cloud & Open Source architecture diagrams with Python & D2 source code provided - automatically regenerated via GitHub Actions CI/CD - AWS, GCP, Kubernetes, Jenkins, ArgoCD, Traefik, Kong API Gateway, Nginx, Redis, PostgreSQL, Kafka, Spark, web farms, event processing...
-
-- [Knowledge-Base](https://github.com/HariSekhon/Knowledge-Base) - IT Knowledge Base from 20 years in DevOps, Linux, Cloud, Big Data, AWS, GCP etc.
-
 ### Stargazers over time
 
 [![Stargazers over time](https://starchart.cc/HariSekhon/GitHub-Actions.svg)](https://starchart.cc/HariSekhon/GitHub-Actions)
+
+## More Core Repos
+
+<!-- OTHER_REPOS_START -->
+
+### Knowledge
+
+[![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=HariSekhon&repo=Knowledge-Base&theme=ambient_gradient&description_lines_count=3)](https://github.com/HariSekhon/Knowledge-Base)
+[![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=HariSekhon&repo=Diagrams-as-Code&theme=ambient_gradient&description_lines_count=3)](https://github.com/HariSekhon/Diagrams-as-Code)
+
+<!--
+
+Not support on GitHub Markdown:
+
+<iframe src="https://raw.githubusercontent.com/HariSekhon/HariSekhon/main/knowledge.md" width="100%" height="500px"></iframe>
+
+Does nothing:
+
+<embed src="https://raw.githubusercontent.com/HariSekhon/HariSekhon/main/knowledge.md" width="100%" height="500px" />
+
+-->
+
+### DevOps Code
+
+[![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=HariSekhon&repo=DevOps-Bash-tools&theme=ambient_gradient&description_lines_count=3)](https://github.com/HariSekhon/DevOps-Bash-tools)
+[![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=HariSekhon&repo=DevOps-Python-tools&theme=ambient_gradient&description_lines_count=3)](https://github.com/HariSekhon/DevOps-Python-tools)
+[![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=HariSekhon&repo=DevOps-Perl-tools&theme=ambient_gradient&description_lines_count=3)](https://github.com/HariSekhon/DevOps-Perl-tools)
+[![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=HariSekhon&repo=DevOps-Golang-tools&theme=ambient_gradient&description_lines_count=3)](https://github.com/HariSekhon/DevOps-Golang-tools)
+
+<!--
+[![Gist Card](https://github-readme-stats.vercel.app/api/gist?id=f8f551332440f1ca8897ff010e363e03)](https://gist.github.com/HariSekhon/f8f551332440f1ca8897ff010e363e03)
+-->
+
+### Containerization
+
+[![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=HariSekhon&repo=Kubernetes-configs&theme=ambient_gradient&description_lines_count=3)](https://github.com/HariSekhon/Kubernetes-configs)
+[![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=HariSekhon&repo=Dockerfiles&theme=ambient_gradient&description_lines_count=3)](https://github.com/HariSekhon/Dockerfiles)
+
+### CI/CD
+
+[![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=HariSekhon&repo=GitHub-Actions&theme=ambient_gradient&description_lines_count=3)](https://github.com/HariSekhon/GitHub-Actions)
+[![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=HariSekhon&repo=Jenkins&theme=ambient_gradient&description_lines_count=3)](https://github.com/HariSekhon/Jenkins)
+
+### DBA - SQL
+
+[![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=HariSekhon&repo=SQL-scripts&theme=ambient_gradient&description_lines_count=3)](https://github.com/HariSekhon/SQL-scripts)
+
+### DevOps Reloaded
+
+[![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=HariSekhon&repo=Nagios-Plugins&theme=ambient_gradient&description_lines_count=3)](https://github.com/HariSekhon/Nagios-Plugins)
+[![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=HariSekhon&repo=HAProxy-configs&theme=ambient_gradient&description_lines_count=3)](https://github.com/HariSekhon/HAProxy-configs)
+[![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=HariSekhon&repo=Templates&theme=ambient_gradient&description_lines_count=3)](https://github.com/HariSekhon/Templates)
+[![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=HariSekhon&repo=Terraform&theme=ambient_gradient&description_lines_count=3)](https://github.com/HariSekhon/Terraform)
+[![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=HariSekhon&repo=Packer-templates&theme=ambient_gradient&description_lines_count=3)](https://github.com/HariSekhon/Packer-templates)
+[![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=HariSekhon&repo=Nagios-Plugin-Kafka&theme=ambient_gradient&description_lines_count=3)](https://github.com/HariSekhon/Nagios-Plugin-Kafka)
+
+### Misc
+
+[![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=HariSekhon&repo=Template-repo&theme=ambient_gradient&description_lines_count=3)](https://github.com/HariSekhon/Template-repo)
+[![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=HariSekhon&repo=Spotify-tools&theme=ambient_gradient&description_lines_count=3)](https://github.com/HariSekhon/Spotify-tools)
+[![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=HariSekhon&repo=Spotify-playlists&theme=ambient_gradient&description_lines_count=3)](https://github.com/HariSekhon/Spotify-playlists)
+
+The rest of my original source repos are
+[here](https://github.com/HariSekhon?tab=repositories&q=&type=source&language=&sort=stargazers).
+
+Pre-built Docker images are available on my [DockerHub](https://hub.docker.com/u/harisekhon/).
+
+<!-- 1x1 pixel counter to record hits -->
+![](https://hit.yhype.me/github/profile?user_id=2211051)
+
+<!-- OTHER_REPOS_END -->
