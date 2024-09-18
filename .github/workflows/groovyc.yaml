@@ -47,6 +47,9 @@ jobs:
       - name: Setup PATH
         run: echo "PATH=$PWD/bash-tools:$PATH" >> "$GITHUB_ENV"
 
+      - name: OS
+        run: cat /etc/*-release
+
       - name: Environment
         run: env | sort
 
