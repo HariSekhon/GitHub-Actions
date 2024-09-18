@@ -585,7 +585,7 @@ jobs:
         run: |
           [ -e /.dockerenv ] && ls -l /.dockerenv
           echo
-          cat /etc/*release
+          cat /etc/*-release
           echo
           echo "Environment Variables:"
           echo
