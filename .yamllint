@@ -1,0 +1,26 @@
+#
+#  Author: Hari Sekhon
+#  Date: 2024-09-22 18:28:35 +0100 (Sun, 22 Sep 2024)
+#
+#  vim:ts=2:sts=2:sw=2:et
+#
+#  https///github.com/HariSekhon/GitHub-Actions
+#
+#  License: see accompanying Hari Sekhon LICENSE file
+#
+#  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback to help steer this or other code I publish
+#
+#  https://www.linkedin.com/in/HariSekhon
+#
+
+extends: default
+
+rules:
+  # false positive
+  comments-indentation: disable
+  # don't care for 'missing starting space in comment'
+  comments: disable
+  # don't care
+  line-length: disable
+  # false positive
+  truthy: disable
