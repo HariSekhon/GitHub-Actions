@@ -75,6 +75,10 @@ env:
   # DockerHub
   #DOCKER_IMAGE: "harisekhon/${{env.APP}}"
 
+  # for CI/CD commits - repo/org environment variables don't appear automatically - they must be imported like this:
+  GIT_AUTHOR_NAME: ${{ vars.GIT_AUTHOR_NAME }}
+  GIT_AUTHOR_EMAIL: ${{ vars.GIT_AUTHOR_EMAIL }}
+
   DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
   DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 
