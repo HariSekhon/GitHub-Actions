@@ -75,20 +75,29 @@ env:
   # DockerHub
   #DOCKER_IMAGE: "harisekhon/${{env.APP}}"
 
-  # for CI/CD commits - repo/org environment variables don't appear automatically - they must be imported like this:
-  GIT_AUTHOR_NAME: ${{ vars.GIT_AUTHOR_NAME }}
-  GIT_AUTHOR_EMAIL: ${{ vars.GIT_AUTHOR_EMAIL }}
-
   DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
   DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 
   GITHUB_USER: ${{ secrets.GITHUB_USER }}
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   GHCR_REGISTRY: ghcr.io/harisekhon
-  # for Git Merge branch jobs
   #
+  # for Git Merge branch jobs
+  # for CI/CD commits like Linting fixes or Git merge branch jobs
+  #
+  # these are shorthand variables that are custom adopted by code in steps
   GIT_USERNAME: 'GitHub Actions'
   GIT_EMAIL: 'platform-engineering@MYCOMPANY.CO.UK'
+  #
+  # OR
+  #
+  # Repo/Org Variables don't appear automatically - they must be imported like this:
+  #
+  # these are the variables that git will automatically use
+  GIT_AUTHOR_NAME: ${{ vars.GIT_AUTHOR_NAME }}
+  GIT_AUTHOR_EMAIL: ${{ vars.GIT_AUTHOR_EMAIL }}
+  GIT_COMMITTER_NAME: ${{ vars.GIT_AUTHOR_NAME }}
+  GIT_COMMITTER_EMAIL: ${{ vars.GIT_AUTHOR_EMAIL }}
 
   # should be provided into the environment by aws-actions/configure-aws-credentials
   # or configure via aws-actions/configure-aws-credentials in Setup section
