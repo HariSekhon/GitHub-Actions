@@ -110,7 +110,7 @@ jobs:
         #   fatal: detected dubious ownership in repository at '/__w/DevOps-Bash-tools/DevOps-Bash-tools'
         #
       - name: Set Git Dir Safe
-        run: git config --global --add safe.directory .
+        run: git config --global --add safe.directory "$PWD"
 
       - name: Validate
         run: |
