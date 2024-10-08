@@ -105,6 +105,13 @@ jobs:
       - name: Environment
         run: env | sort
 
+        # to work around this error:
+        #
+        #   fatal: detected dubious ownership in repository at '/__w/DevOps-Bash-tools/DevOps-Bash-tools'
+        #
+      - name: Set Git Dir Safe
+        run: git config --global --add safe.directory .
+
       - name: Validate
         run: |
           if [ -f .validate.env ]; then
