@@ -68,4 +68,5 @@ jobs:
 
       - name: Systemd Analyze
         run: |
-          find . -name '*.service' -type f | xargs -I {} sh -c 'systemd-analyze verify {} || exit 1'
+          find . -name '*.service' -type f |
+          xargs -I {} sh -c 'systemd-analyze verify {} || exit 1'
