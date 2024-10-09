@@ -53,8 +53,8 @@ jobs:
       - name: Environment
         run: env | sort
 
-      - name: Git version
-        run: git --version
+      #- name: Git version
+      #  run: git --version
 
       - uses: actions/checkout@v3
         with:
