@@ -46,7 +46,7 @@ env:
 
 jobs:
   systemd_analyze:
-    name: Systemd Analyze
+    name: Systemd-Analyze Verify
     runs-on: ubuntu-latest
     container: fedora:latest
     steps:
