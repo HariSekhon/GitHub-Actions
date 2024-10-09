@@ -66,6 +66,15 @@ jobs:
         with:
           submodules: recursive  # requires Git 2.18+ to be installed first
 
+        # to avoid this error:
+        #
+        #   Command /usr/local/bin/prometheus is not executable: No such file or directory
+        #
+      - name: Replace ExecStart binaries in Systemd unit files with /bin/true to avoid executable not found errors
+        run: |
+          find . -name '*.service' -type f |
+          xargs -I {} sh -c "sed -i 's/ExecStart=.*/ExecStart=/bin/true' {}"
+
       - name: Systemd Analyze
         run: |
           find . -name '*.service' -type f |
