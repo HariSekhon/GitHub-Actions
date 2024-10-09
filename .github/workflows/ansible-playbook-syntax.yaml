@@ -64,4 +64,4 @@ jobs:
 
       - name: Ansible Playbook Syntax Check
         run: |
-          find . -name 'playbook.y*ml' -exec ansible-playbook {} --syntax-check \;
+          find . -name 'playbook.y*ml' -type f | xargs -I {} sh -c 'ansible-playbook {} --syntax-check || exit 1'
