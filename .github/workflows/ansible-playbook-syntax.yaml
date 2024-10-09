@@ -11,6 +11,10 @@
 #  https://www.linkedin.com/in/HariSekhon
 #
 
+# ============================================================================ #
+#           A n s i b l e   P l a y b o o k   S y n t a x   C h e c k
+# ============================================================================ #
+
 ---
 name: Ansible Playbook Syntax Check
 
