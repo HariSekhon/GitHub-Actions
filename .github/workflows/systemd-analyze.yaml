@@ -16,7 +16,7 @@
 # ============================================================================ #
 
 ---
-name: Systemd Analyze
+name: Systemd-Analyze Verify
 
 on:
   workflow_call:
@@ -45,7 +45,7 @@ env:
   DEBUG: ${{ inputs.debug == true || github.event.inputs.debug == 'true' || '' }}
 
 jobs:
-  systemd_analyze:
+  systemd_analyze_verify:
     name: Systemd-Analyze Verify
     runs-on: ubuntu-latest
     container: fedora:latest
