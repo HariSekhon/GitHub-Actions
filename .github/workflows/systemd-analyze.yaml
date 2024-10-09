@@ -57,7 +57,7 @@ jobs:
         run: dnf install -y git
 
       - name: Install Systemd
-        run: dnf install -y git
+        run: dnf install -y systemd
 
       - name: Git version
         run: git --version
