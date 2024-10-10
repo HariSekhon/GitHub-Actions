@@ -11,6 +11,12 @@
 #  https://www.linkedin.com/in/HariSekhon
 #
 
+# ============================================================================ #
+#                           G i t L a b   M i r r o r
+# ============================================================================ #
+
+# Mirror GitHub repos to GitLab - because repo sync was moved to GitLab Enterprise only
+
 ---
 name: GitLab Mirror
 
