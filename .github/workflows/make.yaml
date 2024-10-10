@@ -11,6 +11,14 @@
 #  https://www.linkedin.com/in/HariSekhon
 #
 
+# ============================================================================ #
+#                                    M a k e
+# ============================================================================ #
+
+# Run 'make' to build your project with a bunch of language specific caches
+#
+# Checks for build / ci / test targets in the Makefile and calls them specifically if available
+
 ---
 name: Make
 
