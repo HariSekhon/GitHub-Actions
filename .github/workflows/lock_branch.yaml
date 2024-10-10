@@ -11,6 +11,10 @@
 #  https://www.linkedin.com/in/HariSekhon
 #
 
+# ============================================================================ #
+#                             L o c k   B r a n c h
+# ============================================================================ #
+
 # Useful to implement code freezes on branches - call ad-hoc or on a recurring 'schedule' in the calling workflow
 #
 # See adjacent counterpart workflow unlock_branch.yaml
