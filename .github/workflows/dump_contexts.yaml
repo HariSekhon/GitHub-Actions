@@ -11,6 +11,10 @@
 #  https://www.linkedin.com/in/HariSekhon
 #
 
+# ============================================================================ #
+#                    G i t H u b   D u m p   C o n t e x t s
+# ============================================================================ #
+
 # Dumps all GitHub contexts for debugging - not recommended for public repositories in case sensitive information is dumped to public logs
 
 ---
