@@ -13,6 +13,12 @@
 #  https://www.linkedin.com/in/HariSekhon
 #
 
+# ============================================================================ #
+#                              C o d e O w n e r s
+# ============================================================================ #
+
+# Validates .github/CODEOWNERS file syntax
+
 ---
 name: Codeowners
 
