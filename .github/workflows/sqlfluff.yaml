@@ -1,0 +1,90 @@
+#
+#  Author: Hari Sekhon
+#  Date: Sat Jan 15 09:35:18 2022 +0000
+#
+#  vim:ts=2:sts=2:sw=2:et
+#
+#  https://github.com/HariSekhon/GitHub-Actions
+#
+#  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback
+#
+#  https://www.linkedin.com/in/HariSekhon
+#
+
+# ============================================================================ #
+#                                S Q L F L u f f
+# ============================================================================ #
+
+---
+name: SQLFluff
+
+on:
+  push:
+    branches:
+      - master
+      - main
+    paths:
+      - '**/*.sql'
+      - .github/workflows/sqlfluff.yaml
+  pull_request:
+    branches:
+      - master
+      - main
+    paths:
+      - '**/*.sql'
+      - .github/workflows/sqlfluff.yaml
+  workflow_call:
+    inputs:
+      submodules:
+        type: string
+        required: false
+        default: recursive
+      debug:
+        type: string
+        required: false
+        default: false
+  workflow_dispatch:
+    inputs:
+      submodules:
+        type: string
+        required: false
+        default: recursive
+      debug:
+        type: boolean
+        required: false
+        default: false
+  #schedule:
+  #  - cron: '0 0 * * 1'
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash -euxo pipefail {0}
+
+env:
+  DEBUG: ${{ inputs.debug == true || github.event.inputs.debug == 'true' || '' }}
+
+jobs:
+  sqlfluff:
+    name: SQLFluff
+    # github.event.repository.fork isn't available in scheduled workflows
+    # can't prevent forks of this repo, because also prevents caller workflows
+    #if: github.repository == 'HariSekhon/Github-Actions'
+    runs-on: ubuntu-latest
+    container: harisekhon/bash-tools:latest
+    steps:
+      - name: Environment
+        run: env | sort
+
+      - name: Git version
+        run: git --version
+
+      - uses: actions/checkout@v3
+        with:
+          submodules: ${{ inputs.submodules }}  # 'recursive' default requires Git 2.18+ to be installed first
+
+      - name: SQLFluff
+        run: |
+          check_sqlfluff.sh
