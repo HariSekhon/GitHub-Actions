@@ -11,6 +11,12 @@
 #  https://www.linkedin.com/in/HariSekhon
 #
 
+# ============================================================================ #
+#                     T e r r a f o r m   F m t   W r i t e
+# ============================================================================ #
+
+# Lints and fixes Terraform code formatting, git commits and pushes back into local repo to self-fix
+
 ---
 name: Terraform Fmt Write
 
