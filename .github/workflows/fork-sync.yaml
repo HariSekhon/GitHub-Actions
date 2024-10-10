@@ -11,6 +11,10 @@
 #  https://www.linkedin.com/in/HariSekhon
 #
 
+# ============================================================================ #
+#                   G i t H u b   F o r k   R e p o   S y n c
+# ============================================================================ #
+
 # This has the advantage of not triggering GitHub Actions workflows upon updates, and is fast
 #
 # The disadvantage is that updates to the default branch happened without much auditing such as happens with PRs
