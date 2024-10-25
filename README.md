@@ -233,9 +233,9 @@ Copy `.github/workflows` to a private repo. Not recommended as it's the most man
 
 You will be responsible for committing and reconciling any divergences in your local copies.
 
-### Stargazers over time
+## Star History
 
-[![Stargazers over time](https://starchart.cc/HariSekhon/GitHub-Actions.svg)](https://starchart.cc/HariSekhon/GitHub-Actions)
+[![Star History Chart](https://api.star-history.com/svg?repos=HariSekhon/GitHub-Actions&type=Date)](https://star-history.com/#HariSekhon/GitHub-Actions&Date)
 
 ## More Core Repos
 
