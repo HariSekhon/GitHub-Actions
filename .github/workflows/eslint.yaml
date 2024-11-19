@@ -63,7 +63,7 @@ on:
         default: ''
       working-directory:
         type: string
-        required: true
+        required: false
         default: .
       submodules:
         type: string
