@@ -53,7 +53,7 @@ on:
         default: 3.10
       working-directory:
         type: string
-        required: true
+        required: false
         default: .
       #no-pip-install:
       #  type: string
@@ -75,7 +75,7 @@ on:
         default: 3.10
       working-directory:
         type: string
-        required: true
+        required: false
         default: .
       submodules:
         type: string
