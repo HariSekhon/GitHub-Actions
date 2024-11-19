@@ -109,7 +109,7 @@ jobs:
           node-version: ${{ inputs.node-version }}
 
       - name: Install EsLint
-        run: npm install eslint
+        run: npm install -g eslint
 
       - name: EsLint
         working-directory: ${{ inputs.working-directory }}
