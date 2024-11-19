@@ -31,12 +31,18 @@ on:
       - main
     paths:
       - '**/*.js'
+      - package.json
+      - package-lock.json
+      - .github/workflows/eslint.yaml
   pull_request:
     branches:
       - master
       - main
     paths:
       - '**/*.js'
+      - package.json
+      - package-lock.json
+      - .github/workflows/eslint.yaml
   workflow_call:
     inputs:
       node-version:
