@@ -114,7 +114,7 @@ jobs:
         with:
           node-version: ${{ inputs.node-version }}
 
-      - name: Install NPM dependencies from package.json
+      - name: Install NPM dependencies
         run: npm install
 
       - name: Install EsLint
