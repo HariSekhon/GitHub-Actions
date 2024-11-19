@@ -108,6 +108,9 @@ jobs:
         with:
           node-version: ${{ inputs.node-version }}
 
+      - name: Install globals
+        run: npm install globals --save-dev
+
       - name: Install EsLint
         run: npm install -g eslint
 
