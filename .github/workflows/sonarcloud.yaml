@@ -38,8 +38,8 @@ on:
   #    - reopened
   workflow_call:
     secrets:
-      #GITHUB_TOKEN:
-      #  required: true
+      GITHUB_TOKEN:
+        required: false
       SONAR_TOKEN:
         required: true
   workflow_dispatch:
