@@ -387,7 +387,7 @@ on:
     paths:
       - '**/autoinstall-user-data'
 jobs:
-  shellcheck:
+  check_cloudinit:
     uses: HariSekhon/GitHub-Actions/.github/workflows/autoinstall-user-data.yaml@master
     with:
       files: installers/autoinstall-user-data
