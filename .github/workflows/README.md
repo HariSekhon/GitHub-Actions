@@ -17,7 +17,11 @@ Finds all YAML in your repo and lints it. Get a cool badge like:
 Copy this into a yaml file under `.github/workflows/`:
 
 ```yaml
-on: [push]
+on:
+  push:
+    paths:
+      - '**/*.yml'
+      - '**/*.yaml'
 jobs:
   check_yaml:
     uses: HariSekhon/GitHub-Actions/.github/workflows/yaml.yaml@master
@@ -32,8 +36,11 @@ Finds all JSON in your repo and lints it. Get a cool badge like:
 Copy this into `.github/workflows/json.yaml`:
 
 ```yaml
-on: [push]
-jobs:77
+on:
+  push:
+    paths:
+      - '**/*.json'
+jobs:
   check_json:
     uses: HariSekhon/GitHub-Actions/.github/workflows/json.yaml@master
  ```
