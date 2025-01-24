@@ -34,6 +34,8 @@ In your GitHub repo, import these workflows by adding small yaml files to the `.
 - [Docker Build and push to AWS ECR](#docker-build-and-push-to-aws-ecr)
 - [Docker Build and push to multiple registries](#docker-build-and-push-to-multiple-registries)
 - [Check for Broken URL Links](#check-for-broken-url-links)
+- [Lint Jenkinsfiles](#lint-jenkinsfiles)
+- [Lint Groovy](#lint-groovy)
 - [Auto-Merge Production hotfixes back to Staging](#auto-merge-production-hotfixes-back-to-staging)
 - [Mirror Repos to GitLab for DR Backups](#mirror-repos-to-gitlab-for-dr-backups)
 - [AWS CodeArtifact - Publish a Python Package](#aws-codeartifact---publish-a-python-package)
