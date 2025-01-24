@@ -30,7 +30,8 @@ GitHub Actions master template & GitHub Actions Reusable Workflows library.
 
 See [Documentation](https://docs.github.com/en/actions/using-workflows/reusing-workflows#calling-a-reusable-workflow) for how to call these workflows directly from your own GitHub Actions workflow.
 
-Fork this repo to have full control over all updates via Pull Requests. Create environment branches to stage updates across dev/staging/production.
+Fork this repo to have full control over all updates via Pull Requests.
+Create environment branches to stage updates across dev / staging / production.
 
 Forked from [HariSekhon/Templates](https://github.com/HariSekhon/Templates), for which this is now a submodule.
 
@@ -40,19 +41,37 @@ To see GitHub Contexts available, including undocumented fields, see [HariSekhon
 
 In your GitHub repo, import these workflows by adding small yaml files to the `.github/workflows/` directory.
 
+These are slightly simplified for clarify, see the [.github/workflows/README.md](.github/workflows/README.md) for a
+few more details like only running when relevant files have changed.
+
 ## Lint Your YAML
 
 Finds all YAML in your repo and lints it. Get a cool badge like:
 
 [![YAML](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/yaml.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/yaml.yaml)
 
-Copy this into a yaml file under `.github/workflows/`:
+Copy this into `.github/workflows/yaml.yaml`:
 
 ```yaml
 on: [push]
 jobs:
   check_yaml:
     uses: HariSekhon/GitHub-Actions/.github/workflows/yaml.yaml@master
+ ```
+
+## Lint Your JSON
+
+Finds all JSON in your repo and lints it. Get a cool badge like:
+
+[![JSON](https://github.com/HariSekhon/Templates/actions/workflows/json.yaml/badge.svg)](https://github.com/HariSekhon/Templates/actions/workflows/json.yaml)
+
+Copy this into `.github/workflows/json.yaml`:
+
+```yaml
+on: [push]
+jobs:77
+  check_json:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/json.yaml@master
  ```
 
 ## Scan for Secrets and Security issues
