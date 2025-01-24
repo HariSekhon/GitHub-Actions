@@ -10,8 +10,11 @@ In your GitHub repo, import these workflows by adding small yaml files to the `.
 
 <!-- INDEX_START -->
 
-- [Lint Your YAML](#lint-your-yaml)
-- [Lint Your XML](#lint-your-xml)
+- [Lint YAML](#lint-yaml)
+- [Lint JSON](#lint-json)
+- [Lint XML](#lint-xml)
+- [Lint Bash / Shell Scripts](#lint-bash--shell-scripts)
+- [Lint README / Markdown documentation](#lint-readme--markdown-documentation)
 - [Scan for Secrets and Security issues](#scan-for-secrets-and-security-issues)
   - [Semgrep Local](#semgrep-local)
   - [Semgrep Cloud](#semgrep-cloud)
@@ -35,7 +38,7 @@ In your GitHub repo, import these workflows by adding small yaml files to the `.
 
 <!-- INDEX_END -->
 
-## Lint Your YAML
+## Lint YAML
 
 Finds all YAML in your repo and lints it. Get a cool badge like:
 
@@ -54,7 +57,7 @@ jobs:
     uses: HariSekhon/GitHub-Actions/.github/workflows/yaml.yaml@master
  ```
 
-## Lint Your JSON
+## Lint JSON
 
 Finds all JSON in your repo and lints it. Get a cool badge like:
 
@@ -72,7 +75,7 @@ jobs:
     uses: HariSekhon/GitHub-Actions/.github/workflows/json.yaml@master
  ```
 
-## Lint Your XML
+## Lint XML
 
 Finds all XML in your repo and lints it. Get a cool badge like:
 
@@ -90,7 +93,22 @@ jobs:
     uses: HariSekhon/GitHub-Actions/.github/workflows/xml.yaml@master
  ```
 
-## Lint Your README / Markdown documentation
+## Lint Bash / Shell Scripts
+
+Finds all `*.sh` scripts in your repo and lints them. Get a cool badge like:
+
+[![Shellcheck](https://github.com/HariSekhon/DevOps-Bash-tools/actions/workflows/shellcheck.yaml/badge.svg)](https://github.com/HariSekhon/DevOps-Bash-tools/actions/workflows/shellcheck.yaml)
+
+Copy this into `.github/workflows/shellcheck.yaml`:
+
+```yaml
+on: [push]
+jobs:
+  shellcheck:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/shellcheck.yaml@master
+ ```
+
+## Lint README / Markdown documentation
 
 Finds all markdown files in your repo and lints them. Get a cool badge like:
 
