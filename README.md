@@ -78,7 +78,7 @@ jobs:
 
 Finds all markdown files in your repo and lints them. Get a cool badge like:
 
-[![JSON](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/markdown.yaml/badge.svg)](https://github.com/HariSekhon/Templates/actions/workflows/markdown.yaml)
+[![Markdown](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/markdown.yaml/badge.svg)](https://github.com/HariSekhon/Templates/actions/workflows/markdown.yaml)
 
 Copy this into `.github/workflows/markdown.yaml`:
 
