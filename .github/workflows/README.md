@@ -14,6 +14,9 @@ In your GitHub repo, import these workflows by adding small yaml files to the `.
 - [Lint JSON](#lint-json)
 - [Lint XML](#lint-xml)
 - [Lint Bash / Shell Scripts](#lint-bash--shell-scripts)
+- [Lint Python](#lint-python)
+  - [PyLint](#pylint)
+  - [Flake8](#flake8)
 - [Lint README / Markdown documentation](#lint-readme--markdown-documentation)
 - [Lint GitHub CODEOWNERS](#lint-github-codeowners)
 - [Security - Scan for Secrets & Issues](#security---scan-for-secrets--issues)
@@ -54,7 +57,7 @@ In your GitHub repo, import these workflows by adding small yaml files to the `.
 
 ## Lint YAML
 
-Finds all YAML in your repo and lints it. Get a cool badge like:
+Finds all YAML in your repo and lints it.
 
 [![YAML](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/yaml.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/yaml.yaml)
 
@@ -73,7 +76,7 @@ jobs:
 
 ## Lint JSON
 
-Finds all JSON in your repo and lints it. Get a cool badge like:
+Finds all JSON in your repo and lints it.
 
 [![JSON](https://github.com/HariSekhon/Templates/actions/workflows/json.yaml/badge.svg)](https://github.com/HariSekhon/Templates/actions/workflows/json.yaml)
 
@@ -91,7 +94,7 @@ jobs:
 
 ## Lint XML
 
-Finds all XML in your repo and lints it. Get a cool badge like:
+Finds all XML in your repo and lints it.
 
 [![XML](https://github.com/HariSekhon/Templates/actions/workflows/xml.yaml/badge.svg)](https://github.com/HariSekhon/Templates/actions/workflows/xml.yaml)
 
@@ -109,7 +112,7 @@ jobs:
 
 ## Lint Bash / Shell Scripts
 
-Finds all `*.sh` scripts in your repo and lints them. Get a cool badge like:
+Finds all `*.sh` scripts in your repo and lints them.
 
 [![Shellcheck](https://github.com/HariSekhon/DevOps-Bash-tools/actions/workflows/shellcheck.yaml/badge.svg)](https://github.com/HariSekhon/DevOps-Bash-tools/actions/workflows/shellcheck.yaml)
 
@@ -125,9 +128,47 @@ jobs:
     uses: HariSekhon/GitHub-Actions/.github/workflows/shellcheck.yaml@master
  ```
 
+## Lint Python
+
+### PyLint
+
+Finds all `*.py` code in your repo and lints it.
+
+[![PyLint](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/pylint.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/pylint.yaml)
+
+Copy this into `.github/workflows/pylint.yaml`:
+
+```yaml
+on:
+  push:
+    paths:
+      - '*.py'
+jobs:
+  pylint:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/pylint.yaml@master
+ ```
+
+### Flake8
+
+Finds all `*.py` code in your repo and lints it.
+
+[![Flake8](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/flake8.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/flake8.yaml)
+
+Copy this into `.github/workflows/flake8.yaml`:
+
+```yaml
+on:
+  push:
+    paths:
+      - '*.py'
+jobs:
+  flake8:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/flake8.yaml@master
+ ```
+
 ## Lint README / Markdown documentation
 
-Finds all markdown files in your repo and lints them. Get a cool badge like:
+Finds all markdown files in your repo and lints them.
 
 [![Markdown](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/markdown.yaml/badge.svg)](https://github.com/HariSekhon/Templates/actions/workflows/markdown.yaml)
 
@@ -334,7 +375,7 @@ For more sophisticated examples including approvals, secrets, branch and path se
 
 ## Lint Packer HCL
 
-Finds all `*.pkr.hcl` Packer code in your repo and lints them. Get a cool badge like:
+Finds all `*.pkr.hcl` Packer code in your repo and lints them.
 
 [![Packer](https://github.com/HariSekhon/Packer/actions/workflows/packer.yaml/badge.svg)](https://github.com/HariSekhon/Packer/actions/workflows/packer.yaml)
 
