@@ -68,6 +68,7 @@ few more details like only running when relevant files have changed.
 - [Lint Ubuntu AutoInstaller Cloud Init](#lint-ubuntu-autoinstaller-cloud-init)
 - [Docker Build and push to DockerHub](#docker-build-and-push-to-dockerhub)
 - [Docker Build and push to AWS ECR](#docker-build-and-push-to-aws-ecr)
+- [Docker Build and push to multiple registries](#docker-build-and-push-to-multiple-registries)
 - [Lint Jenkinsfiles](#lint-jenkinsfiles)
 - [Lint Groovy](#lint-groovy)
 - [Lint Javascript](#lint-javascript)
@@ -422,6 +423,37 @@ jobs:
 ```
 
 Creates several useful tags, supports multi-stage build caching, see [README](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/README.md) for details.
+
+## Docker Build and push to multiple registries
+
+Supports building + pushing to any combination of the following, just add the relevant secrets, see [docker_build.yaml](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/docker_build.yaml) for details:
+
+- ACR  - Azure Container Registry
+- ECR  - AWS Elastic Container Registry
+- GCR  - Google Container Registry
+- GAR  - Google Artifact Registry
+- GHCR - GitHub Container Registry
+- GitLab Registry
+- Quay.io Registry
+- DockerHub
+
+Create `.github/workflows/docker_build.yaml`:
+
+```yaml
+on: [push]
+jobs:
+  docker_build:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/docker_build.yaml@master
+    with:
+      repo_tags: |
+        harisekhon/bash-tools:latest
+        ghcr.io/harisekhon/bash-tools:latest
+      context: devops-bash-tools-ubuntu  # path to dir containing the source and Dockerfile
+    # GHCR uses the local github.token, for other registries, add secrets, see docker_build.yaml for details
+    secrets:
+      DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+```
 
 ## Lint Jenkinsfiles
 
