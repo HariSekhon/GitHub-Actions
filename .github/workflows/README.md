@@ -26,8 +26,8 @@ In your GitHub repo, import these workflows by adding small yaml files to the `.
   - [tflint](#tflint)
   - [Checkov](#checkov)
 - [Terraform Plan & Apply](#terraform-plan--apply)
-- [Docker Build and push to DockerHub](#docker-build-and-push-to-dockerhub)
 - [Lint Packer HCL](#lint-packer-hcl)
+- [Docker Build and push to DockerHub](#docker-build-and-push-to-dockerhub)
 - [Docker Build and push to AWS ECR](#docker-build-and-push-to-aws-ecr)
 - [Docker Build and push to multiple registries](#docker-build-and-push-to-multiple-registries)
 - [Check for Broken URL Links](#check-for-broken-url-links)
@@ -310,6 +310,24 @@ For more sophisticated examples including approvals, secrets, branch and path se
 [terraform-plan.yaml](https://github.com/HariSekhon/Terraform/blob/master/.github/workflows/terraform-plan.yaml.template) and
 [terraform-apply.yaml](https://github.com/HariSekhon/Terraform/blob/master/.github/workflows/terraform-apply.yaml.template)
 
+## Lint Packer HCL
+
+Finds all `*.pkr.hcl` Packer code in your repo and lints them. Get a cool badge like:
+
+[![Shellcheck](https://github.com/HariSekhon/Packer/actions/workflows/packer.yaml/badge.svg)](https://github.com/HariSekhon/Packer/actions/workflows/packer.yaml)
+
+Copy this into `.github/workflows/packer.yaml`:
+
+```yaml
+on:
+  push:
+    paths:
+      - '*.pkr.hcl'
+jobs:
+  shellcheck:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/packer.yaml@master
+ ```
+
 ## Docker Build and push to DockerHub
 
 [![Docker Build DevOps Bash Tools (Ubuntu)](https://github.com/HariSekhon/Dockerfiles/actions/workflows/docker_build_devops_bash_tools_ubuntu.yaml/badge.svg)](https://github.com/HariSekhon/Dockerfiles/actions/workflows/docker_build_devops_bash_tools_ubuntu.yaml)
@@ -330,24 +348,6 @@ jobs:
       DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 ```
-
-## Lint Packer HCL
-
-Finds all `*.pkr.hcl` Packer code in your repo and lints them. Get a cool badge like:
-
-[![Shellcheck](https://github.com/HariSekhon/Packer/actions/workflows/packer.yaml/badge.svg)](https://github.com/HariSekhon/Packer/actions/workflows/packer.yaml)
-
-Copy this into `.github/workflows/shellcheck.yaml`:
-
-```yaml
-on:
-  push:
-    paths:
-      - '*.pkr.hcl'
-jobs:
-  shellcheck:
-    uses: HariSekhon/GitHub-Actions/.github/workflows/packer.yaml@master
- ```
 
 ## Docker Build and push to AWS ECR
 
