@@ -15,6 +15,7 @@ In your GitHub repo, import these workflows by adding small yaml files to the `.
 - [Lint XML](#lint-xml)
 - [Lint Bash / Shell Scripts](#lint-bash--shell-scripts)
 - [Lint README / Markdown documentation](#lint-readme--markdown-documentation)
+- [Lint GitHub CODEOWNERS](#lint-github-codeowners)
 - [Scan for Secrets and Security issues](#scan-for-secrets-and-security-issues)
   - [Semgrep Local](#semgrep-local)
   - [Semgrep Cloud](#semgrep-cloud)
@@ -127,6 +128,25 @@ on:
 jobs:
   check_markdown:
     uses: HariSekhon/GitHub-Actions/.github/workflows/markdown.yaml@master
+ ```
+
+## Lint GitHub CODEOWNERS
+
+Lints the GitHub `CODEOWNERS` / `.github/CODEOWNERS` files.
+
+[![Codeowners](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/codeowners.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/codeowners.yaml)
+
+Copy this into `.github/workflows/codeowners.yaml`:
+
+```yaml
+on:
+  push:
+    paths:
+      - CODEOWNERS
+      - .github/CODEOWNERS
+jobs:
+  check_codeowners:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/codeowners.yaml@master
  ```
 
 ## Scan for Secrets and Security issues
