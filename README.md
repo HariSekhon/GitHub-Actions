@@ -50,6 +50,9 @@ few more details like only running when relevant files have changed.
 - [Lint JSON](#lint-json)
 - [Lint XML](#lint-xml)
 - [Lint Bash / Shell Scripts](#lint-bash--shell-scripts)
+- [Lint Python](#lint-python)
+  - [PyLint](#pylint)
+  - [Flake8](#flake8)
 - [Lint README / Markdown documentation](#lint-readme--markdown-documentation)
 - [Lint GitHub CODEOWNERS](#lint-github-codeowners)
 - [Security - Scan for Secrets and issues](#security---scan-for-secrets-and-issues)
@@ -154,6 +157,38 @@ on: [push]
 jobs:
   shellcheck:
     uses: HariSekhon/GitHub-Actions/.github/workflows/shellcheck.yaml@master
+ ```
+
+## Lint Python
+
+### PyLint
+
+Finds all `*.py` code in your repo and lints it.
+
+[![PyLint](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/pylint.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/pylint.yaml)
+
+Copy this into `.github/workflows/pylint.yaml`:
+
+```yaml
+on: [push]
+jobs:
+  pylint:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/pylint.yaml@master
+ ```
+
+### Flake8
+
+Finds all `*.py` code in your repo and lints it.
+
+[![Flake8](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/flake8.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/flake8.yaml)
+
+Copy this into `.github/workflows/flake8.yaml`:
+
+```yaml
+on: [push]
+jobs:
+  flake8:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/flake8.yaml@master
  ```
 
 ## Lint README / Markdown documentation
