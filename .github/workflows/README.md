@@ -23,6 +23,21 @@ jobs:
     uses: HariSekhon/GitHub-Actions/.github/workflows/yaml.yaml@master
  ```
 
+## Lint Your JSON
+
+Finds all JSON in your repo and lints it. Get a cool badge like:
+
+[![JSON](https://github.com/HariSekhon/Templates/actions/workflows/json.yaml/badge.svg)](https://github.com/HariSekhon/Templates/actions/workflows/json.yaml)
+
+Copy this into `.github/workflows/json.yaml`:
+
+```yaml
+on: [push]
+jobs:77
+  check_json:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/json.yaml@master
+ ```
+
 ## Scan for Secrets and Security issues
 
 ### Semgrep Local
