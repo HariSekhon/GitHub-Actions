@@ -70,6 +70,7 @@ few more details like only running when relevant files have changed.
 - [Docker Build and push to AWS ECR](#docker-build-and-push-to-aws-ecr)
 - [Lint Jenkinsfiles](#lint-jenkinsfiles)
 - [Lint Groovy](#lint-groovy)
+- [Lint Javascript](#lint-javascript)
 - [Check for Broken URL Links](#check-for-broken-url-links)
 - [Auto-Merge Production hotfixes back to Staging](#auto-merge-production-hotfixes-back-to-staging)
 - [Mirror Repos to GitLab for DR Backups](#mirror-repos-to-gitlab-for-dr-backups)
@@ -450,6 +451,21 @@ on: [push]
 jobs:
   check_groovyc:
     uses: HariSekhon/GitHub-Actions/.github/workflows/groovyc.yaml@master
+```
+
+## Lint Javascript
+
+Finds all Javascript files named `*.js` in the repo and lints them using `eslint`.
+
+[![EsLint](https://github.com/HariSekhon/TamperMonkey/actions/workflows/eslint.yaml/badge.svg)](https://github.com/HariSekhon/TamperMonkey/actions/workflows/eslint.yaml)
+
+Create `.github/workflows/eslint.yaml`:
+
+```yaml
+on: [push]
+jobs:
+  check_eslint:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/eslint.yaml@master
 ```
 
 ## Check for Broken URL Links
