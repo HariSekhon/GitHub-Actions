@@ -8,6 +8,33 @@ See [Documentation](https://docs.github.com/en/actions/using-workflows/reusing-w
 
 In your GitHub repo, import these workflows by adding small yaml files to the `.github/workflows/` directory.
 
+<!-- INDEX_START -->
+
+- [Lint Your YAML](#lint-your-yaml)
+- [Lint Your XML](#lint-your-xml)
+- [Scan for Secrets and Security issues](#scan-for-secrets-and-security-issues)
+  - [Semgrep Local](#semgrep-local)
+  - [Semgrep Cloud](#semgrep-cloud)
+- [Analyze your Terraform code security & best practices](#analyze-your-terraform-code-security--best-practices)
+  - [tfsec](#tfsec)
+  - [Checkov](#checkov)
+- [Terraform Plan & Apply](#terraform-plan--apply)
+- [Docker Build and push to DockerHub](#docker-build-and-push-to-dockerhub)
+- [Docker Build and push to AWS ECR](#docker-build-and-push-to-aws-ecr)
+- [Docker Build and push to multiple registries](#docker-build-and-push-to-multiple-registries)
+- [Check for Broken URL Links](#check-for-broken-url-links)
+- [Auto-Merge Production hotfixes back to Staging](#auto-merge-production-hotfixes-back-to-staging)
+- [Mirror Repos to GitLab for DR Backups](#mirror-repos-to-gitlab-for-dr-backups)
+- [AWS CodeArtifact - Publish a Python Package](#aws-codeartifact---publish-a-python-package)
+- [Permissions](#permissions)
+  - [Security Alerts](#security-alerts)
+- [Linting Auto-fixers](#linting-auto-fixers)
+- [Creating or Commenting on Pull Requests](#creating-or-commenting-on-pull-requests)
+- [Merging Pull Requests](#merging-pull-requests)
+- [Production](#production)
+
+<!-- INDEX_END -->
+
 ## Lint Your YAML
 
 Finds all YAML in your repo and lints it. Get a cool badge like:
