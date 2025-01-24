@@ -45,6 +45,24 @@ jobs:
     uses: HariSekhon/GitHub-Actions/.github/workflows/json.yaml@master
  ```
 
+## Lint Your README / Markdown documentation
+
+Finds all markdown files in your repo and lints them. Get a cool badge like:
+
+[![Markdown](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/markdown.yaml/badge.svg)](https://github.com/HariSekhon/Templates/actions/workflows/markdown.yaml)
+
+Copy this into `.github/workflows/markdown.yaml`:
+
+```yaml
+on:
+  push:
+    paths:
+      - '**/*.md'
+jobs:
+  check_json:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/markdown.yaml@master
+ ```
+
 ## Scan for Secrets and Security issues
 
 ### Semgrep Local
