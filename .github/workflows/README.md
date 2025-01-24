@@ -518,6 +518,26 @@ jobs:
     uses: HariSekhon/GitHub-Actions/.github/workflows/groovyc.yaml@master
 ```
 
+## Lint Javascript
+
+Finds all Javascript files named `*.js` in the repo and lints them using `eslint`.
+
+[![EsLint](https://github.com/HariSekhon/TamperMonkey/actions/workflows/eslint.yaml/badge.svg)](https://github.com/HariSekhon/TamperMonkey/actions/workflows/eslint.yaml)
+
+Create `.github/workflows/eslint.yaml`:
+
+```yaml
+on:
+  push:
+    paths:
+      - '**/*.js'
+      - package.json
+      - package-lock.json
+jobs:
+  check_eslint:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/eslint.yaml@master
+```
+
 ## Check for Broken URL Links
 
 [![URL Links](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/url_links.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/url_links.yaml)
