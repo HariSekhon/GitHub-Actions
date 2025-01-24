@@ -138,7 +138,7 @@ jobs:
 
 Alerts appear under `Security` -> `Code scanning alerts`.
 
-Create `.github/workflows/tfsec.yaml` containing:
+Create `.github/workflows/checkov.yaml` containing:
 
 ```yaml
 on: [push]
