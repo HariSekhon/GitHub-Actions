@@ -61,7 +61,6 @@ jobs:
 
 [![Semgrep](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/semgrep.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/semgrep.yaml)
 
-
 Create `.github/workflows/semgrep.yaml` containing:
 
 ```yaml
