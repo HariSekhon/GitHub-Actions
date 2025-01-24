@@ -68,6 +68,8 @@ few more details like only running when relevant files have changed.
 - [Lint Ubuntu AutoInstaller Cloud Init](#lint-ubuntu-autoinstaller-cloud-init)
 - [Docker Build and push to DockerHub](#docker-build-and-push-to-dockerhub)
 - [Docker Build and push to AWS ECR](#docker-build-and-push-to-aws-ecr)
+- [Lint Jenkinsfiles](#lint-jenkinsfiles)
+- [Lint Groovy](#lint-groovy)
 - [Check for Broken URL Links](#check-for-broken-url-links)
 - [Auto-Merge Production hotfixes back to Staging](#auto-merge-production-hotfixes-back-to-staging)
 - [Mirror Repos to GitLab for DR Backups](#mirror-repos-to-gitlab-for-dr-backups)
