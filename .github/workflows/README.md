@@ -16,7 +16,7 @@ In your GitHub repo, import these workflows by adding small yaml files to the `.
 - [Lint Bash / Shell Scripts](#lint-bash--shell-scripts)
 - [Lint README / Markdown documentation](#lint-readme--markdown-documentation)
 - [Lint GitHub CODEOWNERS](#lint-github-codeowners)
-- [Security - Scan for Secrets and issues](#security---scan-for-secrets-and-issues)
+- [Security - Scan for Secrets and Issues](#security---scan-for-secrets-and-issues)
   - [Semgrep Local](#semgrep-local)
   - [Semgrep Cloud](#semgrep-cloud)
   - [Trivy Filesystem Scan](#trivy-filesystem-scan)
@@ -149,7 +149,7 @@ jobs:
     uses: HariSekhon/GitHub-Actions/.github/workflows/codeowners.yaml@master
  ```
 
-## Security - Scan for Secrets and issues
+## Security - Scan for Secrets and Issues
 
 ### Semgrep Local
 
