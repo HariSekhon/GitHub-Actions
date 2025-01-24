@@ -502,6 +502,42 @@ jobs:
       #ignore_urls_without_dots: 'true'  # any value enables this
 ```
 
+## Lint Jenkinsfiles
+
+Finds all files named `Jenkinsfile` in the repo and lints them using a live Jenkins in docker.
+
+[![Jenkinsfile](https://github.com/HariSekhon/Jenkins/actions/workflows/jenkinsfile.yaml/badge.svg)](https://github.com/HariSekhon/Jenkins/actions/workflows/jenkinsfile.yaml)
+
+Create `.github/workflows/jenkinsfile.yaml`:
+
+```yaml
+on:
+  push:
+    paths:
+      - '**/*Jenkinsfile*'
+jobs:
+  jenkinsfile:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/jenkinsfile.yaml@master
+```
+
+## Lint Groovy
+
+Finds all Groovy files named `*.groovy` in the repo and lints them using `groovyc`.
+
+[![Groovy](https://github.com/HariSekhon/Jenkins/actions/workflows/groovyc.yaml/badge.svg)](https://github.com/HariSekhon/Jenkins/actions/workflows/groovyc.yaml)
+
+Create `.github/workflows/groovyc.yaml`:
+
+```yaml
+on:
+  push:
+    paths:
+      - '**/*.groovy'
+jobs:
+  check_groovyc:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/groovyc.yaml@master
+```
+
 ## Auto-Merge Production hotfixes back to Staging
 
 Merges via a Pull Request for full auditing.
