@@ -122,7 +122,7 @@ Copy this into `.github/workflows/shellcheck.yaml`:
 on:
   push:
     paths:
-      - '*.sh'
+      - '**/*.sh'
 jobs:
   shellcheck:
     uses: HariSekhon/GitHub-Actions/.github/workflows/shellcheck.yaml@master
@@ -142,7 +142,7 @@ Copy this into `.github/workflows/pylint.yaml`:
 on:
   push:
     paths:
-      - '*.py'
+      - '**/*.py'
 jobs:
   pylint:
     uses: HariSekhon/GitHub-Actions/.github/workflows/pylint.yaml@master
@@ -160,7 +160,7 @@ Copy this into `.github/workflows/flake8.yaml`:
 on:
   push:
     paths:
-      - '*.py'
+      - '**/*.py'
 jobs:
   flake8:
     uses: HariSekhon/GitHub-Actions/.github/workflows/flake8.yaml@master
