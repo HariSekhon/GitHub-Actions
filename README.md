@@ -72,6 +72,8 @@ jobs:
 
 Alerts for the above badge appear under the GitHub repo's `Security` tab -> `Code scanning alerts`.
 
+The badge will go red if there are any alerts.
+
 ### Semgrep Cloud
 
 [![Semgrep Cloud](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/semgrep-cloud.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/semgrep-cloud.yaml)
@@ -90,6 +92,8 @@ jobs:
 Alerts for the above badge appears in the Semgrep dashboard at:
 
 <https://semgrep.dev>
+
+The badge will go red oly if failing to run and publish to Semgrep Cloud, whether there are any alerts of not.
 
 ## Analyze your Terraform code security & best practices
 
