@@ -14,7 +14,7 @@ Finds all YAML in your repo and lints it. Get a cool badge like:
 
 [![YAML](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/yaml.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/yaml.yaml)
 
-Copy this into a yaml file under `.github/workflows/`:
+Copy this into `.github/workflows/yaml.yaml`:
 
 ```yaml
 on:
