@@ -33,9 +33,9 @@ In your GitHub repo, import these workflows by adding small yaml files to the `.
 - [Docker Build and push to DockerHub](#docker-build-and-push-to-dockerhub)
 - [Docker Build and push to AWS ECR](#docker-build-and-push-to-aws-ecr)
 - [Docker Build and push to multiple registries](#docker-build-and-push-to-multiple-registries)
-- [Check for Broken URL Links](#check-for-broken-url-links)
 - [Lint Jenkinsfiles](#lint-jenkinsfiles)
 - [Lint Groovy](#lint-groovy)
+- [Check for Broken URL Links](#check-for-broken-url-links)
 - [Auto-Merge Production hotfixes back to Staging](#auto-merge-production-hotfixes-back-to-staging)
 - [Mirror Repos to GitLab for DR Backups](#mirror-repos-to-gitlab-for-dr-backups)
 - [AWS CodeArtifact - Publish a Python Package](#aws-codeartifact---publish-a-python-package)
@@ -482,28 +482,6 @@ jobs:
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 ```
 
-## Check for Broken URL Links
-
-[![URL Links](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/url_links.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/url_links.yaml)
-
-Create `.github/workflows/url_links.yaml`:
-
-```yaml
-on: [push]
-jobs:
-  url_links:
-    uses: HariSekhon/GitHub-Actions/.github/workflows/url_links.yaml@master
-    with:
-
-      # custom ignore inaccessible / internal / partially constructed links or those containing variables
-      # this is a multi-line string, one URL or partial ERE regex match per line
-      url_links_ignored: |
-        https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv
-
-      # ignore URLs without dots as these are usually internal inaccessible local addresses such as http://krb5server rather than public accessible links
-      #ignore_urls_without_dots: 'true'  # any value enables this
-```
-
 ## Lint Jenkinsfiles
 
 Finds all files named `Jenkinsfile` in the repo and lints them using a live Jenkins in docker.
@@ -538,6 +516,28 @@ on:
 jobs:
   check_groovyc:
     uses: HariSekhon/GitHub-Actions/.github/workflows/groovyc.yaml@master
+```
+
+## Check for Broken URL Links
+
+[![URL Links](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/url_links.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/url_links.yaml)
+
+Create `.github/workflows/url_links.yaml`:
+
+```yaml
+on: [push]
+jobs:
+  url_links:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/url_links.yaml@master
+    with:
+
+      # custom ignore inaccessible / internal / partially constructed links or those containing variables
+      # this is a multi-line string, one URL or partial ERE regex match per line
+      url_links_ignored: |
+        https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv
+
+      # ignore URLs without dots as these are usually internal inaccessible local addresses such as http://krb5server rather than public accessible links
+      #ignore_urls_without_dots: 'true'  # any value enables this
 ```
 
 ## Auto-Merge Production hotfixes back to Staging
