@@ -57,6 +57,7 @@ few more details like only running when relevant files have changed.
   - [Semgrep Cloud](#semgrep-cloud)
   - [Trivy Filesystem Scan](#trivy-filesystem-scan)
   - [Trivy Docker Image Scan](#trivy-docker-image-scan)
+  - [Grype Filesystem Scan](#grype-filesystem-scan)
 - [Analyze your Terraform code security & best practices](#analyze-your-terraform-code-security--best-practices)
   - [tfsec](#tfsec)
   - [tflint](#tflint)
@@ -253,6 +254,19 @@ jobs:
     with:
       docker_image: harisekhon/bash-tools
       severity: ''
+```
+
+### Grype Filesystem Scan
+
+[![Grype](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/grype.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/grype.yaml)
+
+Alerts for the above badge appear under the GitHub repo's `Security` tab -> `Code scanning alerts`.
+
+```yaml
+on: [push]
+jobs:
+  grype:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/grype.yaml@master
 ```
 
 ## Analyze your Terraform code security & best practices
