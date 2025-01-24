@@ -26,11 +26,6 @@ on:
         required: false
         default: false
 
-permissions:
-  actions: read
-  contents: read
-  security-events: write
-
 defaults:
   run:
     shell: bash -euxo pipefail {0}
