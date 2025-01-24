@@ -153,21 +153,6 @@ jobs:
     uses: HariSekhon/GitHub-Actions/.github/workflows/markdown.yaml@master
  ```
 
-## Lint Bash / Shell Scripts
-
-Finds all `*.sh` scripts in your repo and lints them. Get a cool badge like:
-
-[![Markdown](https://github.com/HariSekhon/DevOps-Bash-tools/actions/workflows/shellcheck.yaml/badge.svg)](https://github.com/HariSekhon/DevOps-Bash-tools/actions/workflows/shellcheck.yaml)
-
-Copy this into `.github/workflows/shellcheck.yaml`:
-
-```yaml
-on: [push]
-jobs:
-  shellcheck:
-    uses: HariSekhon/GitHub-Actions/.github/workflows/shellcheck.yaml@master
- ```
-
 ## Scan for Secrets and Security issues
 
 ### Semgrep Local
