@@ -30,12 +30,12 @@ In your GitHub repo, import these workflows by adding small yaml files to the `.
 - [Lint Redhat Kickstart](#lint-redhat-kickstart)
 - [Lint Debian Preseed](#lint-debian-preseed)
 - [Lint Ubuntu AutoInstaller Cloud Init](#lint-ubuntu-autoinstaller-cloud-init)
-- [Docker Build and push to DockerHub](#docker-build-and-push-to-dockerhub)
-- [Docker Build and push to AWS ECR](#docker-build-and-push-to-aws-ecr)
-- [Docker Build and push to multiple registries](#docker-build-and-push-to-multiple-registries)
 - [Lint Jenkinsfiles](#lint-jenkinsfiles)
 - [Lint Groovy](#lint-groovy)
 - [Lint Javascript](#lint-javascript)
+- [Docker Build and push to DockerHub](#docker-build-and-push-to-dockerhub)
+- [Docker Build and push to AWS ECR](#docker-build-and-push-to-aws-ecr)
+- [Docker Build and push to multiple registries](#docker-build-and-push-to-multiple-registries)
 - [Check for Broken URL Links](#check-for-broken-url-links)
 - [Auto-Merge Production hotfixes back to Staging](#auto-merge-production-hotfixes-back-to-staging)
 - [Mirror Repos to GitLab for DR Backups](#mirror-repos-to-gitlab-for-dr-backups)
@@ -396,6 +396,62 @@ jobs:
       files: installers/autoinstall-user-data
  ```
 
+## Lint Jenkinsfiles
+
+Finds all files named `Jenkinsfile` in the repo and lints them using a live Jenkins in docker.
+
+[![Jenkinsfile](https://github.com/HariSekhon/Jenkins/actions/workflows/jenkinsfile.yaml/badge.svg)](https://github.com/HariSekhon/Jenkins/actions/workflows/jenkinsfile.yaml)
+
+Create `.github/workflows/jenkinsfile.yaml`:
+
+```yaml
+on:
+  push:
+    paths:
+      - '**/*Jenkinsfile*'
+jobs:
+  jenkinsfile:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/jenkinsfile.yaml@master
+```
+
+## Lint Groovy
+
+Finds all Groovy files named `*.groovy` in the repo and lints them using `groovyc`.
+
+[![Groovy](https://github.com/HariSekhon/Jenkins/actions/workflows/groovyc.yaml/badge.svg)](https://github.com/HariSekhon/Jenkins/actions/workflows/groovyc.yaml)
+
+Create `.github/workflows/groovyc.yaml`:
+
+```yaml
+on:
+  push:
+    paths:
+      - '**/*.groovy'
+jobs:
+  check_groovyc:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/groovyc.yaml@master
+```
+
+## Lint Javascript
+
+Finds all Javascript files named `*.js` in the repo and lints them using `eslint`.
+
+[![EsLint](https://github.com/HariSekhon/TamperMonkey/actions/workflows/eslint.yaml/badge.svg)](https://github.com/HariSekhon/TamperMonkey/actions/workflows/eslint.yaml)
+
+Create `.github/workflows/eslint.yaml`:
+
+```yaml
+on:
+  push:
+    paths:
+      - '**/*.js'
+      - package.json
+      - package-lock.json
+jobs:
+  check_eslint:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/eslint.yaml@master
+```
+
 ## Docker Build and push to DockerHub
 
 [![Docker Build DevOps Bash Tools (Ubuntu)](https://github.com/HariSekhon/Dockerfiles/actions/workflows/docker_build_devops_bash_tools_ubuntu.yaml/badge.svg)](https://github.com/HariSekhon/Dockerfiles/actions/workflows/docker_build_devops_bash_tools_ubuntu.yaml)
@@ -481,62 +537,6 @@ jobs:
     secrets:
       DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-```
-
-## Lint Jenkinsfiles
-
-Finds all files named `Jenkinsfile` in the repo and lints them using a live Jenkins in docker.
-
-[![Jenkinsfile](https://github.com/HariSekhon/Jenkins/actions/workflows/jenkinsfile.yaml/badge.svg)](https://github.com/HariSekhon/Jenkins/actions/workflows/jenkinsfile.yaml)
-
-Create `.github/workflows/jenkinsfile.yaml`:
-
-```yaml
-on:
-  push:
-    paths:
-      - '**/*Jenkinsfile*'
-jobs:
-  jenkinsfile:
-    uses: HariSekhon/GitHub-Actions/.github/workflows/jenkinsfile.yaml@master
-```
-
-## Lint Groovy
-
-Finds all Groovy files named `*.groovy` in the repo and lints them using `groovyc`.
-
-[![Groovy](https://github.com/HariSekhon/Jenkins/actions/workflows/groovyc.yaml/badge.svg)](https://github.com/HariSekhon/Jenkins/actions/workflows/groovyc.yaml)
-
-Create `.github/workflows/groovyc.yaml`:
-
-```yaml
-on:
-  push:
-    paths:
-      - '**/*.groovy'
-jobs:
-  check_groovyc:
-    uses: HariSekhon/GitHub-Actions/.github/workflows/groovyc.yaml@master
-```
-
-## Lint Javascript
-
-Finds all Javascript files named `*.js` in the repo and lints them using `eslint`.
-
-[![EsLint](https://github.com/HariSekhon/TamperMonkey/actions/workflows/eslint.yaml/badge.svg)](https://github.com/HariSekhon/TamperMonkey/actions/workflows/eslint.yaml)
-
-Create `.github/workflows/eslint.yaml`:
-
-```yaml
-on:
-  push:
-    paths:
-      - '**/*.js'
-      - package.json
-      - package-lock.json
-jobs:
-  check_eslint:
-    uses: HariSekhon/GitHub-Actions/.github/workflows/eslint.yaml@master
 ```
 
 ## Check for Broken URL Links
