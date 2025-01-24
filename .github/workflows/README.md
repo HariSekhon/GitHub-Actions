@@ -137,6 +137,7 @@ on:
   push:
     paths:
       - '**/*.tf'
+      - '**/*.tfvars'
       - '**/*.hcl'
 jobs:
   tfsec:
@@ -148,6 +149,9 @@ jobs:
 [![checkov](https://github.com/HariSekhon/Terraform/actions/workflows/checkov.yaml/badge.svg)](https://github.com/HariSekhon/Terraform/actions/workflows/checkov.yaml)
 
 Alerts appear under `Security` -> `Code scanning alerts`.
+
+Checkov can scan more than just Terraform code, so you probably don't want to restrict to only the Terraform file
+extensions paths filter used in the above tfsec workflow.
 
 Create `.github/workflows/checkov.yaml` containing:
 
