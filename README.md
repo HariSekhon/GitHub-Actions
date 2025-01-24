@@ -44,6 +44,40 @@ In your GitHub repo, import these workflows by adding small yaml files to the `.
 These are slightly simplified for clarify, see the [.github/workflows/README.md](.github/workflows/README.md) for a
 few more details like only running when relevant files have changed.
 
+<!-- INDEX_START -->
+
+- [Lint Your YAML](#lint-your-yaml)
+- [Lint Your XML](#lint-your-xml)
+- [Scan for Secrets and Security issues](#scan-for-secrets-and-security-issues)
+  - [Semgrep Local](#semgrep-local)
+  - [Semgrep Cloud](#semgrep-cloud)
+- [Analyze your Terraform code security & best practices](#analyze-your-terraform-code-security--best-practices)
+  - [tfsec](#tfsec)
+  - [Checkov](#checkov)
+- [Terraform Plan & Apply](#terraform-plan--apply)
+- [Docker Build and push to DockerHub](#docker-build-and-push-to-dockerhub)
+- [Docker Build and push to AWS ECR](#docker-build-and-push-to-aws-ecr)
+- [Check for Broken URL Links](#check-for-broken-url-links)
+- [Auto-Merge Production hotfixes back to Staging](#auto-merge-production-hotfixes-back-to-staging)
+- [Mirror Repos to GitLab for DR Backups](#mirror-repos-to-gitlab-for-dr-backups)
+- [AWS CodeArtifact - Publish a Python Package](#aws-codeartifact---publish-a-python-package)
+- [Production](#production)
+  - [Option 1 - Hashref](#option-1---hashref)
+  - [Option 2 - Public Fork (fully automated)](#option-2---public-fork-fully-automated)
+  - [Option 3 - Private Copy (manual)](#option-3---private-copy-manual)
+- [Star History](#star-history)
+- [More Core Repos](#more-core-repos)
+  - [Knowledge](#knowledge)
+  - [DevOps Code](#devops-code)
+  - [Containerization](#containerization)
+  - [CI/CD](#cicd)
+  - [DBA - SQL](#dba---sql)
+  - [DevOps Reloaded](#devops-reloaded)
+  - [Templates](#templates)
+  - [Misc](#misc)
+
+<!-- INDEX_END -->
+
 ## Lint Your YAML
 
 Finds all YAML in your repo and lints it. Get a cool badge like:
@@ -102,6 +136,21 @@ on: [push]
 jobs:
   check_markdown:
     uses: HariSekhon/GitHub-Actions/.github/workflows/markdown.yaml@master
+ ```
+
+## Lint Bash / Shell Scripts
+
+Finds all `*.sh` scripts in your repo and lints them. Get a cool badge like:
+
+[![Markdown](https://github.com/HariSekhon/DevOps-Bash-tools/actions/workflows/shellcheck.yaml/badge.svg)](https://github.com/HariSekhon/DevOps-Bash-tools/actions/workflows/shellcheck.yaml)
+
+Copy this into `.github/workflows/shellcheck.yaml`:
+
+```yaml
+on: [push]
+jobs:
+  shellcheck:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/shellcheck.yaml@master
  ```
 
 ## Scan for Secrets and Security issues
