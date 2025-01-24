@@ -56,6 +56,7 @@ few more details like only running when relevant files have changed.
   - [Semgrep Cloud](#semgrep-cloud)
 - [Analyze your Terraform code security & best practices](#analyze-your-terraform-code-security--best-practices)
   - [tfsec](#tfsec)
+  - [tflint](#tflint)
   - [Checkov](#checkov)
 - [Terraform Plan & Apply](#terraform-plan--apply)
 - [Docker Build and push to DockerHub](#docker-build-and-push-to-dockerhub)
