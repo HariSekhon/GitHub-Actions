@@ -418,6 +418,8 @@ jobs:
 
 Finds all Groovy files named `*.groovy` in the repo and lints them using `groovyc`.
 
+This is a basic check but good for a Jenkins Groovy Shared Library.
+
 [![Groovy](https://github.com/HariSekhon/Jenkins/actions/workflows/groovyc.yaml/badge.svg)](https://github.com/HariSekhon/Jenkins/actions/workflows/groovyc.yaml)
 
 Create `.github/workflows/groovyc.yaml`:
