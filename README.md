@@ -76,6 +76,8 @@ few more details like only running when relevant files have changed.
 - [Auto-Merge Production hotfixes back to Staging](#auto-merge-production-hotfixes-back-to-staging)
 - [Mirror Repos to GitLab for DR Backups](#mirror-repos-to-gitlab-for-dr-backups)
 - [AWS CodeArtifact - Publish a Python Package](#aws-codeartifact---publish-a-python-package)
+- [Kubernetes - Pluto - Check for Outdated APIs](#kubernetes---pluto---check-for-outdated-apis)
+- [Kubernetes - Polaris - Security & Best Practices Check](#kubernetes---polaris---security--best-practices-check)
 - [Production](#production)
   - [Option 1 - Hashref](#option-1---hashref)
   - [Option 2 - Public Fork (fully automated)](#option-2---public-fork-fully-automated)
@@ -573,6 +575,39 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+```
+
+## Kubernetes - Pluto - Check for Outdated APIs
+
+Checks all Kubernetes YAML files for outdated API objects using Pluto.
+
+[![Pluto](https://github.com/HariSekhon/Kubernetes-configs/actions/workflows/pluto.yaml/badge.svg)](https://github.com/HariSekhon/Kubernetes-configs/actions/workflows/pluto.yaml)
+
+Create `.github/workflows/pluto.yaml`:
+
+```yaml
+on: [push]
+jobs:
+  pluto:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/pluto.yaml@master
+```
+
+## Kubernetes - Polaris - Security & Best Practices Check
+
+Checks all Kubernetes YAML files for security issues and best practices.
+
+Polaris currently fails on very advanced patches such as found in my
+[Kubernetes-configs](https://github.com/HariSekhon/Kubernetes-configs) repo.
+
+[![Polaris](https://github.com/HariSekhon/Kubernetes-configs/actions/workflows/polaris.yaml/badge.svg)](https://github.com/HariSekhon/Kubernetes-configs/actions/workflows/polaris.yaml)
+
+Create `.github/workflows/polaris.yaml`:
+
+```yaml
+on: [push]
+jobs:
+  polaris:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/polaris.yaml@master
 ```
 
 ## Production
