@@ -93,7 +93,7 @@ Alerts for the above badge appears in the Semgrep dashboard at:
 
 <https://semgrep.dev>
 
-The badge will go red oly if failing to run and publish to Semgrep Cloud, whether there are any alerts of not.
+The badge will go red only if failing to run and publish to Semgrep Cloud, whether there are any alerts of not.
 
 ## Analyze your Terraform code security & best practices
 
