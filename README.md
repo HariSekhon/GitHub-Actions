@@ -46,8 +46,11 @@ few more details like only running when relevant files have changed.
 
 <!-- INDEX_START -->
 
-- [Lint Your YAML](#lint-your-yaml)
-- [Lint Your XML](#lint-your-xml)
+- [Lint YAML](#lint-yaml)
+- [Lint JSON](#lint-json)
+- [Lint XML](#lint-xml)
+- [Lint Bash / Shell Scripts](#lint-bash--shell-scripts)
+- [Lint README / Markdown documentation](#lint-readme--markdown-documentation)
 - [Scan for Secrets and Security issues](#scan-for-secrets-and-security-issues)
   - [Semgrep Local](#semgrep-local)
   - [Semgrep Cloud](#semgrep-cloud)
@@ -78,7 +81,7 @@ few more details like only running when relevant files have changed.
 
 <!-- INDEX_END -->
 
-## Lint Your YAML
+## Lint YAML
 
 Finds all YAML in your repo and lints it. Get a cool badge like:
 
@@ -93,7 +96,7 @@ jobs:
     uses: HariSekhon/GitHub-Actions/.github/workflows/yaml.yaml@master
  ```
 
-## Lint Your JSON
+## Lint JSON
 
 Finds all JSON in your repo and lints it. Get a cool badge like:
 
@@ -106,9 +109,9 @@ on: [push]
 jobs:
   check_json:
     uses: HariSekhon/GitHub-Actions/.github/workflows/json.yaml@master
- ```
+```
 
-## Lint Your XML
+## Lint XML
 
 Finds all XML in your repo and lints it. Get a cool badge like:
 
@@ -138,7 +141,7 @@ jobs:
     uses: HariSekhon/GitHub-Actions/.github/workflows/shellcheck.yaml@master
  ```
 
-## Lint Your README / Markdown documentation
+## Lint README / Markdown documentation
 
 Finds all markdown files in your repo and lints them. Get a cool badge like:
 
