@@ -118,15 +118,29 @@ You must check the dashboard.
 ## Analyze your Terraform code security & best practices
 
 [![tfsec](https://github.com/HariSekhon/Terraform/actions/workflows/tfsec.yaml/badge.svg)](https://github.com/HariSekhon/Terraform/actions/workflows/tfsec.yaml)
-Alerts appear under Security -> Code scanning alerts.
 
-Create `.github/workflows/tfsec.yaml`:
+Alerts appear under `Security` -> `Code scanning alerts`.
+
+Create `.github/workflows/tfsec.yaml` containing:
 
 ```yaml
 on: [push]
 jobs:
   tfsec:
     uses: HariSekhon/GitHub-Actions/.github/workflows/tfsec.yaml@master
+```
+
+[![checkov](https://github.com/HariSekhon/Terraform/actions/workflows/checkov.yaml/badge.svg)](https://github.com/HariSekhon/Terraform/actions/workflows/checkov.yaml)
+
+Alerts appear under `Security` -> `Code scanning alerts`.
+
+Create `.github/workflows/tfsec.yaml` containing:
+
+```yaml
+on: [push]
+jobs:
+  checkov:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/checkov.yaml@master
 ```
 
 ## Terraform Plan & Apply
