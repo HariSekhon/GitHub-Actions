@@ -25,12 +25,11 @@ jobs:
 
 ## Scan for Secrets and Security issues
 
-[![Semgrep](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/semgrep.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/semgrep.yaml) <--
-Alerts appear under the GitHub repo's Security tab -> Code scanning alerts.
+### Semgrep Local
 
-[![Semgrep Cloud](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/semgrep-cloud.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/semgrep-cloud.yaml) <-- Alerts appear in the <https://semgrep.dev> dashboard
+[![Semgrep](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/semgrep.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/semgrep.yaml)
 
-Create `.github/workflows/semgrep.yaml` for local repo alerts:
+Create `.github/workflows/semgrep.yaml` containing:
 
 ```yaml
 on: [push]
@@ -39,7 +38,13 @@ jobs:
     uses: HariSekhon/GitHub-Actions/.github/workflows/semgrep.yaml@master
 ```
 
-or `.github/workflows/semgrep-cloud.yaml` for <https://semgrep.dev> alerts:
+Alerts for the above badge appear under the GitHub repo's `Security` tab -> `Code scanning alerts`.
+
+### Semgrep Cloud
+
+[![Semgrep Cloud](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/semgrep-cloud.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/semgrep-cloud.yaml)
+
+Create `.github/workflows/semgrep-cloud.yaml` containing:
 
 ```yaml
 on: [push]
@@ -49,6 +54,10 @@ jobs:
     secrets:
       SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
 ```
+
+ Alerts for the above badge appears in the Semgrep dashboard at:
+
+<https://semgrep.dev>
 
 ## Analyze your Terraform code security & best practices
 
