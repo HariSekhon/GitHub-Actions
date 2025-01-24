@@ -35,6 +35,7 @@ In your GitHub repo, import these workflows by adding small yaml files to the `.
 - [Docker Build and push to multiple registries](#docker-build-and-push-to-multiple-registries)
 - [Lint Jenkinsfiles](#lint-jenkinsfiles)
 - [Lint Groovy](#lint-groovy)
+- [Lint Javascript](#lint-javascript)
 - [Check for Broken URL Links](#check-for-broken-url-links)
 - [Auto-Merge Production hotfixes back to Staging](#auto-merge-production-hotfixes-back-to-staging)
 - [Mirror Repos to GitLab for DR Backups](#mirror-repos-to-gitlab-for-dr-backups)
