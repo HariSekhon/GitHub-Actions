@@ -307,7 +307,25 @@ jobs:
       ...
 ```
 
-For more sophisticated examples including approvals, secrets, branch and path selection etc. see my [Terraform repo](https://github.com/HariSekhon/Terraform)'s templates for [terraform-plan.yaml](https://github.com/HariSekhon/Terraform/blob/master/.github/workflows/terraform-plan.yaml.template) and [terraform-apply.yaml](https://github.com/HariSekhon/Terraform/blob/master/.github/workflows/terraform-apply.yaml.template)
+For more sophisticated examples including approvals, secrets, branch and path selection etc. see my
+[Terraform repo](https://github.com/HariSekhon/Terraform)'s templates for
+[terraform-plan.yaml](https://github.com/HariSekhon/Terraform/blob/master/.github/workflows/terraform-plan.yaml.template) and
+[terraform-apply.yaml](https://github.com/HariSekhon/Terraform/blob/master/.github/workflows/terraform-apply.yaml.template)
+
+## Lint Packer HCL
+
+Finds all `*.pkr.hcl` Packer code in your repo and lints them. Get a cool badge like:
+
+[![Shellcheck](https://github.com/HariSekhon/Packer/actions/workflows/packer.yaml/badge.svg)](https://github.com/HariSekhon/Packer/actions/workflows/packer.yaml)
+
+Copy this into `.github/workflows/packer.yaml`:
+
+```yaml
+on: [push]
+jobs:
+  shellcheck:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/packer.yaml@master
+ ```
 
 ## Docker Build and push to DockerHub
 
