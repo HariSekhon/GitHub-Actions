@@ -27,6 +27,9 @@ In your GitHub repo, import these workflows by adding small yaml files to the `.
   - [Checkov](#checkov)
 - [Terraform Plan & Apply](#terraform-plan--apply)
 - [Lint Packer HCL](#lint-packer-hcl)
+- [Lint Redhat Kickstart](#lint-redhat-kickstart)
+- [Lint Debian Preseed](#lint-debian-preseed)
+- [Lint Ubuntu AutoInstaller Cloud Init](#lint-ubuntu-autoinstaller-cloud-init)
 - [Docker Build and push to DockerHub](#docker-build-and-push-to-dockerhub)
 - [Docker Build and push to AWS ECR](#docker-build-and-push-to-aws-ecr)
 - [Docker Build and push to multiple registries](#docker-build-and-push-to-multiple-registries)
@@ -314,7 +317,7 @@ For more sophisticated examples including approvals, secrets, branch and path se
 
 Finds all `*.pkr.hcl` Packer code in your repo and lints them. Get a cool badge like:
 
-[![Shellcheck](https://github.com/HariSekhon/Packer/actions/workflows/packer.yaml/badge.svg)](https://github.com/HariSekhon/Packer/actions/workflows/packer.yaml)
+[![Packer](https://github.com/HariSekhon/Packer/actions/workflows/packer.yaml/badge.svg)](https://github.com/HariSekhon/Packer/actions/workflows/packer.yaml)
 
 Copy this into `.github/workflows/packer.yaml`:
 
@@ -324,8 +327,70 @@ on:
     paths:
       - '*.pkr.hcl'
 jobs:
-  shellcheck:
+  check_packer_hcl:
     uses: HariSekhon/GitHub-Actions/.github/workflows/packer.yaml@master
+ ```
+
+## Lint Redhat Kickstart
+
+Lints Redhat Kickstart automated installer files.
+
+[![Kickstart](https://github.com/HariSekhon/Packer/actions/workflows/kickstart.yaml/badge.svg)](https://github.com/HariSekhon/Packer/actions/workflows/kickstart.yaml)
+
+Copy this into `.github/workflows/kickstart.yaml`:
+
+```yaml
+on:
+  push:
+    paths:
+      - '**/anaconda-ks.cfg'
+      - '**/ks.cfg'
+      - '**/kickstart.cfg'
+jobs:
+  check_kickstart:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/kickstart.yaml@master
+    with:
+      files: installers/anaconda-ks.cfg
+ ```
+
+## Lint Debian Preseed
+
+Lints Debian Preseed automated installer files.
+
+[![Preseed](https://github.com/HariSekhon/Packer/actions/workflows/preseed.yaml/badge.svg)](https://github.com/HariSekhon/Packer/actions/workflows/preseed.yaml)
+
+Copy this into `.github/workflows/preseed.yaml`:
+
+```yaml
+on:
+  push:
+    paths:
+      - '**/preseed.cfg'
+jobs:
+  check_preseed:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/preseed.yaml@master
+    with:
+      files: installers/preseed.cfg
+ ```
+
+## Lint Ubuntu AutoInstaller Cloud Init
+
+Lints Ubuntu AutoInstaller Cloud Init automated installer files.
+
+[![AutoInstaller](https://github.com/HariSekhon/Packer/actions/workflows/autoinstall-user-data.yaml/badge.svg)](https://github.com/HariSekhon/Packer/actions/workflows/autoinstall-user-data.yaml)
+
+Copy this into `.github/workflows/autoinstall-user-data.yaml`:
+
+```yaml
+on:
+  push:
+    paths:
+      - '**/autoinstall-user-data'
+jobs:
+  shellcheck:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/autoinstall-user-data.yaml@master
+    with:
+      files: installers/autoinstall-user-data
  ```
 
 ## Docker Build and push to DockerHub
