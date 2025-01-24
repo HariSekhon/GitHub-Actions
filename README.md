@@ -214,6 +214,19 @@ jobs:
     uses: HariSekhon/GitHub-Actions/.github/workflows/tfsec.yaml@master
 ```
 
+### tflint
+
+[![tflint](https://github.com/HariSekhon/Terraform/actions/workflows/tflint.yaml/badge.svg)](https://github.com/HariSekhon/Terraform/actions/workflows/tflint.yaml)
+
+Create `.github/workflows/tflint.yaml` containing:
+
+```yaml
+on: [push]
+jobs:
+  tfsec:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/tflint.yaml@master
+```
+
 ### Checkov
 
 [![checkov](https://github.com/HariSekhon/Terraform/actions/workflows/checkov.yaml/badge.svg)](https://github.com/HariSekhon/Terraform/actions/workflows/checkov.yaml)
