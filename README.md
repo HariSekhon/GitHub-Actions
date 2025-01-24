@@ -376,7 +376,7 @@ Copy this into `.github/workflows/autoinstall-user-data.yaml`:
 ```yaml
 on: [push]
 jobs:
-  check_autoinstaller:
+  check_cloudinit:
     uses: HariSekhon/GitHub-Actions/.github/workflows/autoinstall-user-data.yaml@master
     with:
       files: installers/autoinstall-user-data
