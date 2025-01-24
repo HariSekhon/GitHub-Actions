@@ -420,6 +420,36 @@ jobs:
 
 Creates several useful tags, supports multi-stage build caching, see [README](https://github.com/HariSekhon/GitHub-Actions/blob/master/.github/workflows/README.md) for details.
 
+## Lint Jenkinsfiles
+
+Finds all files named `Jenkinsfile` in the repo and lints them using a live Jenkins in docker.
+
+[![Jenkinsfile](https://github.com/HariSekhon/Jenkins/actions/workflows/jenkinsfile.yaml/badge.svg)](https://github.com/HariSekhon/Jenkins/actions/workflows/jenkinsfile.yaml)
+
+Create `.github/workflows/jenkinsfile.yaml`:
+
+```yaml
+on: [push]
+jobs:
+  jenkinsfile:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/jenkinsfile.yaml@master
+```
+
+## Lint Groovy
+
+Finds all Groovy files named `*.groovy` in the repo and lints them using `groovyc`.
+
+[![Groovy](https://github.com/HariSekhon/Jenkins/actions/workflows/groovyc.yaml/badge.svg)](https://github.com/HariSekhon/Jenkins/actions/workflows/groovyc.yaml)
+
+Create `.github/workflows/groovyc.yaml`:
+
+```yaml
+on: [push]
+jobs:
+  check_groovyc:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/groovyc.yaml@master
+```
+
 ## Check for Broken URL Links
 
 [![URL Links](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/url_links.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/url_links.yaml)
