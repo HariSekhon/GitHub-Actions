@@ -50,7 +50,7 @@ on:
         #
         #   Error: The version '3.1' with architecture 'x64' was not found for Ubuntu 22.04.
         #
-        default: 3.10
+        default: '3.10'
       working-directory:
         type: string
         required: false
@@ -72,7 +72,7 @@ on:
       python-version:
         type: string
         required: true
-        default: 3.10
+        default: '3.10'
       working-directory:
         type: string
         required: false
