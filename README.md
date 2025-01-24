@@ -40,6 +40,19 @@ To see GitHub Contexts available, including undocumented fields, see [HariSekhon
 
 In your GitHub repo, import these workflows by adding small yaml files to the `.github/workflows/` directory.
 
+## Lint Your YAML
+
+Finds all YAML in your repo and lints it. Get a cool badge like:
+
+[![YAML](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/yaml.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/yaml.yaml)
+
+```yaml
+on: [push]
+jobs:
+  check_yaml:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/yaml.yaml@master
+ ```
+
 ## Scan for Secrets and Security issues
 
 [![Semgrep](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/semgrep.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/semgrep.yaml)
