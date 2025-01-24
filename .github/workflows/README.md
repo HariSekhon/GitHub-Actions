@@ -27,6 +27,7 @@ In your GitHub repo, import these workflows by adding small yaml files to the `.
   - [Checkov](#checkov)
 - [Terraform Plan & Apply](#terraform-plan--apply)
 - [Docker Build and push to DockerHub](#docker-build-and-push-to-dockerhub)
+- [Lint Packer HCL](#lint-packer-hcl)
 - [Docker Build and push to AWS ECR](#docker-build-and-push-to-aws-ecr)
 - [Docker Build and push to multiple registries](#docker-build-and-push-to-multiple-registries)
 - [Check for Broken URL Links](#check-for-broken-url-links)
