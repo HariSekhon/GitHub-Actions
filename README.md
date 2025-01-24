@@ -74,6 +74,21 @@ jobs:
     uses: HariSekhon/GitHub-Actions/.github/workflows/json.yaml@master
  ```
 
+## Lint Your XML
+
+Finds all XML in your repo and lints it. Get a cool badge like:
+
+[![XML](https://github.com/HariSekhon/Templates/actions/workflows/xml.yaml/badge.svg)](https://github.com/HariSekhon/Templates/actions/workflows/xml.yaml)
+
+Copy this into `.github/workflows/xml.yaml`:
+
+```yaml
+on: [push]
+jobs:
+  check_xml:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/xml.yaml@master
+ ```
+
 ## Lint Your README / Markdown documentation
 
 Finds all markdown files in your repo and lints them. Get a cool badge like:
@@ -85,7 +100,7 @@ Copy this into `.github/workflows/markdown.yaml`:
 ```yaml
 on: [push]
 jobs:
-  check_json:
+  check_markdown:
     uses: HariSekhon/GitHub-Actions/.github/workflows/markdown.yaml@master
  ```
 
