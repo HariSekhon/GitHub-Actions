@@ -106,7 +106,10 @@ Finds all `*.sh` scripts in your repo and lints them. Get a cool badge like:
 Copy this into `.github/workflows/shellcheck.yaml`:
 
 ```yaml
-on: [push]
+on:
+  push:
+    paths:
+      - '*.sh'
 jobs:
   shellcheck:
     uses: HariSekhon/GitHub-Actions/.github/workflows/shellcheck.yaml@master
