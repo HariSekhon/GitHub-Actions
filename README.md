@@ -54,6 +54,8 @@ few more details like only running when relevant files have changed.
 - [Scan for Secrets and Security issues](#scan-for-secrets-and-security-issues)
   - [Semgrep Local](#semgrep-local)
   - [Semgrep Cloud](#semgrep-cloud)
+  - [Trivy Filesystem Scan](#trivy-filesystem-scan)
+  - [Trivy Docker Image Scan](#trivy-docker-image-scan)
 - [Analyze your Terraform code security & best practices](#analyze-your-terraform-code-security--best-practices)
   - [tfsec](#tfsec)
   - [tflint](#tflint)
@@ -197,6 +199,35 @@ Alerts for the above badge appears in the Semgrep dashboard at:
 
 The badge will go red only if failing to run and publish to Semgrep Cloud, whether there are any alerts of not.
 You must check the dashboard.
+
+### Trivy Filesystem Scan
+
+[![Trivy Filesystem Scan](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/trivy.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/trivy.yaml)
+
+Alerts for the above badge appear under the GitHub repo's `Security` tab -> `Code scanning alerts`.
+
+```yaml
+on: [push]
+jobs:
+  trivy:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/trivy.yaml@master
+```
+
+### Trivy Docker Image Scan
+
+[![Trivy Docker Image Scan](https://github.com/HariSekhon/DevOps-Bash-tools/actions/workflows/trivy_image.yaml/badge.svg)](https://github.com/HariSekhon/DevOps-Bash-tools/actions/workflows/trivy_image.yaml)
+
+Alerts for the above badge appear under the GitHub repo's `Security` tab -> `Code scanning alerts`.
+
+```text
+on: [push]
+jobs:
+  trivy:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/trivy_image.yaml@master
+    with:
+      docker_image: harisekhon/bash-tools
+      severity: ''
+```
 
 ## Analyze your Terraform code security & best practices
 
