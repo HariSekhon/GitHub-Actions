@@ -98,7 +98,7 @@ few more details like only running when relevant files have changed.
 
 ## Lint YAML
 
-Finds all YAML in your repo and lints it. Get a cool badge like:
+Finds all YAML in your repo and lints it.
 
 [![YAML](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/yaml.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/yaml.yaml)
 
@@ -113,7 +113,7 @@ jobs:
 
 ## Lint JSON
 
-Finds all JSON in your repo and lints it. Get a cool badge like:
+Finds all JSON in your repo and lints it.
 
 [![JSON](https://github.com/HariSekhon/Templates/actions/workflows/json.yaml/badge.svg)](https://github.com/HariSekhon/Templates/actions/workflows/json.yaml)
 
@@ -128,7 +128,7 @@ jobs:
 
 ## Lint XML
 
-Finds all XML in your repo and lints it. Get a cool badge like:
+Finds all XML in your repo and lints it.
 
 [![XML](https://github.com/HariSekhon/Templates/actions/workflows/xml.yaml/badge.svg)](https://github.com/HariSekhon/Templates/actions/workflows/xml.yaml)
 
@@ -143,7 +143,7 @@ jobs:
 
 ## Lint Bash / Shell Scripts
 
-Finds all `*.sh` scripts in your repo and lints them. Get a cool badge like:
+Finds all `*.sh` scripts in your repo and lints them.
 
 [![Shellcheck](https://github.com/HariSekhon/DevOps-Bash-tools/actions/workflows/shellcheck.yaml/badge.svg)](https://github.com/HariSekhon/DevOps-Bash-tools/actions/workflows/shellcheck.yaml)
 
@@ -158,7 +158,7 @@ jobs:
 
 ## Lint README / Markdown documentation
 
-Finds all markdown files in your repo and lints them. Get a cool badge like:
+Finds all markdown files in your repo and lints them.
 
 [![Markdown](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/markdown.yaml/badge.svg)](https://github.com/HariSekhon/Templates/actions/workflows/markdown.yaml)
 
@@ -338,7 +338,7 @@ For more sophisticated examples including approvals, secrets, branch and path se
 
 ## Lint Packer HCL
 
-Finds all `*.pkr.hcl` Packer code in your repo and lints them. Get a cool badge like:
+Finds all `*.pkr.hcl` Packer code in your repo and lints them.
 
 [![Packer](https://github.com/HariSekhon/Packer/actions/workflows/packer.yaml/badge.svg)](https://github.com/HariSekhon/Packer/actions/workflows/packer.yaml)
 
