@@ -30,6 +30,7 @@ In your GitHub repo, import these workflows by adding small yaml files to the `.
   - [tflint](#tflint)
   - [Checkov](#checkov)
 - [Terraform Plan & Apply](#terraform-plan--apply)
+- [Lint Ansible Playbooks](#lint-ansible-playbooks)
 - [Lint Packer HCL](#lint-packer-hcl)
 - [Lint Redhat Kickstart](#lint-redhat-kickstart)
 - [Lint Debian Preseed](#lint-debian-preseed)
@@ -377,6 +378,25 @@ For more sophisticated examples including approvals, secrets, branch and path se
 [terraform-plan.yaml](https://github.com/HariSekhon/Terraform/blob/master/.github/workflows/terraform-plan.yaml.template) and
 [terraform-apply.yaml](https://github.com/HariSekhon/Terraform/blob/master/.github/workflows/terraform-apply.yaml.template)
 
+## Lint Ansible Playbooks
+
+Finds all Ansible `playbook.y*ml` in your repo and lints them.
+
+[![Ansible](https://github.com/HariSekhon/Ansible/actions/workflows/ansible-playbook-syntax.yaml/badge.svg)](https://github.com/HariSekhon/Ansible/actions/workflows/ansible-playbook-syntax.yaml)
+
+Copy this into `.github/workflows/ansible-playbook-syntax.yaml`:
+
+```yaml
+on:
+  push:
+    paths:
+      - '**/playbook.yml'
+      - '**/playbook.yaml'
+jobs:
+  check_ansible_playbook_syntax:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/ansible-playbook-syntax.yaml@master
+ ```
+
 ## Lint Packer HCL
 
 Finds all `*.pkr.hcl` Packer code in your repo and lints them.
@@ -389,7 +409,7 @@ Copy this into `.github/workflows/packer.yaml`:
 on:
   push:
     paths:
-      - '*.pkr.hcl'
+      - '**/*.pkr.hcl'
 jobs:
   check_packer_hcl:
     uses: HariSekhon/GitHub-Actions/.github/workflows/packer.yaml@master
