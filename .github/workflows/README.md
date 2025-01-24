@@ -133,7 +133,11 @@ Alerts appear under `Security` -> `Code scanning alerts`.
 Create `.github/workflows/tfsec.yaml` containing:
 
 ```yaml
-on: [push]
+on:
+  push:
+    paths:
+      - '**/*.tf'
+      - '**/*.hcl'
 jobs:
   tfsec:
     uses: HariSekhon/GitHub-Actions/.github/workflows/tfsec.yaml@master
