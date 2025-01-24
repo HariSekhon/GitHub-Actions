@@ -16,7 +16,7 @@ In your GitHub repo, import these workflows by adding small yaml files to the `.
 - [Lint Bash / Shell Scripts](#lint-bash--shell-scripts)
 - [Lint README / Markdown documentation](#lint-readme--markdown-documentation)
 - [Lint GitHub CODEOWNERS](#lint-github-codeowners)
-- [Security - Scan for Secrets and Issues](#security---scan-for-secrets-and-issues)
+- [Security - Scan for Secrets & Issues](#security---scan-for-secrets--issues)
   - [Semgrep Local](#semgrep-local)
   - [Semgrep Cloud](#semgrep-cloud)
   - [Trivy Filesystem Scan](#trivy-filesystem-scan)
@@ -36,6 +36,8 @@ In your GitHub repo, import these workflows by adding small yaml files to the `.
 - [Docker Build and push to DockerHub](#docker-build-and-push-to-dockerhub)
 - [Docker Build and push to AWS ECR](#docker-build-and-push-to-aws-ecr)
 - [Docker Build and push to multiple registries](#docker-build-and-push-to-multiple-registries)
+- [Kubernetes - Pluto - Check for Outdated APIs](#kubernetes---pluto---check-for-outdated-apis)
+- [Kubernetes - Polaris - Security & Best Practices Check](#kubernetes---polaris---security--best-practices-check)
 - [Check for Broken URL Links](#check-for-broken-url-links)
 - [Auto-Merge Production hotfixes back to Staging](#auto-merge-production-hotfixes-back-to-staging)
 - [Mirror Repos to GitLab for DR Backups](#mirror-repos-to-gitlab-for-dr-backups)
@@ -159,7 +161,7 @@ jobs:
     uses: HariSekhon/GitHub-Actions/.github/workflows/codeowners.yaml@master
  ```
 
-## Security - Scan for Secrets and Issues
+## Security - Scan for Secrets & Issues
 
 ### Semgrep Local
 
@@ -539,6 +541,45 @@ jobs:
     secrets:
       DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+```
+
+## Kubernetes - Pluto - Check for Outdated APIs
+
+Checks all Kubernetes YAML files for outdated API objects using Pluto.
+
+[![Pluto](https://github.com/HariSekhon/Kubernetes-configs/actions/workflows/pluto.yaml/badge.svg)](https://github.com/HariSekhon/Kubernetes-configs/actions/workflows/pluto.yaml)
+
+Create `.github/workflows/pluto.yaml`:
+
+```yaml
+on:
+  push:
+    paths:
+      - '**/*.yaml'
+jobs:
+  pluto:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/pluto.yaml@master
+```
+
+## Kubernetes - Polaris - Security & Best Practices Check
+
+Checks all Kubernetes YAML files for security issues and best practices.
+
+Polaris currently fails on very advanced patches such as found in my
+[Kubernetes-configs](https://github.com/HariSekhon/Kubernetes-configs) repo.
+
+[![Polaris](https://github.com/HariSekhon/Kubernetes-configs/actions/workflows/polaris.yaml/badge.svg)](https://github.com/HariSekhon/Kubernetes-configs/actions/workflows/polaris.yaml)
+
+Create `.github/workflows/polaris.yaml`:
+
+```yaml
+on:
+  push:
+    paths:
+      - '**/*.yaml'
+jobs:
+  polaris:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/polaris.yaml@master
 ```
 
 ## Check for Broken URL Links
