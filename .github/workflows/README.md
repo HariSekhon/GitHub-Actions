@@ -146,6 +146,8 @@ on:
 jobs:
   pylint:
     uses: HariSekhon/GitHub-Actions/.github/workflows/pylint.yaml@master
+    with:
+      python-version: '3.10'
  ```
 
 ### Flake8
@@ -164,6 +166,8 @@ on:
 jobs:
   flake8:
     uses: HariSekhon/GitHub-Actions/.github/workflows/flake8.yaml@master
+    with:
+      python-version: '3.10'
  ```
 
 ## Lint README / Markdown documentation
