@@ -52,7 +52,7 @@ few more details like only running when relevant files have changed.
 - [Lint Bash / Shell Scripts](#lint-bash--shell-scripts)
 - [Lint README / Markdown documentation](#lint-readme--markdown-documentation)
 - [Lint GitHub CODEOWNERS](#lint-github-codeowners)
-- [Scan for Secrets and Security issues](#scan-for-secrets-and-security-issues)
+- [Security - Scan for Secrets and issues](#security---scan-for-secrets-and-issues)
   - [Semgrep Local](#semgrep-local)
   - [Semgrep Cloud](#semgrep-cloud)
   - [Trivy Filesystem Scan](#trivy-filesystem-scan)
@@ -175,7 +175,7 @@ jobs:
     uses: HariSekhon/GitHub-Actions/.github/workflows/codeowners.yaml@master
  ```
 
-## Scan for Secrets and Security issues
+## Security - Scan for Secrets and issues
 
 ### Semgrep Local
 
