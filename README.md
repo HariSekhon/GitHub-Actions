@@ -62,6 +62,7 @@ few more details like only running when relevant files have changed.
   - [tflint](#tflint)
   - [Checkov](#checkov)
 - [Terraform Plan & Apply](#terraform-plan--apply)
+- [Lint Packer HCL](#lint-packer-hcl)
 - [Docker Build and push to DockerHub](#docker-build-and-push-to-dockerhub)
 - [Docker Build and push to AWS ECR](#docker-build-and-push-to-aws-ecr)
 - [Check for Broken URL Links](#check-for-broken-url-links)
