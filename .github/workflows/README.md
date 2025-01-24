@@ -327,6 +327,24 @@ jobs:
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 ```
 
+## Lint Packer HCL
+
+Finds all `*.pkr.hcl` Packer code in your repo and lints them. Get a cool badge like:
+
+[![Shellcheck](https://github.com/HariSekhon/Packer/actions/workflows/packer.yaml/badge.svg)](https://github.com/HariSekhon/Packer/actions/workflows/packer.yaml)
+
+Copy this into `.github/workflows/shellcheck.yaml`:
+
+```yaml
+on:
+  push:
+    paths:
+      - '*.pkr.hcl'
+jobs:
+  shellcheck:
+    uses: HariSekhon/GitHub-Actions/.github/workflows/packer.yaml@master
+ ```
+
 ## Docker Build and push to AWS ECR
 
 Create `.github/workflows/docker_build_aws_ecr.yaml`:
