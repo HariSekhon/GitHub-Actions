@@ -44,6 +44,7 @@ jobs:
   check_json:
     uses: HariSekhon/GitHub-Actions/.github/workflows/json.yaml@master
  ```
+
 ## Lint Your XML
 
 Finds all XML in your repo and lints it. Get a cool badge like:
