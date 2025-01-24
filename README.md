@@ -165,7 +165,7 @@ jobs:
 
 Finds all `*.py` code in your repo and lints it.
 
-[![PyLint](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/pylint.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/pylint.yaml)
+[![PyLint](https://github.com/HariSekhon/pylib/actions/workflows/pylint.yaml/badge.svg)](https://github.com/HariSekhon/pylib/actions/workflows/pylint.yaml)
 
 Copy this into `.github/workflows/pylint.yaml`:
 
@@ -180,7 +180,7 @@ jobs:
 
 Finds all `*.py` code in your repo and lints it.
 
-[![Flake8](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/flake8.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/flake8.yaml)
+[![Flake8](https://github.com/HariSekhon/pylib/actions/workflows/flake8.yaml/badge.svg)](https://github.com/HariSekhon/pylib/actions/workflows/flake8.yaml)
 
 Copy this into `.github/workflows/flake8.yaml`:
 
