@@ -193,7 +193,9 @@ jobs:
           CERTIFICATE_PASSWORD: ${{ secrets.certificate_password }}
         run: |
           if [ -n "${CERTIFICATE:-}" ]; then
-            security import "$CERTIFICATE" \
+            cert="$(mktemp)"
+            echo "$CERTIFICATE" > "$cert"
+            security import "$cert" \
                 -k ~/Library/Keychains/login.keychain-db \
                 -T /usr/bin/codesign \
                 -T /usr/bin/security \
