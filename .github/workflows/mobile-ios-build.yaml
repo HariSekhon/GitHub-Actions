@@ -49,10 +49,6 @@ on:
         type: string
         required: true
         description: XCode build configuration
-      certificate:
-        type: string
-        required: false
-        description: Path to signing certificate file (optional)
       submodules:
         type: string
         required: false
@@ -62,6 +58,10 @@ on:
         required: false
         default: false
     secrets:
+      certificate:
+        type: string
+        required: false
+        description: Path to signing certificate file (optional)
       certificate_password:
         type: string
         required: false
@@ -80,10 +80,6 @@ on:
         type: string
         required: true
         description: XCode build configuration
-      certificate:
-        type: string
-        required: false
-        description: Path to signing certificate file (optional)
       submodules:
         type: string
         required: false
@@ -93,6 +89,10 @@ on:
         required: false
         default: false
     secrets:
+      certificate:
+        type: string
+        required: false
+        description: Path to signing certificate file (optional)
       certificate_password:
         type: string
         required: false
