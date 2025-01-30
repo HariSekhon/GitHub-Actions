@@ -23,6 +23,10 @@ name: Dump Contexts
 on:
   workflow_call:
     inputs:
+      os:
+        type: string
+        required: false
+        description: OS to run on (defaults to both Ubuntu Linux and macOS)
       debug:
         type: string
         required: false
@@ -47,6 +51,7 @@ jobs:
     name: Dump Contexts
     #runs-on: ubuntu-latest
     #container: ubuntu:latest
+    runs-on: ${{ inputs.runs-on || github.event.inputs.runs-on || matrix.os }}
     strategy:
       matrix:
         os:
