@@ -1,0 +1,204 @@
+#
+#  Author: Hari Sekhon
+#  Date: 2025-01-31 05:44:00 +0700 (Fri, 31 Jan 2025)
+#
+#  vim:ts=2:sts=2:sw=2:et
+#
+#  https://github.com/HariSekhon/GitHub-Actions
+#
+#  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback
+#
+#  https://www.linkedin.com/in/HariSekhon
+#
+
+# ============================================================================ #
+#                        M o b i l e   i O S   B u i l d
+# ============================================================================ #
+
+---
+name: YAML
+
+on:
+  #push:
+  #  branches:
+  #    - master
+  #    - main
+  #  paths:
+  #    - Podfile
+  #    - Fastfile
+  #    - .github/workflows/mobild-ios-build.yaml
+  #pull_request:
+  #  branches:
+  #    - master
+  #    - main
+  #  paths:
+  #    - Podfile
+  #    - Fastfile
+  #    - .github/workflows/mobild-ios-build.yaml
+  workflow_call:
+    inputs:
+      app:
+        type: string
+        required: true
+        description: Name of the App - should match APP.xcworkspace
+      scheme:
+        type: string
+        required: true
+        description: XCode build scheme
+      configuration:
+        type: string
+        required: true
+        description: XCode build configuration
+      certificate:
+        type: string
+        required: false
+        description: Path to signing certificate file (optional)
+      submodules:
+        type: string
+        required: false
+        default: recursive
+      debug:
+        type: string
+        required: false
+        default: false
+    secrets:
+      certificate_password:
+        type: string
+        required: false
+        description: Password for certificate file (optional)
+  workflow_dispatch:
+    inputs:
+      app:
+        type: string
+        required: true
+        description: Name of the App - should match APP.xcworkspace
+      scheme:
+        type: string
+        required: true
+        description: XCode build scheme
+      configuration:
+        type: string
+        required: true
+        description: XCode build configuration
+      certificate:
+        type: string
+        required: false
+        description: Path to signing certificate file (optional)
+      submodules:
+        type: string
+        required: false
+        default: recursive
+      debug:
+        type: boolean
+        required: false
+        default: false
+    secrets:
+      certificate_password:
+        type: string
+        required: false
+        description: Password for certificate file (optional)
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash -euxo pipefail {0}
+
+env:
+  APP: ${{ inputs.app || github.event.inputs.app || '' }}
+  SCHEME: ${{ inputs.scheme || github.event.inputs.scheme || '' }}
+  CONFIGURATION: ${{ inputs.configuration || github.event.inputs.configuration || '' }}
+  CERTIFICATE: ${{ inputs.certificate || github.event.inputs.certificate || '' }}
+  DEBUG: ${{ inputs.debug == true || github.event.inputs.debug == 'true' || '' }}
+
+jobs:
+  build:
+    name: iOS Build
+    runs-on: macos-latest
+    steps:
+      - name: Environment
+        run: env | sort
+
+      - name: Git version
+        run: git --version
+
+      - uses: actions/checkout@v3
+        with:
+          submodules: ${{ inputs.submodules }}  # 'recursive' default requires Git 2.18+ to be installed first
+
+      - name: Install Homebrew
+        run: |
+          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+      - name: Add Homebrew to PATH
+        run: |
+          echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.bashrc
+          . ~/.bashrc
+
+      - name: Homebrew Version
+        run: |
+          brew --version
+
+      - name: Install XCode
+        #run: xcode-select --install
+        run: |
+          # use expect to auto-answer the download and license prompts
+          brew install expect
+          expect <<EOF
+          spawn xcode-select --install
+          set timeout -1
+          expect {
+              "The software is available for download" {
+                  send "\r"
+                  exp_continue
+              }
+              "Press the Return key to continue" {
+                  send "\r"
+              }
+              eof
+          }
+          EOF
+
+      - name: XCode Version
+        run: xcodebuild -version
+
+      - name: Set XCode to Developer
+        run: |
+          sudo xcode-select -switch /Applications/Xcode.app/Contents/Developer
+          xcode-select --print-path
+
+      - name: Show SDKs
+        run: xcodebuild -showsdks
+
+      - name: Download Platforms
+        run: xcodebuild -downloadAllPlatforms
+
+      - name: List Simulators
+        run: xcrun simctl list
+
+      - name: Install CocoaPods
+        run: sudo gem install cocoapods
+
+      - name: Install Pod Dependencies
+        run: pod install
+
+      - name: Copy profiles to library
+        run: |
+          mkdir -p -v ~/Library/MobileDevice/Provisioning\ Profiles
+          cp -vi *.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/
+
+      - name: Load Certificate to KeyChain
+        env:
+          CERTIFICATE_PASSWORD: ${{ secrets.certificate_password }}
+        run: |
+          if [ -n "${CERTIFICATE:-}" ]; then
+            security import "$CERTIFICATE" \
+                -k ~/Library/Keychains/login.keychain-db \
+                -T /usr/bin/codesign \
+                -T /usr/bin/security \
+                ${CERTIFICATE_PASSWORD:+-P "$CERTIFICATE_PASSWORD"}
+          fi
+
+      - name: iOS XCode Build
+        run: xcodebuild -workspace "$APP".xcworkspace -scheme "$SCHEME" -configuration "$CONFIGURATION"
