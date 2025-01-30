@@ -45,8 +45,16 @@ env:
 jobs:
   dump_contexts:
     name: Dump Contexts
-    runs-on: ubuntu-latest
-    container: ubuntu:latest
+    #runs-on: ubuntu-latest
+    #container: ubuntu:latest
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+    # run inside a Docker container when on Ubuntu Linux
+    # so we can get a little more environment and context output
+    container: ${{ matrix.os == 'ubuntu-latest' && 'ubuntu:latest' || '' }}
     timeout-minutes: 10
     steps:
 
