@@ -214,7 +214,7 @@ jobs:
       - name: Install Pod Dependencies
         run: pod install
 
-      - name: Copy profiles to library
+      - name: Copy Mobile Profiles to Library
         env:
           MOBILEPROVISION_TAR: ${{ secrets.mobileprovision_tar }}
         run: |
