@@ -195,9 +195,12 @@ jobs:
         run: pod install
 
       - name: Copy profiles to library
+        env:
+          MOBILEPROVISION_TAR: ${{ secrets.mobileprovision_tar }}
         run: |
           mkdir -p -v ~/Library/MobileDevice/Provisioning\ Profiles
-          cp -vi *.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/
+          base64 --decode <<< "$MOBILEPROVISION_TAR" |
+          tar xvz -C ~/Library/MobileDevice/Provisioning\ Profiles/
 
       - name: Load Certificate to KeyChain
         env:
