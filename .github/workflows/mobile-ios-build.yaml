@@ -232,6 +232,7 @@ jobs:
           #if [ -n "${CERTIFICATE:-}" ]; then
             cert="$(mktemp)"
             base64 --decode <<< "$CERTIFICATE" > "$cert"
+            file "$cert"
             security import "$cert" \
                 -k ~/Library/Keychains/login.keychain-db \
                 -T /usr/bin/codesign \
