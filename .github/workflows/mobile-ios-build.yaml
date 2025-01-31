@@ -117,7 +117,6 @@ env:
   APP: ${{ inputs.app || github.event.inputs.app || '' }}
   SCHEME: ${{ inputs.scheme || github.event.inputs.scheme || '' }}
   CONFIGURATION: ${{ inputs.configuration || github.event.inputs.configuration || '' }}
-  CERTIFICATE: ${{ inputs.certificate || github.event.inputs.certificate || '' }}
   DEBUG: ${{ inputs.debug == true || github.event.inputs.debug == 'true' || '' }}
 
 jobs:
