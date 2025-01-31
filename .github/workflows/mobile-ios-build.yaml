@@ -180,7 +180,7 @@ jobs:
       - name: XCode Path
         run: xcode-select --print-path
 
-      - name: Show SDKs
+      - name: Show Available SDKs
         run: xcodebuild -showsdks
 
       - name: Download Platforms
