@@ -217,6 +217,7 @@ jobs:
           mkdir -p -v ~/Library/MobileDevice/Provisioning\ Profiles
           base64 --decode <<< "$MOBILEPROVISION_TAR" |
           tar xvz -C ~/Library/MobileDevice/Provisioning\ Profiles/
+          ls -la ~/Library/MobileDevice/Provisioning\ Profiles/
 
       - name: Load Certificate to KeyChain
         env:
