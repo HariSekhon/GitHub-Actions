@@ -195,8 +195,11 @@ jobs:
       - name: Show Available SDKs
         run: xcodebuild -showsdks
 
-      - name: Download Platforms
-        run: xcodebuild -downloadAllPlatforms
+      # already provided:
+      #
+      #- name: Download Platforms
+      #  run: xcodebuild -downloadAllPlatforms
+      #      "All requested platforms are downloaded"
 
       - name: List Simulators
         run: xcrun simctl list
