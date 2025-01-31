@@ -134,6 +134,18 @@ jobs:
         with:
           submodules: ${{ inputs.submodules }}  # 'recursive' default requires Git 2.18+ to be installed first
 
+      - uses: actions/cache@v4
+        name: Cache Pods
+        with:
+          path: Pods
+          key: ${{ runner.os }}-pods
+
+      - uses: actions/cache@v4
+        name: Cache CoreSimular
+        with:
+          path: /Library/Developer/CoreSimulator
+          key: ${{ runner.os }}-core-simulator
+
       # XCode is already available
       #- name: Install Homebrew
       #  run: |
