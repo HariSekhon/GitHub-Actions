@@ -173,6 +173,7 @@ jobs:
 
       - name: Set XCode to Developer
         run: |
+          xcode-select --print-path
           sudo xcode-select -switch /Applications/Xcode.app/Contents/Developer
           xcode-select --print-path
 
