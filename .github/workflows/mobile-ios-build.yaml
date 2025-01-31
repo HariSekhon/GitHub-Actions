@@ -134,38 +134,39 @@ jobs:
         with:
           submodules: ${{ inputs.submodules }}  # 'recursive' default requires Git 2.18+ to be installed first
 
-      - name: Install Homebrew
-        run: |
-          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-      - name: Add Homebrew to PATH
-        run: |
-          echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.bashrc
-          . ~/.bashrc
-
-      - name: Homebrew Version
-        run: |
-          brew --version
-
-      - name: Install XCode
-        #run: xcode-select --install
-        run: |
-          # use expect to auto-answer the download and license prompts
-          brew install expect
-          expect <<EOF
-          spawn xcode-select --install
-          set timeout -1
-          expect {
-              "The software is available for download" {
-                  send "\r"
-                  exp_continue
-              }
-              "Press the Return key to continue" {
-                  send "\r"
-              }
-              eof
-          }
-          EOF
+      # XCode is already available
+      #- name: Install Homebrew
+      #  run: |
+      #    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      #
+      #- name: Add Homebrew to PATH
+      #  run: |
+      #    echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.bashrc
+      #    . ~/.bashrc
+      #
+      #- name: Homebrew Version
+      #  run: |
+      #    brew --version
+      #
+      #- name: Install XCode
+      #  #run: xcode-select --install
+      #  run: |
+      #    # use expect to auto-answer the download and license prompts
+      #    brew install expect
+      #    expect <<EOF
+      #    spawn xcode-select --install
+      #    set timeout -1
+      #    expect {
+      #        "The software is available for download" {
+      #            send "\r"
+      #            exp_continue
+      #        }
+      #        "Press the Return key to continue" {
+      #            send "\r"
+      #        }
+      #        eof
+      #    }
+      #    EOF
 
       - name: XCode Version
         run: xcodebuild -version
