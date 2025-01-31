@@ -140,11 +140,12 @@ jobs:
           path: Pods
           key: ${{ runner.os }}-pods
 
-      - uses: actions/cache@v4
-        name: Cache CoreSimular
-        with:
-          path: /Library/Developer/CoreSimulator
-          key: ${{ runner.os }}-core-simulator
+      # already downloaded, no need to download and cache
+      #- uses: actions/cache@v4
+      #  name: Cache CoreSimulator
+      #  with:
+      #    path: /Library/Developer/CoreSimulator
+      #    key: ${{ runner.os }}-core-simulator
 
       # XCode is already available
       #- name: Install Homebrew
