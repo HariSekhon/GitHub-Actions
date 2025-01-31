@@ -203,7 +203,9 @@ jobs:
 
       - name: Load Certificate to KeyChain
         env:
+          CERTIFICATE: ${{ secrets.certificate }}
           CERTIFICATE_PASSWORD: ${{ secrets.certificate_password }}
+          CERTIFICATE_CA_TAR: ${{ secrets.certificate_ca_tar }}
         run: |
           #if [ -n "${CERTIFICATE:-}" ]; then
             cert="$(mktemp)"
