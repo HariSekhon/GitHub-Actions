@@ -59,13 +59,17 @@ on:
         default: false
     secrets:
       certificate:
-        type: string
         required: false
-        description: Path to signing certificate file (optional)
+        description: Base64 encoded string of signing certificate file
       certificate_password:
-        type: string
         required: false
         description: Password for certificate file (optional)
+      certificate_ca_tar:
+        required: false
+        description: Base64 encoded .tar.gz of any Certificate CA of the singing authority eg. AppleWWDRCAG3.cer
+      mobileprovision_tar:
+        required: true
+        description: Base64 encoded .tar.gz of *.mobileprovision files
   workflow_dispatch:
     inputs:
       app:
@@ -90,19 +94,15 @@ on:
         default: false
     secrets:
       certificate:
-        type: string
         required: false
         description: Base64 encoded string of signing certificate file
       certificate_password:
-        type: string
         required: false
         description: Password for certificate file (optional)
       certificate_ca_tar:
-        type: string
         required: false
         description: Base64 encoded .tar.gz of any Certificate CA of the singing authority eg. AppleWWDRCAG3.cer
       mobileprovision_tar:
-        type: string
         required: true
         description: Base64 encoded .tar.gz of *.mobileprovision files
 
