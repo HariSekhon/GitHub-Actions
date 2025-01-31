@@ -134,6 +134,7 @@ jobs:
         with:
           submodules: ${{ inputs.submodules }}  # 'recursive' default requires Git 2.18+ to be installed first
 
+      # saves ~10 minutes IRL depending on how many dependencies in Podfile
       - uses: actions/cache@v4
         name: Cache Pods
         with:
