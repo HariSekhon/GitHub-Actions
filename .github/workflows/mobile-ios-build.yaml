@@ -177,6 +177,9 @@ jobs:
       #    sudo xcode-select -switch /Applications/Xcode.app/Contents/Developer
       #    xcode-select --print-path
 
+      - name: XCode Path
+        run: xcode-select --print-path
+
       - name: Show SDKs
         run: xcodebuild -showsdks
 
