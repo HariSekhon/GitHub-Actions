@@ -27,17 +27,14 @@ on:  # yamllint disable-line rule:truthy
     paths:
       - sonar-project.properties
       - .github/workflows/sonarcloud.yaml
-  #  ignore-paths:
-  #    - '**/README.md'
+    paths-ignore:
+      - '**/*.md'
   pull_request:
     branches:
       - master
       - main
-    paths:
-      - sonar-project.properties
-      - .github/workflows/sonarcloud.yaml
-  #  ignore-paths:
-  #    - '**/README.md'
+    paths-ignore:
+      - '**/*.md'
   #  types:
   #    - opened
   #    - synchronize
