@@ -56,6 +56,7 @@ few more details like only running when relevant files have changed.
 - [Lint README / Markdown documentation](#lint-readme--markdown-documentation)
 - [Lint GitHub CODEOWNERS](#lint-github-codeowners)
 - [Security - Scan for Secrets and issues](#security---scan-for-secrets-and-issues)
+  - [SonarCloud](#sonarcloud)
   - [Semgrep Local](#semgrep-local)
   - [Semgrep Cloud](#semgrep-cloud)
   - [Trivy Filesystem Scan](#trivy-filesystem-scan)
@@ -223,6 +224,20 @@ jobs:
  ```
 
 ## Security - Scan for Secrets and issues
+
+### SonarCloud
+
+[![SonarCloud](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/sonarcloud.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/sonarcloud.yaml)
+
+```yaml
+on: [push]
+jobs:
+  SonarCloud:
+    name: SonarCloud
+    uses: HariSekhon/GitHub-Actions/.github/workflows/sonarcloud.yaml@master
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+```
 
 ### Semgrep Local
 
