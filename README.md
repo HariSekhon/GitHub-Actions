@@ -247,7 +247,6 @@ Alerts for the above badge appears in the SonarCloud dashboard at:
 The badge will go red only if failing to run and publish to SonarCloud, whether there are any alerts of not.
 You must check the dashboard.
 
-
 ### Semgrep Local
 
 [![Semgrep](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/semgrep.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/semgrep.yaml)
