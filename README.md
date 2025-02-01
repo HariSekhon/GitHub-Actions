@@ -227,7 +227,7 @@ jobs:
 
 ### SonarCloud
 
-[![SonarCloud](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/sonarcloud.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/sonarcloud.yaml)
+[![SonarCloud](https://github.com/HariSekhon/DevOps-Bash-tools/actions/workflows/sonarcloud.yaml/badge.svg)](https://github.com/HariSekhon/DevOps-Bash-tools/actions/workflows/sonarcloud.yaml)
 
 ```yaml
 on: [push]
