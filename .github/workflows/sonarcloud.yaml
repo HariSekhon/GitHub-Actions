@@ -20,16 +20,20 @@
 ---
 name: SonarCloud
 on:
-  #push:
-  #  branches:
-  #    - master
-  #    - main
+  push:
+    branches:
+      - master
+      - main
+    paths:
+      - .github/workflows/sonarcloud.yaml
   #  ignore-paths:
   #    - '**/README.md'
-  #pull_request:
-  #  branches:
-  #    - master
-  #    - main
+  pull_request:
+    branches:
+      - master
+      - main
+    paths:
+      - .github/workflows/sonarcloud.yaml
   #  ignore-paths:
   #    - '**/README.md'
   #  types:
