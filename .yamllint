@@ -22,5 +22,5 @@ rules:
   comments: disable
   # don't care
   line-length: disable
-  # false positive
-  truthy: disable
+  # false positive - disabled inline now
+  #truthy: disable
