@@ -158,7 +158,7 @@ env:
 
 # https://docs.github.com/en/actions/learn-github-actions/events-that-trigger-workflows
 
-on:
+on:  # yamllint disable-line rule:truthy
   push:
     branches:
       - master
