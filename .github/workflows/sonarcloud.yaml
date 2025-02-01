@@ -24,9 +24,6 @@ on:  # yamllint disable-line rule:truthy
     branches:
       - master
       - main
-    paths:
-      - sonar-project.properties
-      - .github/workflows/sonarcloud.yaml
     paths-ignore:
       - '**/*.md'
   pull_request:
