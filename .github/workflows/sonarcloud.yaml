@@ -25,6 +25,7 @@ on:  # yamllint disable-line rule:truthy
       - master
       - main
     paths:
+      - sonar-project.properties
       - .github/workflows/sonarcloud.yaml
   #  ignore-paths:
   #    - '**/README.md'
@@ -33,6 +34,7 @@ on:  # yamllint disable-line rule:truthy
       - master
       - main
     paths:
+      - sonar-project.properties
       - .github/workflows/sonarcloud.yaml
   #  ignore-paths:
   #    - '**/README.md'
