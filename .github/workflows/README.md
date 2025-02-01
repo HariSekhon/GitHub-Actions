@@ -20,6 +20,7 @@ In your GitHub repo, import these workflows by adding small yaml files to the `.
 - [Lint README / Markdown documentation](#lint-readme--markdown-documentation)
 - [Lint GitHub CODEOWNERS](#lint-github-codeowners)
 - [Security - Scan for Secrets & Issues](#security---scan-for-secrets--issues)
+  - [SonarCloud](#sonarcloud)
   - [Semgrep Local](#semgrep-local)
   - [Semgrep Cloud](#semgrep-cloud)
   - [Trivy Filesystem Scan](#trivy-filesystem-scan)
@@ -209,6 +210,20 @@ jobs:
  ```
 
 ## Security - Scan for Secrets & Issues
+
+### SonarCloud
+
+[![SonarCloud](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/sonarcloud.yaml/badge.svg)](https://github.com/HariSekhon/GitHub-Actions/actions/workflows/sonarcloud.yaml)
+
+```yaml
+on: [push]
+jobs:
+  SonarCloud:
+    name: SonarCloud
+    uses: HariSekhon/GitHub-Actions/.github/workflows/sonarcloud.yaml@master
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+```
 
 ### Semgrep Local
 
