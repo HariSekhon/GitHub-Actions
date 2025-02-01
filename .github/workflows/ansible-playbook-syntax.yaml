@@ -18,7 +18,7 @@
 ---
 name: Ansible Playbook Syntax Check
 
-on:
+on:  # yamllint disable-line rule:truthy
   workflow_call:
     inputs:
       debug:
