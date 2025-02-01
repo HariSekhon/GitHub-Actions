@@ -20,7 +20,7 @@
 ---
 name: Dump Contexts
 
-on:
+on:  # yamllint disable-line rule:truthy
   workflow_call:
     inputs:
       os:

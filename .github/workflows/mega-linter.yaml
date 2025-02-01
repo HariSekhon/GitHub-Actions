@@ -20,7 +20,7 @@
 # More info at https://megalinter.github.io
 name: MegaLinter
 
-on:
+on:  # yamllint disable-line rule:truthy
   push:
     branches:
       - master

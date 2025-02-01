@@ -20,7 +20,7 @@
 ---
 name: GitLab Mirror
 
-on:
+on:  # yamllint disable-line rule:truthy
   workflow_call:
     secrets:
       GH_TOKEN:

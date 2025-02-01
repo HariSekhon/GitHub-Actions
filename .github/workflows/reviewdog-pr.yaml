@@ -20,7 +20,7 @@
 ---
 name: reviewdog PR review
 
-on:
+on:  # yamllint disable-line rule:truthy
   workflow_call:
     inputs:
       debug:

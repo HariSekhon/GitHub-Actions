@@ -31,7 +31,7 @@
 ---
 name: Infrastructure Cost Estimation
 
-on:
+on:  # yamllint disable-line rule:truthy
   # calling workflows should use something like this pull_request:
   #pull_request:
   #  branches:

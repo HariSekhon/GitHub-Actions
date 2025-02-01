@@ -27,7 +27,7 @@
 ---
 name: JFrog Cloud Artifactory Auth Test
 
-on:
+on:  # yamllint disable-line rule:truthy
   workflow_call:
     # https://github.com/marketplace/actions/setup-jfrog-cli
     inputs:

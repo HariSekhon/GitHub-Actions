@@ -19,7 +19,7 @@
 
 ---
 name: Close Stale Issues and PRs
-on:
+on:  # yamllint disable-line rule:truthy
   workflow_call:
     inputs:
       debug:

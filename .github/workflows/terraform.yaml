@@ -20,7 +20,7 @@
 ---
 name: Terraform
 
-on:
+on:  # yamllint disable-line rule:truthy
   # call from a workflow with triggers like this
   #push:
   #  branches:

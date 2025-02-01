@@ -23,7 +23,7 @@
 ---
 name: Trivy Image Scan GitHub Security Alerts
 
-on:
+on:  # yamllint disable-line rule:truthy
   workflow_call:
     inputs:
       image:
