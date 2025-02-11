@@ -123,6 +123,43 @@ jobs:
   build:
     name: iOS Build
     runs-on: macos-latest
+
+    # Mac builds are 10x expensive vs Linux, and not included in Enterprise 50,000 build minutes
+    #
+    # Build runs in ~3 minutes locally, so cap at 30 minutes because even if runner was half as powerful as my laptop
+    # there is no way it should take more than 10x - the build is simply stuck and hanging for 6 hours running up a
+    # crazy bill which is pointless
+    #
+    # Letting a job run for 6 hours before timing out costs $28.80 and doesn't finish anyway - if it doesn't complete in 30 minutes it probably won't
+    timeout-minutes: 30
+
+    # can't test with larger runner, hit this error:
+    #
+    #     The job was not started because recent account payments have failed or your spending limit needs to be increased. Please check the 'Billing & plans' section in your settings.
+    #
+    #runs-on: macos-latest-xlarge
+
+    steps:
+      - name: System
+        run: |
+          sysctl -n machdep.cpu.brand_string
+          system_profiler SPHardwareDataType
+
+    # macos-latest shows:
+    #
+    #    Apple M1 (Virtual)
+    #
+    #    Hardware:
+    #
+    #        Hardware Overview:
+    #
+    #          Model Name: Apple Virtual Machine 1
+    #          Model Identifier: VirtualMac2,1
+    #          Model Number: VM0001LL/A
+    #          Chip: Apple M1 (Virtual)
+    #          Total Number of Cores: 3
+    #          Memory: 7 GB
+
     steps:
       - name: Environment
         run: env | sort
