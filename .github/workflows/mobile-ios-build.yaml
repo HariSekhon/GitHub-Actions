@@ -118,6 +118,7 @@ env:
   SCHEME: ${{ inputs.scheme || github.event.inputs.scheme || '' }}
   CONFIGURATION: ${{ inputs.configuration || github.event.inputs.configuration || '' }}
   DEBUG: ${{ inputs.debug == true || github.event.inputs.debug == 'true' || '' }}
+  ACTIONS_RUNNER_DEBUG: true
 
 jobs:
   build:
