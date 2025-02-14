@@ -291,7 +291,7 @@ permissions:
 # XXX: cancels previous builds that haven't started even if cancel-in-progress is set to false
 concurrency:
   # XXX: don't set this to the same group in a reusable workflow and calling workflow, that will result in a deadlock
-  group: ${{ github.ref }}-${{ github.workflow }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false  # build auto-cancellation - enabling this causes false-positive badge failure statuses
 
 
