@@ -88,10 +88,10 @@ jobs:
       - name: Environment
         run: env | sort
 
-      - name: Set up Python 3.8
+      - name: Set up Python 3.13
         uses: actions/setup-python@v1
         with:
-          python-version: 3.8
+          python-version: 3.13.2
 
       - name: Git version
         run: git --version
