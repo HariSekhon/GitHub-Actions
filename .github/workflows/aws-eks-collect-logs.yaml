@@ -1,0 +1,300 @@
+#  vim:ts=2:sts=2:sw=2:et
+#
+#  Author: Hari Sekhon
+#  Date: 2024-10-26 01:24:51 +0400 (Sat, 26 Oct 2024)
+#
+#  https://github.com/HariSekhon/GitHub-Actions
+#
+#  License: see accompanying Hari Sekhon LICENSE file
+#
+#  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback to help steer this or other code I publish
+#
+#  https://www.linkedin.com/in/HariSekhon
+#
+
+# Not finalized / tested yet
+
+---
+name: EKS Collect All Logs
+
+on:
+  # https://docs.github.com/en/actions/using-workflows/reusing-workflows#creating-a-reusable-workflow
+  workflow_call:
+    inputs:
+      k8s_context:
+        description: The Kubernetes context to dump to dump the logs for its nodes
+        type: string
+        required: true
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+      AWS_DEFAULT_REGION:
+        required: true
+      SSH_KEY:
+        description: EKS SSH Key pem secret
+        type: string
+        required: true
+
+  workflow_dispatch:  # needs to be in default branch before you get the UI option to manually run though
+    inputs:
+      k8s_context:
+        description: The ECR repository, without the 'xxx.dkr.ecr.<region>.amazonaws.com' prefix
+        type: string
+        required: true
+    secrets:
+      SSH_KEY:
+        description: EKS SSH Key pem secret
+        type: string
+        required: true
+
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash -euxo pipefail {0}
+
+env:
+  K8S_CONTEXT: ${{ inputs.k8s_context }}
+  SSH_USER: ec2-user
+
+jobs:
+  get_eks_logs:
+    name: Get EKS Logs
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Environment
+        run: |
+          [ -e /.dockerenv ] && ls -l /.dockerenv
+          echo
+          cat /etc/*-release
+          echo
+          echo "Environment Variables:"
+          echo
+          env | sort
+
+      # https://github.com/aws-actions/configure-aws-credentials#configure-aws-credentials-action-for-github-actions
+      - uses: aws-actions/configure-aws-credentials@v2
+        #name: Configure AWS credentials
+        id: configure-aws-credentials  # id is necessary to extract AWS_ACCOUNT_ID further down
+        with:
+          # https://github.com/aws-actions/configure-aws-credentials/blob/master/action.yml
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_DEFAULT_REGION }}
+          #role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/my-github-actions-role
+           #role-duration-seconds: 43200 # default: 21600 (6 hours), but you could have a session valid token for 12 hours
+
+      - name: AWS CLI version
+        run: aws --version
+
+      - name: AWS CLI whoami
+        run: aws sts get-caller-identity
+
+      - name: Download kubectl
+        run: |
+          curl -Lo /usr/local/bin/kubectl "https://dl.k8s.io/release/$(curl -sSL https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x /usr/local/bin/kubectl
+
+      - name: Download jq
+        run: |
+          curl -Lo /usr/local/bin/jq https://github.com/jqlang/jq/releases/latest/download/jq-linux-amd64
+          chmod +x /usr/local/bin/jq
+
+      - name: Set EKS Cluster Environment Variable from Context
+        run: |
+          echo "EKS_CLUSTER=${K8S_CONTEXT##*:}" >> "$GITHUB_ENV"
+
+        # Code adapted from :
+        #
+        #   https://github.com/HariSekhon/DevOps-Bash-tools/blob/master/aws/aws_kube_creds.sh
+        #
+      - name: Configure EKS Kubectl Context
+        run: aws eks update-kubeconfig --name "$EKS_CLUSTER"
+
+      - name: Enable CloudWatch Master Logging
+        run: |
+          echo "Enabling CloudWatch logging on EKS cluster; $EKS_CLUSTER"
+          aws eks update-cluster-config --name "$EKS_CLUSTER" \
+                  --logging '{
+                      "clusterLogging":[
+                          {
+                              "types": [
+                                  "api",
+                                  "audit",
+                                  "authenticator",
+                                  "scheduler",
+                                  "controllerManager"
+                              ],
+                              "enabled":true
+                          }
+                      ]
+                  }' || :
+          echo "Enabled CloudWatch logging on EKS cluster: $EKS_CLUSTER"
+
+      - name: Get CloudWatch Log Groups
+        run: |
+          echo "If the previous step was not already previous run then this step will fail due to a race condition..."
+          echo
+          echo "In which case re-run this workflow again after a few minutes."
+          echo
+          echo "Log Groups:"
+          echo
+          log_groups="$(aws logs describe-log-groups --log-group-name-prefix "/aws/eks/$EKS_CLUSTER/cluster" |
+              jq -Mr '.logGroups[].logGroupName')"
+          echo "LOG_GROUPS=$log_groups" >> "$GITHUB_ENV"
+
+      - name: Get CloudWatch Master Logs
+        run: |
+          tstamp="$(date '+%F_%H%M%S')"
+
+          for log_group in $LOG_GROUPS; do
+              echo "Getting log stream names for log_group: $log_group"
+              echo
+              # usually this
+              #log_stream="$(aws logs describe-log-streams --log-group-name "/aws/eks/$EKS_CLUSTER/cluster")"
+              log_streams="$(aws logs describe-log-streams --log-group-name "$log_group" |
+                  jq -Mr '.logStreams[].logStreamName'
+              )"
+
+              for log_stream in $log_streams; do
+                  echo "Getting logs for stream: $log_stream"
+                  logfile="${log_group//\//_}.${log_stream//\//_}.$tstamp.log"
+                  logfile="${logfile#_}"
+                  aws logs get-log-events --log-group-name "$log_group" --log-stream-name "$log_stream" --limit "$limit" |
+                  jq -Mr '.events[].message' > "$logfile"
+                  echo "Log stream dumped to file: $logfile"
+                  echo
+              done
+              echo
+          done
+
+          echo "Logs fetched, creating compressed tarball"
+          echo
+
+          tarball="$EKS_CLUSTER.master.cloudwatch.logs.$tstamp.tar.gz"
+
+          tar czvf "$tarball" "aws_eks_${EKS_CLUSTER}_"*".$tstamp.log"
+
+          echo
+          echo "Generated tarball: $tarball"
+          echo
+          echo "TARBALL=$tarball" >> "$GITHUB_ENV"
+
+          echo "Completed download of AWS EKS CloudWatch Logs for cluster: $EKS_CLUSTER"
+
+      - name: Upload CloudWatch EKS Master logs tarball as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: EKS_Master_CloudWatch logs
+          # this might not work due to lack of env support in with blocks
+          path: ${{ env.tarball }}
+          retention-days: 2
+
+      # Code adapted from:
+      #
+      #   https://github.com/HariSekhon/DevOps-Bash-tools/blob/master/kubernetes/kubernetes_nodes_ssh_dump_logs.sh
+      #
+      - name: Get List of EKS Worker Nodes
+        run: |
+          echo "Getting Kubernetes nodes via kubectl"
+
+          nodes="$(kubectl top nodes --no-headers | awk '{print $1}')"
+
+          num_nodes="$(wc -l <<< "$nodes" | sed 's/[[:space:]]//g')"
+
+          echo "Found $num_nodes nodes"
+
+          echo "NODES=$nodes" >> "$GITHUB_ENV"
+
+      # Remaining steps code adapted from:
+      #
+      #   https://github.com/HariSekhon/DevOps-Bash-tools/blob/master/monitoring/ssh_dump_logs.sh
+      #
+      - name: SSH Keyscan for Known Hosts
+        run: |
+          ssh_known_hosts=~/.ssh/known_hosts
+
+          echo "SSH Keyscanning nodes to prevent getting stuck on host key prompts"
+          echo
+          for server in $NODES; do
+              echo "SSH keyscan '$server'"
+              ssh-keyscan "$server" |
+              while read -r line; do
+                  echo "$line" >> "$ssh_known_hosts"
+              done
+              echo
+          done
+          echo
+
+      - name: SSH Dump Logs
+        env:
+          SSH_KEY_CONTENT: ${{ secrets.SSH_KEY }}
+        run: |
+          tstamp="$(date '+%F_%H%M')"
+
+          SSH_KEY=~/.ssh/eks.pem
+
+          cat > "$SSH_KEY" << EOF
+          $SSH_KEY_CONTENT
+          EOF
+
+          for server in $NODES; do
+              echo
+              for log in messages dmesg; do
+                  # do not change this format without also changing the format of the gunzip and tar operations further down
+                  log_file="log.$tstamp.$server.$log.txt.gz"
+                  echo "Dumping server '$server' log: $log" &&
+                  sudo=""
+                  if [ "$SSH_USER" != "root" ]; then
+                      sudo=sudo
+                  fi
+                  ssh -i "$SSH_KEY" "$SSH_USER@$server" "
+                      $sudo gzip -c /var/log/$log > ~/$log_file &&
+                      $sudo chown -v \$USER ~/$log_file
+                  " &&
+                  scp -i "$SSH_KEY" "$SSH_USER@$server":"./$log_file" .
+                  echo "Dumped server '$server' log to file: $log_file" ||
+                  echo "Failed to get '$server' log: $log" >&2
+                  echo "This can be because of a race condition where AWS EC2 Spot instances or GCP Preemptible"
+                  echo "instances can go away at any time in between listing and iterating through nodes"
+                  echo "but we still want to collect the rest of the servers without erroring out completely"
+              done
+          done
+          echo
+
+          echo "Tarballing all logs into a support bundle for easy sharing with vendors"
+          echo
+          echo "Gunzipping logs to achieve better overall compression"
+          echo
+          gunzip "log.$tstamp".*.txt.gz
+          echo
+          tarball="aws_eks_${EKS_CLUSTER}_worker_logs.$tstamp.tar.gz"
+          echo
+          echo "Tarballing logs to: $tarball"
+          echo
+          tar czvf "$tarball" "log.$tstamp".*.txt
+          echo
+          echo "Tarball ready: $tarball"
+          echo
+          echo "TARBALL=$tarball" >> "$GITHUB_ENV"
+          echo
+          echo "EKS Worker Log dumps completed"
+
+      - name: Upload EKS Worker logs tarball as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: EKS_Worker_Logs
+          # TODO: this might not work due to lack of env support in with blocks - test and workaround this
+          path: ${{ env.tarball }}
+          retention-days: 2
