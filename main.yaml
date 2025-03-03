@@ -1232,17 +1232,17 @@ jobs:
 #      if: startsWith(runner.os, 'Linux')
 #      with:
 #        path: ~/.cache/pip
-#        key: pip-${{ runner.os }}  # -${{ github.workflow }}-${{ hashFiles('**/requirements.txt') }}
+#        key: pip-${{ runner.os }}-${{ runner.arch }}  # -${{ github.workflow }}-${{ hashFiles('**/requirements.txt') }}
 #        restore-keys: |
-#          pip-${{ runner.os }}  # -${{ github.workflow }}-
+#          pip-${{ runner.os }}-${{ runner.arch }}  # -${{ github.workflow }}-
 #
 #    - uses: actions/cache@v2
 #      if: startsWith(runner.os, 'macOS')
 #      with:
 #        path: ~/Library/Caches/pip
-#        key: pip-${{ runner.os }}  # -${{ github.workflow }}-${{ hashFiles('**/requirements.txt') }}
+#        key: pip-${{ runner.os }}-${{ runner.arch }}  # -${{ github.workflow }}-${{ hashFiles('**/requirements.txt') }}
 #        restore-keys: |
-#          pip-${{ runner.os }}  # -${{ github.workflow }}-
+#          pip-${{ runner.os }}-${{ runner.arch }}  # -${{ github.workflow }}-
 #
 # ============================================================================
 # Perl
@@ -1250,9 +1250,9 @@ jobs:
 #    - uses: actions/cache@v2
 #      with:
 #        path: ~/.cpanm
-#        key: cpanm-${{ runner.os }}  # -${{ github.workflow }}-${{ hashFiles('**/cpan-requirements.txt') }}
+#        key: cpanm-${{ runner.os }}-${{ runner.arch }}  # -${{ github.workflow }}-${{ hashFiles('**/cpan-requirements.txt') }}
 #        restore-keys: |
-#          cpanm-${{ runner.os }}  # -${{ github.workflow }}-
+#          cpanm-${{ runner.os }}-${{ runner.arch }}  # -${{ github.workflow }}-
 #
 # ============================================================================
 # Go
@@ -1260,9 +1260,9 @@ jobs:
 #    - uses: actions/cache@v2
 #      with:
 #        path: ~/go/pkg/mod
-#        key: go-${{ runner.os }}  # -${{ github.workflow }}-${{ hashFiles('**/go.sum') }}
+#        key: go-${{ runner.os }}-${{ runner.arch }}  # -${{ github.workflow }}-${{ hashFiles('**/go.sum') }}
 #        restore-keys: |
-#          go-${{ runner.os }}  # -${{ github.workflow }}-
+#          go-${{ runner.os }}-${{ runner.arch }}  # -${{ github.workflow }}-
 #
 # ============================================================================
 # Java / Maven
@@ -1271,17 +1271,17 @@ jobs:
 #      name: Maven Cache
 #      with:
 #        path: ~/.m2/repository
-#        key: maven-${{ runner.os }}  # -${{ github.workflow }}-${{ hashFiles('**/pom.xml') }}
+#        key: maven-${{ runner.os }}-${{ runner.arch }}  # -${{ github.workflow }}-${{ hashFiles('**/pom.xml') }}
 #        restore-keys: |
-#          maven-${{ runner.os }}  # -${{ github.workflow }}-
+#          maven-${{ runner.os }}-${{ runner.arch }}  # -${{ github.workflow }}-
 #
 #    - uses: actions/cache@v2
 #      name: Maven Wrapper
 #      with:
 #        path: ~/.m2/wrapper
-#        key: maven-wrapper-${{ runner.os }}  # -${{ github.workflow }}-${{ hashFiles('**/pom.xml') }}
+#        key: maven-wrapper-${{ runner.os }}-${{ runner.arch }}  # -${{ github.workflow }}-${{ hashFiles('**/pom.xml') }}
 #        restore-keys: |
-#          maven-wrapper-${{ runner.os }}  # -${{ github.workflow }}-
+#          maven-wrapper-${{ runner.os }}-${{ runner.arch }}  # -${{ github.workflow }}-
 #
 # ============================================================================
 # Scala / SBT
@@ -1290,17 +1290,17 @@ jobs:
 #      name: SBT Cache
 #      with:
 #        path: ~/.sbt
-#        key: sbt-${{ runner.os }}  # -${{ github.workflow }}-${{ hashFiles('**/build.sbt') }}
+#        key: sbt-${{ runner.os }}-${{ runner.arch }}  # -${{ github.workflow }}-${{ hashFiles('**/build.sbt') }}
 #        restore-keys:
-#          sbt-${{ runner.os }}  # -${{ github.workflow }}-
+#          sbt-${{ runner.os }}-${{ runner.arch }}  # -${{ github.workflow }}-
 #
 #    - uses: actions/cache@v2
 #      name: SBT Ivy Cache
 #      with:
 #        path: ~/.ivy2/cache
-#        key: sbt-ivy-cache-${{ runner.os }}  # -${{ github.workflow }}-${{ hashFiles('**/build.sbt') }}
+#        key: sbt-ivy-cache-${{ runner.os }}-${{ runner.arch }}  # -${{ github.workflow }}-${{ hashFiles('**/build.sbt') }}
 #        restore-keys: |
-#          sbt-ivy-cache-${{ runner.os }}  # -${{ github.workflow }}-
+#          sbt-ivy-cache-${{ runner.os }}-${{ runner.arch }}  # -${{ github.workflow }}-
 #
 # ============================================================================
 # Gradle
@@ -1309,17 +1309,17 @@ jobs:
 #      name: Gradle Cache
 #      with:
 #        path: ~/.gradle/caches
-#        key: gradle-cache-${{ runner.os }}  # -${{ github.workflow }}-${{ hashFiles('**/build.gradle') }}
+#        key: gradle-cache-${{ runner.os }}-${{ runner.arch }}  # -${{ github.workflow }}-${{ hashFiles('**/build.gradle') }}
 #        restore-keys: |
-#          gradle-cache-${{ runner.os }}  # -${{ github.workflow }}-
+#          gradle-cache-${{ runner.os }}-${{ runner.arch }}  # -${{ github.workflow }}-
 #
 #    - uses: actions/cache@v2
 #      name: Gradle Wrapper
 #      with:
 #        path: ~/.gradle/wrapper
-#        key: gradle-wrapper-${{ runner.os }}  # -${{ github.workflow }}-${{ hashFiles('**/build.gradle') }}
+#        key: gradle-wrapper-${{ runner.os }}-${{ runner.arch }}  # -${{ github.workflow }}-${{ hashFiles('**/build.gradle') }}
 #        restore-keys: |
-#          gradle-wrapper-${{ runner.os }}  # -${{ github.workflow }}-
+#          gradle-wrapper-${{ runner.os }}-${{ runner.arch }}  # -${{ github.workflow }}-
 
 #  docker:
 #    #name: docker
