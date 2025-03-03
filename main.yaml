@@ -679,32 +679,41 @@ jobs:
 #        restore-keys: |
 #          gradle-wrapper-${{ runner.os }}-${{ runner.arch }}  # -${{ github.workflow }}-
 
-#  docker:
-#    #name: docker
-#    runs-on:
-#      - ubuntu-latest
-#
-#    steps:
-#    - uses: docker://harisekhon/centos-dev
-#    -  name: build & test
-#       run: make build test
+      - name: Apk Cache
+        if: startsWith(runner.os, 'Linux')
+        uses: actions/cache@v2
+        with:
+          path: /var/cache/apk
+          key: apk-cache-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('/etc/*release') }}
+          restore-keys: |
+            apk-cache-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('/etc/*release') }}
 
-# ============================================================================ #
-# Artifact Upload / Download for sharing between jobs or storing
-#
-# https://github.com/marketplace/actions/upload-a-build-artifact
-#
-# - uses: actions/upload-artifact@v2
-#   with:
-#     name: my-artifact
-#       path: path/to/file.jar
-#
-# https://github.com/marketplace/actions/download-a-build-artifact
-#
-# - uses: actions/download-artifact@v2
-#   with:
-#     name: my-artifact  # if name isn't specified, downloads all artifacts to subdirectories of same name
-#     #path: path/to/artifacts-dir
+      - name: Apt Cache
+        if: startsWith(runner.os, 'Linux')
+        uses: actions/cache@v2
+        with:
+          path: /var/cache/apt
+          key: apt-cache-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('/etc/*release') }}
+          restore-keys: |
+            apt-cache-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('/etc/*release') }}
+
+      - name: Brew Cache
+        if: startsWith(runner.os, 'macOS')
+        uses: actions/cache@v2
+        with:
+          path: ~/Library/Caches/Homebrew/
+          key: brew-cache-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles(' /System/Library/CoreServices/SystemVersion.plist') }}
+          restore-keys: |
+            brew-cache-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles(' /System/Library/CoreServices/SystemVersion.plist') }}
+
+      - name: Yum Cache
+        if: startsWith(runner.os, 'Linux')
+        uses: actions/cache@v2
+        with:
+          path: /var/cache/yum
+          key: yum-cache-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('/etc/*release') }}
+          restore-keys: |
+            yum-cache-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('/etc/*release') }}
 
       # ============================================================================ #
       #                                 B u i l d
@@ -760,10 +769,34 @@ jobs:
         if: ${{ failure() }}
         run: echo 'run a notify command or action here'
 
+#  docker:
+#    #name: docker
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: docker://harisekhon/centos-dev
+#      - name: build & test
+#        run: make build test
+
+# ============================================================================ #
+# Artifact Upload / Download for sharing between jobs or storing
+#
+# https://github.com/marketplace/actions/upload-a-build-artifact
+#
+# - uses: actions/upload-artifact@v2
+#   with:
+#     name: my-artifact
+#       path: path/to/file.jar
+#
+# https://github.com/marketplace/actions/download-a-build-artifact
+#
+# - uses: actions/download-artifact@v2
+#   with:
+#     name: my-artifact  # if name isn't specified, downloads all artifacts to subdirectories of same name
+#     #path: path/to/artifacts-dir
+
   # ============================================================================ #
   #                                D o c k e r
   # ============================================================================ #
-
   # Call reusable workflow
   dockerhub_build:
     name: DockerHub Build
