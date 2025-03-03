@@ -53,7 +53,6 @@ on:  # yamllint disable-line rule:truthy
         required: false
     secrets:
       SSH_KEY:
-        description: "EKS SSH user (default: ec2-user)"
         type: string
         required: true
 
