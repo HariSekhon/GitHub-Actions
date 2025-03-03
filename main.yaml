@@ -1225,20 +1225,6 @@ jobs:
 
     # Cache with matrix
 
-#    - uses: actions/cache@v2
-#      with:
-#        path: ~/.cache/pip
-#        key: pip-${{ runner.os }}  # -${{ github.workflow }}-${{ hashFiles('**/requirements.txt') }}
-#        restore-keys: |
-#          pip-${{ runner.os }}  # -${{ github.workflow }}-
-#
-#    - uses: actions/cache@v2
-#      with:
-#        path: ~/.cpanm
-#        key: cpanm-${{ runner.os }}  # -${{ github.workflow }}-${{ hashFiles('**/cpan-requirements.txt') }}
-#        restore-keys: |
-#          cpanm-${{ runner.os }}  # -${{ github.workflow }}-
-
 # ============================================================================ #
 # Python
 #
@@ -1254,7 +1240,7 @@ jobs:
 #      if: startsWith(runner.os, 'macOS')
 #      with:
 #        path: ~/Library/Caches/pip
-#        key: pip-${{ runner.os }}  # -${{ github.workflow }}${{ hashFiles('**/requirements.txt') }}
+#        key: pip-${{ runner.os }}  # -${{ github.workflow }}-${{ hashFiles('**/requirements.txt') }}
 #        restore-keys: |
 #          pip-${{ runner.os }}  # -${{ github.workflow }}-
 #
@@ -1264,7 +1250,7 @@ jobs:
 #    - uses: actions/cache@v2
 #      with:
 #        path: ~/.cpanm
-#        key: cpanm-${{ runner.os }}  # -${{ github.workflow }}${{ hashFiles('**/cpan-requirements.txt') }}
+#        key: cpanm-${{ runner.os }}  # -${{ github.workflow }}-${{ hashFiles('**/cpan-requirements.txt') }}
 #        restore-keys: |
 #          cpanm-${{ runner.os }}  # -${{ github.workflow }}-
 #
