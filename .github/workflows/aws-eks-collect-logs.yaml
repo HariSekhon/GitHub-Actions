@@ -17,7 +17,7 @@
 ---
 name: EKS Collect All Logs
 
-on:
+on:  # yamllint disable-line rule:truthy
   # https://docs.github.com/en/actions/using-workflows/reusing-workflows#creating-a-reusable-workflow
   workflow_call:
     inputs:
