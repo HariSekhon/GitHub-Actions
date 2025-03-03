@@ -82,7 +82,7 @@ jobs:
 
       - name: Apk Cache
         if: ( contains(inputs.caches, 'apk') || contains(inputs.caches, 'alpine') ) && startsWith(runner.os, 'Linux')
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: /var/cache/apk
           key: apk-cache-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('/etc/*release') }}
@@ -92,7 +92,7 @@ jobs:
       - name: Apt Cache
         # could specify '! inputs.container ||' , which would infer we are still on ubuntu-latest and enable apt cache, but better to give calling workflow the option of enabling/disabling cache via input instead
         if: ( contains(inputs.caches, 'apt') || contains(inputs.caches, 'debian') || contains(inputs.caches, 'ubuntu') ) && startsWith(runner.os, 'Linux')
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: /var/cache/apt
           key: apt-cache-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('/etc/*release') }}
@@ -101,7 +101,7 @@ jobs:
 
       - name: Brew Cache
         if: ( contains(inputs.caches, 'brew') || contains(inputs.caches, 'mac') || contains(inputs.caches, 'macos') ) && startsWith(runner.os, 'macOS')
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/Library/Caches/Homebrew/
           key: brew-cache-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles(' /System/Library/CoreServices/SystemVersion.plist') }}
@@ -110,7 +110,7 @@ jobs:
 
       - name: Yum Cache
         if: ( contains(inputs.caches, 'yum') || contains(inputs.caches, 'centos') || contains(inputs.caches, 'rhel') ) && startsWith(runner.os, 'Linux')
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: /var/cache/yum
           key: yum-cache-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('/etc/*release') }}
@@ -175,7 +175,7 @@ jobs:
       - name: Python Pip Cache Linux
         # could specify 'inputs.python-version', but better to give calling workflow the option of enabling/disabling cache via input instead
         if: ( contains(inputs.caches, 'pip') || contains(inputs.caches, 'python') ) && startsWith(runner.os, 'Linux')
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.cache/pip
           key: pip-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/requirements.txt') }}
@@ -184,7 +184,7 @@ jobs:
 
       - name: Python Pip Cache Mac
         if: ( contains(inputs.caches, 'pip') || contains(inputs.caches, 'python') ) && startsWith(runner.os, 'macOS')
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/Library/Caches/pip
           key: pip-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/requirements.txt') }}
@@ -196,7 +196,7 @@ jobs:
       #
       - name: Perl CPAN Cache
         if: contains(inputs.caches, 'perl') || contains(inputs.caches, 'cpan')
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.cpan
           key: cpan-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/cpan-requirements.txt') }}
@@ -205,7 +205,7 @@ jobs:
 
       - name: Perl CPANM Cache
         if: contains(inputs.caches, 'perl') || contains(inputs.caches, 'cpan') || contains(inputs.caches, 'cpanm')
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.cpanm
           key: cpanm-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/cpan-requirements.txt') }}
@@ -217,7 +217,7 @@ jobs:
 
       - name: Ruby Gem Cache
         if: contains(inputs.caches, 'ruby') || contains(inputs.caches, 'gem')
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.gem
           key: gem-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/Gemfile') }}
@@ -229,7 +229,7 @@ jobs:
 
       - name: Golang Pkg Cache
         if: contains(inputs.caches, 'golang')
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/go/pkg/mod
           key: golang-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/go.sum') }}
@@ -241,7 +241,7 @@ jobs:
 
       - name: NodeJS Modules Cache
         if: contains(inputs.caches, 'nodejs')
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: node_modules
           key: nodejs-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/package.json') }}
@@ -253,7 +253,7 @@ jobs:
 
       - name: Maven Cache
         if: contains(inputs.caches, 'maven')
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.m2/repository
           key: maven-cache-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/pom.xml') }}
@@ -262,7 +262,7 @@ jobs:
 
       - name: Maven Wrapper
         if: contains(inputs.caches, 'maven')
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.m2/wrapper
           key: maven-wrapper-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/pom.xml') }}
@@ -272,7 +272,7 @@ jobs:
       # ============================================================================ #
       - name: Gradle Cache
         if: contains(inputs.caches, 'gradle')
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.gradle/caches
           key: gradle-cache-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/build.gradle') }}
@@ -281,7 +281,7 @@ jobs:
 
       - name: Gradle Wrapper
         if: contains(inputs.caches, 'gradle')
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.gradle/wrapper
           key: gradle-wrapper-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/build.gradle') }}
@@ -291,7 +291,7 @@ jobs:
       # ============================================================================ #
       - name: SBT Cache
         if: contains(inputs.caches, 'sbt')
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.sbt
           key: sbt-cache-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/build.sbt') }}
@@ -300,7 +300,7 @@ jobs:
 
       - name: SBT Ivy Cache
         if: contains(inputs.caches, 'sbt')
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.ivy2/cache
           key: sbt-ivy-cache-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/build.sbt') }}
@@ -310,7 +310,7 @@ jobs:
       # ============================================================================ #
       - name: Groovy Cache
         if: contains(inputs.caches, 'groovy')
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.groovy
           key: groovy-cache-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/*.groovy') }}
