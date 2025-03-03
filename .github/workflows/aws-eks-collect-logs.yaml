@@ -38,24 +38,22 @@ on:  # yamllint disable-line rule:truthy
       AWS_DEFAULT_REGION:
         required: true
       SSH_KEY:
-        description: "EKS SSH user (default: ec2-user)"
         type: string
         required: true
 
   workflow_dispatch:  # needs to be in default branch before you get the UI option to manually run though
     inputs:
       k8s_context:
-        description: The ECR repository, without the 'xxx.dkr.ecr.<region>.amazonaws.com' prefix
         type: string
         required: true
       ssh_user:
-        description: EKS SSH user (defaults to ec2-user)
+        description: "EKS SSH user (defaults to ec2-user)"
         type: string
         default: ec2-user
         required: false
     secrets:
       SSH_KEY:
-        description: EKS SSH Key pem secret
+        description: "EKS SSH user (default: ec2-user)"
         type: string
         required: true
 
