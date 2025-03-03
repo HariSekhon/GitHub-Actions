@@ -103,7 +103,6 @@ jobs:
           #role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/my-github-actions-role
            #role-duration-seconds: 43200 # default: 21600 (6 hours), but you could have a session valid token for 12 hours
 
-      # TODO: install AWS CLI
       - name: AWS CLI version
         run: aws --version
 
