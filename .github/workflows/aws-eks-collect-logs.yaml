@@ -25,6 +25,11 @@ on:
         description: The Kubernetes context to dump to dump the logs for its nodes
         type: string
         required: true
+      ssh_user:
+        description: EKS SSH user (defaults to ec2-user)
+        type: string
+        default: ec2-user
+        required: false
     secrets:
       AWS_ACCESS_KEY_ID:
         required: true
@@ -43,12 +48,16 @@ on:
         description: The ECR repository, without the 'xxx.dkr.ecr.<region>.amazonaws.com' prefix
         type: string
         required: true
+      ssh_user:
+        description: EKS SSH user (defaults to ec2-user)
+        type: string
+        default: ec2-user
+        required: false
     secrets:
       SSH_KEY:
         description: EKS SSH Key pem secret
         type: string
         required: true
-
 
 permissions:
   contents: read
@@ -63,8 +72,8 @@ defaults:
     shell: bash -euxo pipefail {0}
 
 env:
-  K8S_CONTEXT: ${{ inputs.k8s_context }}
-  SSH_USER: ec2-user
+  K8S_CONTEXT: ${{ inputs.k8s_context || github.event.inputs.k8s_context }}
+  SSH_USER: ${{ inputs.ssh_user || github.event.inputs.ssh_user }}
 
 jobs:
   get_eks_logs:
