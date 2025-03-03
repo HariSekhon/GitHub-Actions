@@ -161,8 +161,8 @@ jobs:
           echo "Log Groups:"
           echo
           log_groups="$(
-            aws logs describe-log-groups --log-group-name-prefix "/aws/eks/$EKS_CLUSTER/cluster" |
-            jq -Mr '.logGroups[].logGroupName'
+              aws logs describe-log-groups --log-group-name-prefix "/aws/eks/$EKS_CLUSTER/cluster" |
+              jq -Mr '.logGroups[].logGroupName'
           )"
           echo "LOG_GROUPS=$log_groups" >> "$GITHUB_ENV"
 
@@ -175,7 +175,8 @@ jobs:
               echo
               # usually this
               #log_stream="$(aws logs describe-log-streams --log-group-name "/aws/eks/$EKS_CLUSTER/cluster")"
-              log_streams="$(aws logs describe-log-streams --log-group-name "$log_group" |
+              log_streams="$(
+                  aws logs describe-log-streams --log-group-name "$log_group" |
                   jq -Mr '.logStreams[].logStreamName'
               )"
 
