@@ -44,6 +44,7 @@ on:  # yamllint disable-line rule:truthy
   workflow_dispatch:  # needs to be in default branch before you get the UI option to manually run though
     inputs:
       k8s_context:
+        description: The Kubernetes context to dump to dump the logs for its nodes
         type: string
         required: true
       ssh_user:
