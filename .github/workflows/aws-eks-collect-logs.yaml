@@ -26,7 +26,7 @@ on:  # yamllint disable-line rule:truthy
         type: string
         required: true
       ssh_user:
-        description: "EKS SSH user (defaults: ec2-user)"
+        description: "EKS SSH user (default: ec2-user)"
         type: string
         default: ec2-user
         required: false
@@ -38,7 +38,7 @@ on:  # yamllint disable-line rule:truthy
       AWS_DEFAULT_REGION:
         required: true
       SSH_KEY:
-        description: "EKS SSH user (defaults: ec2-user)"
+        description: "EKS SSH user (default: ec2-user)"
         type: string
         required: true
 
