@@ -114,10 +114,12 @@ jobs:
           curl -Lo /usr/local/bin/kubectl "https://dl.k8s.io/release/$(curl -sSL https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
           chmod +x /usr/local/bin/kubectl
 
-      - name: Download jq
+      - name: Install jq
         run: |
-          curl -Lo /usr/local/bin/jq https://github.com/jqlang/jq/releases/latest/download/jq-linux-amd64
-          chmod +x /usr/local/bin/jq
+          apt update &&
+          apt install -y jq
+          #curl -Lo /usr/local/bin/jq https://github.com/jqlang/jq/releases/latest/download/jq-linux-amd64
+          #chmod +x /usr/local/bin/jq
 
       - name: Set EKS Cluster Environment Variable from Context
         run: |
