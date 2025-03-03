@@ -564,8 +564,9 @@ jobs:
       - uses: actions/setup-java@v2
         #name: Setup Java
         with:
-          distribution: 'temurin' # See 'Supported distributions' for available options
-          java-version: '17'  # 8, 11, 16, 17
+          distribution: temurin # See 'Supported distributions' for available options
+          java-version: '21'  # 8, 11, 16, 17, 21
+          #cache: gradle
 
       # https://github.com/marketplace/actions/setup-node-js-environment
       #
