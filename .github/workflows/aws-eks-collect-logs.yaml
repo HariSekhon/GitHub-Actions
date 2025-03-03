@@ -243,9 +243,7 @@ jobs:
           for server in $NODES; do
               echo "SSH keyscan '$server'"
               ssh-keyscan "$server" |
-              while read -r line; do
-                  echo "$line" >> "$ssh_known_hosts"
-              done
+              tee -a "$ssh_known_hosts"
               echo
           done
           echo
