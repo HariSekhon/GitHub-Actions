@@ -276,20 +276,32 @@ jobs:
           CERTIFICATE_PASSWORD: ${{ secrets.certificate_password }}
           CERTIFICATE_CA_TAR: ${{ secrets.certificate_ca_tar }}
         run: |
-          #if [ -n "${CERTIFICATE:-}" ]; then
-            cert="$(mktemp)"
-            base64 --decode <<< "$CERTIFICATE" > "$cert"
-            file "$cert"
-            security import "$cert" \
-                -k ~/Library/Keychains/login.keychain-db \
-                -T /usr/bin/codesign \
-                -T /usr/bin/security \
-                ${CERTIFICATE_PASSWORD:+-P "$CERTIFICATE_PASSWORD"}
-          #fi
+          #cert="$(mktemp)"
+          cert="certificate.p12"
+          keychain="build.keychain"
+          KEYCHAIN_PATH="$HOME/Library/Keychains/$keychain-db"
+          echo "KEYCHAIN_PATH=$KEYCHAIN_PATH" >> "$GITHUB_ENV"
+          base64 --decode <<< "$CERTIFICATE" > "$cert"
+          file "$cert"
+          md5 "$cert"
+          security create-keychain -p "" "$keychain"
+          security default-keychain -s "$keychain"
+          security unlock-keychain -p "" "$keychain"
+          security import "$cert" \
+              -k "$KEYCHAIN_PATH" \
+              -T /usr/bin/codesign \
+              ${CERTIFICATE_PASSWORD:+-P "$CERTIFICATE_PASSWORD"}
+          security set-key-partition-list -S apple-tool:,apple: -k "" "$keychain"
           if [ -n "${CERTIFICATE_CA_TAR:-}" ]; then
-            base64 --decode <<< "$CERTIFICATE_CA_TAR" |
-            tar zxv
+              base64 --decode <<< "$CERTIFICATE_CA_TAR" |
+              tar zxv
           fi
 
+      - name: Clean Derived Data
+        run: rm -rf ~/Library/Developer/Xcode/DerivedData/*
+
+      - name: XCode Clean
+        run: xcodebuild clean -workspace "$APP".xcworkspace -scheme "$SCHEME" -configuration "$CONFIGURATION" -verbose
+
       - name: iOS XCode Build
-        run: xcodebuild -workspace "$APP".xcworkspace -scheme "$SCHEME" -configuration "$CONFIGURATION"
+        run: xcodebuild archive -workspace "$APP".xcworkspace -scheme "$SCHEME" -configuration "$CONFIGURATION" -verbose OTHER_CODE_SIGN_FLAGS="--keychain=$KEYCHAIN_PATH"
