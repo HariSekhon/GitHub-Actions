@@ -170,22 +170,6 @@ jobs:
         with:
           submodules: ${{ inputs.submodules }}  # 'recursive' default requires Git 2.18+ to be installed first
 
-      # saves ~10 minutes IRL depending on how many dependencies in Podfile
-      - uses: actions/cache@v4
-        name: Cocoa Pods Cache
-        with:
-          path: Pods
-          key: cocoapods-${{ runner.os }}-${{ runner.arch }}  # -${{ github.workflow }}-${{ hashFiles('**/Podfile') }}
-          restore-key: |
-            cocoapods-${{ runner.os }}-${{ runner.arch }}  # -${{ github.workflow }}-
-
-      # already downloaded, no need to download and cache
-      #- uses: actions/cache@v4
-      #  name: Cache CoreSimulator
-      #  with:
-      #    path: /Library/Developer/CoreSimulator
-      #    key: ${{ runner.os }}-core-simulator
-
       # XCode is already available
       #- name: Install Homebrew
       #  run: |
@@ -220,6 +204,17 @@ jobs:
       #    }
       #    EOF
 
+      - uses: maxim-lobanov/setup-xcode@c51a66b42363123fa82a6cfe02c60af4281dab93 # v1
+        with:
+          # The Xcode version must already be installed on the macOS runner
+          #
+          # - set the 'macos_version' input parameter to the workflow to align accordingly
+          # - see here for the Xcode versions available on each version of macOS:
+          #
+          #   https://github.com/actions/runner-images/tree/main/images/macos
+          #
+          xcode-version: ${{ inputs.xcode_version || github.event.inputs.xcode_version || 'latest' }}
+
       - name: XCode Version
         run: xcodebuild -version
 
@@ -243,6 +238,22 @@ jobs:
 
       - name: List Simulators
         run: xcrun simctl list
+
+      # saves ~10 minutes IRL depending on how many dependencies in Podfile
+      - uses: actions/cache@v4
+        name: Cocoa Pods Cache
+        with:
+          path: Pods
+          key: cocoapods-${{ runner.os }}-${{ runner.arch }}  # -${{ github.workflow }}-${{ hashFiles('**/Podfile') }}
+          restore-key: |
+            cocoapods-${{ runner.os }}-${{ runner.arch }}  # -${{ github.workflow }}-
+
+      # already downloaded, no need to download and cache
+      #- uses: actions/cache@v4
+      #  name: Cache CoreSimulator
+      #  with:
+      #    path: /Library/Developer/CoreSimulator
+      #    key: ${{ runner.os }}-core-simulator
 
       - name: Install CocoaPods
         #run: sudo gem install cocoapods
