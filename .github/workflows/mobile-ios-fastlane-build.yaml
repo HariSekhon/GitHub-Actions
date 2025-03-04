@@ -1,0 +1,304 @@
+#
+#  Author: Hari Sekhon
+#  Date: 2025-01-31 05:44:00 +0700 (Fri, 31 Jan 2025)
+#
+#  vim:ts=2:sts=2:sw=2:et
+#
+#  https://github.com/HariSekhon/GitHub-Actions
+#
+#  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback
+#
+#  https://www.linkedin.com/in/HariSekhon
+#
+
+# ============================================================================ #
+#               M o b i l e   i O S   F a s t l a n e   B u i l d
+# ============================================================================ #
+
+---
+name: Mobile iOS Fastlane Build
+
+on:  # yamllint disable-line rule:truthy
+  #push:
+  #  branches:
+  #    - master
+  #    - main
+  #  paths:
+  #    - '**/*.swift'
+  #    - Gemfile
+  #    - Gemfile.lock
+  #    - Podfile
+  #    - Podfile.lock
+  #    - fastlane/**
+  #    - '!**/*.md'
+  #    - .github/workflows/mobile-ios-fastlane-build.yaml
+  workflow_call:
+    inputs:
+      xcode_version:
+        type: string
+        required: false
+        default: latest
+        description: Specify a specific Xcode version to build with
+      macos_version:
+        type: string
+        required: false
+        default: latest
+        description: "Specify a macOS github actions runner version which contains the Xcode version you want to use (without the macos- prefix). You usually won't need to change this since the latest runner has lots of Xcode versions already installed"
+      build_lane:
+        type: string
+        required: true
+        description: The Fastlane 'lane' to build
+      deploy_lane:
+        type: string
+        required: false
+        description: The Fastlane 'lane' to deploy
+    secrets:
+      certificate:
+        required: false
+        description: Base64 encoded string of signing certificate file
+      certificate_password:
+        required: false
+        description: Password for certificate file (optional)
+      certificate_ca_tar:
+        required: false
+        description: Base64 encoded .tar.gz of any Certificate CA of the singing authority eg. AppleWWDRCAG3.cer
+      google_application_credentials_json:
+        required: true
+      mobileprovision_tar:
+        required: true
+        description: Base64 encoded .tar.gz of *.mobileprovision files
+  workflow_dispatch:
+    inputs:
+      xcode_version:
+        type: string
+        required: false
+        default: latest-stable
+        description: Specify a specific Xcode version to build with
+      macos_version:
+        type: string
+        required: false
+        default: latest
+        description: "Specify a macOS github actions runner version which contains the Xcode version you want to use (without the macos- prefix). You usually won't need to change this since the latest runner has lots of Xcode versions already installed"
+      build_lane:
+        type: string
+        required: true
+        description: The Fastlane 'lane' to build
+      deploy_lane:
+        type: string
+        required: false
+        description: The Fastlane 'lane' to deploy
+    secrets:
+      certificate:
+        required: false
+        description: Base64 encoded string of signing certificate file
+      certificate_password:
+        required: false
+        description: Password for certificate file (optional)
+      certificate_ca_tar:
+        required: false
+        description: Base64 encoded .tar.gz of any Certificate CA of the singing authority eg. AppleWWDRCAG3.cer
+      google_application_credentials_json:
+        required: true
+      mobileprovision_tar:
+        required: true
+        description: Base64 encoded .tar.gz of *.mobileprovision files
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash -euxo pipefail {0}
+
+env:
+  APP: ${{ inputs.app || github.event.inputs.app || '' }}
+  SCHEME: ${{ inputs.scheme || github.event.inputs.scheme || '' }}
+  CONFIGURATION: ${{ inputs.configuration || github.event.inputs.configuration || '' }}
+  DEBUG: ${{ inputs.debug == true || github.event.inputs.debug == 'true' || '' }}
+  #ACTIONS_RUNNER_DEBUG: true
+  #KEYCHAIN_LOGGING: "YES"
+  #NONINTERACTIVE: 1
+
+jobs:
+  build:
+    name: Xcode iOS Build
+    runs-on: macos-latest
+
+    # Mac builds are 10x expensive vs Linux, and not included in Enterprise 50,000 build minutes
+    #
+    # Build runs in ~3 minutes locally, so cap at 30 minutes because even if runner was half as powerful as my laptop
+    # there is no way it should take more than 10x - the build is simply stuck and hanging for 6 hours running up a
+    # crazy bill which is pointless
+    #
+    # Letting a job run for 6 hours before timing out costs $28.80 and doesn't finish anyway - if it doesn't complete in 30 minutes it probably won't
+    timeout-minutes: 30
+
+    # can't test with larger runner, hit this error:
+    #
+    #     The job was not started because recent account payments have failed or your spending limit needs to be increased. Please check the 'Billing & plans' section in your settings.
+    #
+    #runs-on: macos-latest-xlarge
+
+    steps:
+      - name: System
+        run: |
+          sysctl -n machdep.cpu.brand_string
+          system_profiler SPHardwareDataType
+
+    # macos-latest shows:
+    #
+    #    Apple M1 (Virtual)
+    #
+    #    Hardware:
+    #
+    #        Hardware Overview:
+    #
+    #          Model Name: Apple Virtual Machine 1
+    #          Model Identifier: VirtualMac2,1
+    #          Model Number: VM0001LL/A
+    #          Chip: Apple M1 (Virtual)
+    #          Total Number of Cores: 3
+    #          Memory: 7 GB
+
+    steps:
+      - name: Environment
+        run: env | sort
+
+      - name: Git version
+        run: git --version
+
+      - uses: actions/checkout@v3
+        with:
+          submodules: ${{ inputs.submodules }}  # 'recursive' default requires Git 2.18+ to be installed first
+
+      # saves ~10 minutes IRL depending on how many dependencies in Podfile
+      - uses: actions/cache@v4
+        name: Cocoa Pods Cache
+        with:
+          path: Pods
+          key: cocoapods-${{ runner.os }}-${{ runner.arch }}  # -${{ github.workflow }}-${{ hashFiles('**/Podfile') }}
+          restore-key: |
+            cocoapods-${{ runner.os }}-${{ runner.arch }}  # -${{ github.workflow }}-
+
+      # already downloaded, no need to download and cache
+      #- uses: actions/cache@v4
+      #  name: Cache CoreSimulator
+      #  with:
+      #    path: /Library/Developer/CoreSimulator
+      #    key: ${{ runner.os }}-core-simulator
+
+      # XCode is already available
+      #- name: Install Homebrew
+      #  run: |
+      #    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      #
+      #- name: Add Homebrew to PATH
+      #  run: |
+      #    echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.bashrc
+      #    . ~/.bashrc
+      #
+      #- name: Homebrew Version
+      #  run: |
+      #    brew --version
+      #
+      #- name: Install XCode
+      #  #run: xcode-select --install
+      #  run: |
+      #    # use expect to auto-answer the download and license prompts
+      #    brew install expect
+      #    expect <<EOF
+      #    spawn xcode-select --install
+      #    set timeout -1
+      #    expect {
+      #        "The software is available for download" {
+      #            send "\r"
+      #            exp_continue
+      #        }
+      #        "Press the Return key to continue" {
+      #            send "\r"
+      #        }
+      #        eof
+      #    }
+      #    EOF
+
+      - name: XCode Version
+        run: xcodebuild -version
+
+      #- name: Set XCode Path
+      #  run: |
+      #    xcode-select --print-path
+      #    sudo xcode-select -switch /Applications/Xcode.app/Contents/Developer
+      #    xcode-select --print-path
+
+      - name: XCode Path
+        run: xcode-select --print-path
+
+      - name: Show Available SDKs
+        run: xcodebuild -showsdks
+
+      # already provided:
+      #
+      #- name: Download Platforms
+      #  run: xcodebuild -downloadAllPlatforms
+      #      "All requested platforms are downloaded"
+
+      - name: List Simulators
+        run: xcrun simctl list
+
+      - name: Install CocoaPods
+        #run: sudo gem install cocoapods
+        run: |
+          version="$(sed -n 's/^COCOAPODS: \([0-9.]*\)/\1/p' Podfile.lock)"
+          sudo gem install cocoapods -v "$version"
+
+      - name: Install Pod Dependencies
+        run: pod install  # --verbose
+
+      - name: Copy Mobile Profiles to Library
+        env:
+          MOBILEPROVISION_TAR: ${{ secrets.mobileprovision_tar }}
+        run: |
+          mkdir -p -v ~/Library/MobileDevice/Provisioning\ Profiles
+          base64 --decode <<< "$MOBILEPROVISION_TAR" |
+          tar xvz -C ~/Library/MobileDevice/Provisioning\ Profiles/
+          ls -la ~/Library/MobileDevice/Provisioning\ Profiles/
+
+      - name: Load Certificate to KeyChain
+        env:
+          CERTIFICATE: ${{ secrets.certificate }}
+          CERTIFICATE_PASSWORD: ${{ secrets.certificate_password }}
+          CERTIFICATE_CA_TAR: ${{ secrets.certificate_ca_tar }}
+        run: |
+          #cert="$(mktemp)"
+          cert="certificate.p12"
+          keychain="build.keychain"
+          KEYCHAIN_PATH="$HOME/Library/Keychains/$keychain-db"
+          echo "KEYCHAIN_PATH=$KEYCHAIN_PATH" >> "$GITHUB_ENV"
+          base64 --decode <<< "$CERTIFICATE" > "$cert"
+          file "$cert"
+          md5 "$cert"
+          security create-keychain -p "" "$keychain"
+          security default-keychain -s "$keychain"
+          security unlock-keychain -p "" "$keychain"
+          security import "$cert" \
+              -k "$KEYCHAIN_PATH" \
+              -T /usr/bin/codesign \
+              ${CERTIFICATE_PASSWORD:+-P "$CERTIFICATE_PASSWORD"}
+          security set-key-partition-list -S apple-tool:,apple: -k "" "$keychain"
+          if [ -n "${CERTIFICATE_CA_TAR:-}" ]; then
+              base64 --decode <<< "$CERTIFICATE_CA_TAR" |
+              tar zxv
+          fi
+
+      # undermines caching for performance
+      #- name: Clean Derived Data
+      #  run: rm -rf ~/Library/Developer/Xcode/DerivedData/*
+
+      # undermines caching for performance
+      #- name: XCode Clean
+      #  run: xcodebuild clean -workspace "$APP".xcworkspace -scheme "$SCHEME" -configuration "$CONFIGURATION" -verbose
+
+      # This step hangs, which is almost certainly a pop-up for keychain password that has not been solved yet
+      # Switched to Fastlane build which solved this
+      - name: iOS XCode Build
+        run: xcodebuild archive -workspace "$APP".xcworkspace -scheme "$SCHEME" -configuration "$CONFIGURATION" -verbose OTHER_CODE_SIGN_FLAGS="--keychain=$KEYCHAIN_PATH"
