@@ -249,6 +249,11 @@ jobs:
       - name: List Simulators
         run: xcrun simctl list
 
+      - uses: irgaly/xcode-cache@985ae4fb036020b70ecd8797146f43a5b87f8ac2 # v1
+        with:
+          key: xcode-cache-deriveddata-${{ github.workflow }}-${{ github.ref }}
+          restore-keys: xcode-cache-deriveddata-${{ github.workflow }}-
+
       # saves ~10 minutes IRL depending on how many dependencies in Podfile
       - uses: actions/cache@v4
         name: Cocoa Pods Cache
