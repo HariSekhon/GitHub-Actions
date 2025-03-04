@@ -300,8 +300,8 @@ jobs:
       #- name: Clean Derived Data
       #  run: rm -rf ~/Library/Developer/Xcode/DerivedData/*
 
-      - name: XCode Clean
-        run: xcodebuild clean -workspace "$APP".xcworkspace -scheme "$SCHEME" -configuration "$CONFIGURATION" -verbose
+      #- name: XCode Clean
+      #  run: xcodebuild clean -workspace "$APP".xcworkspace -scheme "$SCHEME" -configuration "$CONFIGURATION" -verbose
 
       # This step hangs, which is almost certainly a pop-up for keychain password that has not been solved yet
       # Switched to Fastlane build which solved this
