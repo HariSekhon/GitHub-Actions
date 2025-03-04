@@ -204,6 +204,16 @@ jobs:
       #    }
       #    EOF
 
+      - name: Xcode List Available Versions
+        run: |
+          for app in /Applications/Xcode*.app; do
+            if [ -d "$app" ]; then
+              echo "Found: $app"
+              "$app/Contents/Developer/usr/bin/xcodebuild" -version
+              echo
+            fi
+          done
+
       - uses: maxim-lobanov/setup-xcode@c51a66b42363123fa82a6cfe02c60af4281dab93 # v1
         with:
           # The Xcode version must already be installed on the macOS runner
