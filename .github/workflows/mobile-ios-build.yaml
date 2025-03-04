@@ -48,11 +48,11 @@ on:  # yamllint disable-line rule:truthy
       scheme:
         type: string
         required: true
-        description: XCode build scheme
+        description: Xcode build scheme
       configuration:
         type: string
         required: true
-        description: XCode build configuration
+        description: Xcode build configuration
       submodules:
         type: string
         required: false
@@ -83,11 +83,11 @@ on:  # yamllint disable-line rule:truthy
       scheme:
         type: string
         required: true
-        description: XCode build scheme
+        description: Xcode build scheme
       configuration:
         type: string
         required: true
-        description: XCode build configuration
+        description: Xcode build configuration
       submodules:
         type: string
         required: false
@@ -122,11 +122,13 @@ env:
   SCHEME: ${{ inputs.scheme || github.event.inputs.scheme || '' }}
   CONFIGURATION: ${{ inputs.configuration || github.event.inputs.configuration || '' }}
   DEBUG: ${{ inputs.debug == true || github.event.inputs.debug == 'true' || '' }}
-  ACTIONS_RUNNER_DEBUG: true
+  #ACTIONS_RUNNER_DEBUG: true
+  #KEYCHAIN_LOGGING: "YES"
+  #NONINTERACTIVE: 1
 
 jobs:
   build:
-    name: iOS Build
+    name: Xcode iOS Build
     runs-on: macos-latest
 
     # Mac builds are 10x expensive vs Linux, and not included in Enterprise 50,000 build minutes
@@ -178,10 +180,12 @@ jobs:
 
       # saves ~10 minutes IRL depending on how many dependencies in Podfile
       - uses: actions/cache@v4
-        name: Cache Pods
+        name: Cocoa Pods Cache
         with:
           path: Pods
-          key: ${{ runner.os }}-pods
+          key: cocoapods-${{ runner.os }}-${{ runner.arch }}  # -${{ github.workflow }}-${{ hashFiles('**/Podfile') }}
+          restore-key: |
+            cocoapods-${{ runner.os }}-${{ runner.arch }}  # -${{ github.workflow }}-
 
       # already downloaded, no need to download and cache
       #- uses: actions/cache@v4
