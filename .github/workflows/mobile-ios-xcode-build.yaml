@@ -26,7 +26,6 @@ on:  # yamllint disable-line rule:truthy
   #  paths:
   #    - Podfile
   #    - Podfile.lock
-  #    - fastlane/**
   #    - '!**/*.md'
   #    - .github/workflows/mobild-ios-build.yaml
   #pull_request:
@@ -36,7 +35,6 @@ on:  # yamllint disable-line rule:truthy
   #  paths:
   #    - Podfile
   #    - Podfile.lock
-  #    - fastlane/**
   #    - '!**/*.md'
   #    - .github/workflows/mobild-ios-build.yaml
   workflow_call:
