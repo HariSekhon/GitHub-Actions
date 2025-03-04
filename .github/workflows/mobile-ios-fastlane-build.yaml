@@ -111,36 +111,43 @@ defaults:
     shell: bash -euxo pipefail {0}
 
 env:
-  APP: ${{ inputs.app || github.event.inputs.app || '' }}
-  SCHEME: ${{ inputs.scheme || github.event.inputs.scheme || '' }}
-  CONFIGURATION: ${{ inputs.configuration || github.event.inputs.configuration || '' }}
-  DEBUG: ${{ inputs.debug == true || github.event.inputs.debug == 'true' || '' }}
+  FASTLANE_BUILD_LANE: ${{ inputs.build_lane || github.event.inputs.build_lane }}
+  FASTLANE_DEPLOY_LANE: ${{ inputs.deploy_lane || github.event.inputs.deploy_lane }}
+  FASTLANE_SKIP_UPDATE_CHECK: 1
+
+  GOOGLE_APPLICATION_CREDENTIALS: /tmp/google_application_credentials.json
+
+  XCODE_VERSION: ${{ inputs.xcode_version || github.event.inputs.xcode_version || 'latest-stable' }}
+
   #ACTIONS_RUNNER_DEBUG: true
   #KEYCHAIN_LOGGING: "YES"
-  #NONINTERACTIVE: 1
+
+  # Fastlane recommends these next two
+  LC_ALL: en_US.UTF-8
+  LANG: en_US.UTF-8
+
+  NONINTERACTIVE: 1
+  HOMEBREW_NO_ANALYTICS: 1
+  HOMEBREW_NO_AUTOREMOVE: 1
+  HOMEBREW_NO_AUTO_CLEANUP: 1
+  HOMEBREW_NO_AUTO_UPDATE: 1
+  HOMEBREW_NO_BOOTSNAP: 1
+  HOMEBREW_NO_CLEANUP_FORMULAE: 1
+  HOMEBREW_NO_INSECURE_REDIRECT: 1
+  HOMEBREW_NO_INSTALL_CLEANUP: 1
+  HOMEBREW_NO_INSTALL_UPGRADE: 1
+  HOMEBREW_VERBOSE_USING_DOTS: 1
 
 jobs:
-  build:
-    name: Xcode iOS Build
-    runs-on: macos-latest
-
-    # Mac builds are 10x expensive vs Linux, and not included in Enterprise 50,000 build minutes
-    #
-    # Build runs in ~3 minutes locally, so cap at 30 minutes because even if runner was half as powerful as my laptop
-    # there is no way it should take more than 10x - the build is simply stuck and hanging for 6 hours running up a
-    # crazy bill which is pointless
-    #
-    # Letting a job run for 6 hours before timing out costs $28.80 and doesn't finish anyway - if it doesn't complete in 30 minutes it probably won't
-    timeout-minutes: 30
-
-    # can't test with larger runner, hit this error:
-    #
-    #     The job was not started because recent account payments have failed or your spending limit needs to be increased. Please check the 'Billing & plans' section in your settings.
-    #
-    #runs-on: macos-latest-xlarge
-
+  environment_checks:
+    name: Environment Checks
+    runs-on: macos-${{ inputs.macos_version || github.event.inputs.macos_version || 'latest' }}
+    timeout-minutes: 5
     steps:
-      - name: System
+      - name: macOS System Version
+        run: sw_vers
+
+      - name: macOS Hardware
         run: |
           sysctl -n machdep.cpu.brand_string
           system_profiler SPHardwareDataType
@@ -160,93 +167,159 @@ jobs:
     #          Total Number of Cores: 3
     #          Memory: 7 GB
 
-    steps:
       - name: Environment
         run: env | sort
 
       - name: Git version
         run: git --version
 
-      - uses: actions/checkout@v3
+      - name: Configure Firebase Google Application Credentials
+        run: |
+          if [ "${#GOOGLE_APPLICATION_CREDENTIALS_JSON}" -lt 50 ]; then
+              echo "GOOGLE_APPLICATION_CREDENTIALS_JSON secret not set properly, too short to be valid"
+              exit 1
+          fi
+          cat > "$GOOGLE_APPLICATION_CREDENTIALS" <<< "$GOOGLE_APPLICATION_CREDENTIALS_JSON"
+          md5 "$GOOGLE_APPLICATION_CREDENTIALS"
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS_JSON: ${{ secrets.google_application_credentials_json }}
+
+      # Test the Firebase credentials work first because finding this out at the end of the build is slow and expensive
+      - name: Install Firebase CLI
+        run: |
+          brew install firebase-cli &&
+          firebase --version
+
+      - name: Firebase - Test Credentials by Listing Projects
+        run: firebase projects:list
+
+  # ============================================================================ #
+  build:
+    name: Fastlane iOS Build
+    runs-on: macos-${{ inputs.macos_version || github.event.inputs.macos_version || 'latest' }}
+    needs: environment_checks
+
+    # Mac builds are 10x expensive vs Linux, and not included in Enterprise 50,000 build minutes
+    #
+    # Build runs in ~3 minutes locally, so cap at 30 minutes because even if runner was half as powerful as my laptop
+    # there is no way it should take more than 10x - the build is simply stuck and hanging for 6 hours running up a
+    # crazy bill which is pointless
+    #
+    # Letting a job run for 6 hours before timing out costs $28.80 and doesn't finish anyway - if it doesn't complete in 30 minutes it probably won't
+    timeout-minutes: 30
+
+    # can't test with larger runner, hit this error:
+    #
+    #     The job was not started because recent account payments have failed or your spending limit needs to be increased. Please check the 'Billing & plans' section in your settings.
+    #
+    #runs-on: macos-latest-xlarge  # 6 CPU M1 arm64, 8 GPU, 14GB RAM, 14GB disk.
+
+    steps:
+      # requires Apple ID login and if 2FA enforced, this is a problem
+      #- name: Install Xcodes
+      #  if: env.XCODE_VERSION
+      #  run: |
+      #    brew install robotsandpencils/made/xcodes
+      #    xcodes version
+      #
+      #- name: List Xcode versions available to install
+      #  if: env.XCODE_VERSION
+      #  run: xcodes list
+      #
+      #- name: Install Xcode custom version
+      #  if: env.XCODE_VERSION
+      #  run: xcodes install "$XCODE_VERSION"
+      #
+      #- name: Xcode versions installed
+      #  if: env.XCODE_VERSION
+      #  run: xcodes installed
+      #
+      #- name: Switch Xcode version
+      #  if: env.XCODE_VERSION
+      #  run: xcodes select "$XCODE_VERSION"
+
+      - name: Xcode List Available Versions
+        run: |
+          for app in /Applications/Xcode*.app; do
+            if [ -d "$app" ]; then
+              echo "Found: $app"
+              "$app/Contents/Developer/usr/bin/xcodebuild" -version
+              echo
+            fi
+          done
+
+      - uses: maxim-lobanov/setup-xcode@c51a66b42363123fa82a6cfe02c60af4281dab93 # v1
         with:
-          submodules: ${{ inputs.submodules }}  # 'recursive' default requires Git 2.18+ to be installed first
+          # The Xcode version must already be installed on the macOS runner
+          #
+          # - set the 'macos_version' input parameter to the workflow to align accordingly
+          # - see here for the Xcode versions available on each version of macOS:
+          #
+          #   https://github.com/actions/runner-images/tree/main/images/macos
+          #
+          xcode-version: ${{ inputs.xcode_version || github.event.inputs.xcode_version || 'latest' }}
 
-      # saves ~10 minutes IRL depending on how many dependencies in Podfile
-      - uses: actions/cache@v4
-        name: Cocoa Pods Cache
-        with:
-          path: Pods
-          key: cocoapods-${{ runner.os }}-${{ runner.arch }}  # -${{ github.workflow }}-${{ hashFiles('**/Podfile') }}
-          restore-key: |
-            cocoapods-${{ runner.os }}-${{ runner.arch }}  # -${{ github.workflow }}-
-
-      # already downloaded, no need to download and cache
-      #- uses: actions/cache@v4
-      #  name: Cache CoreSimulator
-      #  with:
-      #    path: /Library/Developer/CoreSimulator
-      #    key: ${{ runner.os }}-core-simulator
-
-      # XCode is already available
-      #- name: Install Homebrew
-      #  run: |
-      #    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-      #
-      #- name: Add Homebrew to PATH
-      #  run: |
-      #    echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.bashrc
-      #    . ~/.bashrc
-      #
-      #- name: Homebrew Version
-      #  run: |
-      #    brew --version
-      #
-      #- name: Install XCode
-      #  #run: xcode-select --install
-      #  run: |
-      #    # use expect to auto-answer the download and license prompts
-      #    brew install expect
-      #    expect <<EOF
-      #    spawn xcode-select --install
-      #    set timeout -1
-      #    expect {
-      #        "The software is available for download" {
-      #            send "\r"
-      #            exp_continue
-      #        }
-      #        "Press the Return key to continue" {
-      #            send "\r"
-      #        }
-      #        eof
-      #    }
-      #    EOF
-
-      - name: XCode Version
+      - name: Xcode Version
         run: xcodebuild -version
 
-      #- name: Set XCode Path
-      #  run: |
-      #    xcode-select --print-path
-      #    sudo xcode-select -switch /Applications/Xcode.app/Contents/Developer
-      #    xcode-select --print-path
-
-      - name: XCode Path
+      - name: Xcode Path
         run: xcode-select --print-path
 
       - name: Show Available SDKs
         run: xcodebuild -showsdks
 
-      # already provided:
-      #
-      #- name: Download Platforms
-      #  run: xcodebuild -downloadAllPlatforms
-      #      "All requested platforms are downloaded"
-
       - name: List Simulators
         run: xcrun simctl list
 
+      - uses: actions/checkout@v3
+
+      - uses: actions/cache@v4
+        name: Cache Pods
+        with:
+          path: Pods
+          key: ${{ runner.os }}-cocoa-pods-${{ github.workflow }}-${{ github.ref }}
+          restore-keys: |
+            ${{ runner.os }}-cocoa-pods-${{ github.workflow }}-${{ github.ref }}
+            ${{ runner.os }}-cocoa-pods-${{ github.workflow }}
+            ${{ runner.os }}-pods
+
+      #- uses: actions/cache@v4
+      #  name: Cache Xcode DerivedData
+      #  with:
+      #    path: ~/Library/Developer/Xcode/DerivedData
+      #    key: ${{ runner.os }}-derived-data-${{ github.workflow }}-${{ github.ref }}
+      #    restore-keys: |
+      #      ${{ runner.os }}-derived-data-${{ github.workflow }}-${{ github.ref }}
+      #      ${{ runner.os }}-derived-data-${{ github.workflow }}
+      #
+      #- name: Cache Build
+      #  uses: actions/cache@v4
+      #  with:
+      #    path: build/
+      #    key: ${{ runner.os }}-build-${{ github.workflow }}-${{ github.ref }}
+      #    restore-keys: |
+      #      ${{ runner.os }}-build-${{ github.workflow }}-${{ github.ref }}
+      #      ${{ runner.os }}-build-${{ github.workflow }}
+
+      - uses: irgaly/xcode-cache@985ae4fb036020b70ecd8797146f43a5b87f8ac2 # v1
+        with:
+          key: xcode-cache-deriveddata-${{ github.workflow }}-${{ github.ref }}
+          restore-keys: xcode-cache-deriveddata-${{ github.workflow }}-
+
+      #- name: Install Bundler for Fastlane
+      #  run: brew install bundler
+
+      #- name: Install Bundler for Fastlane
+      #  run: sudo gem install bundler
+
+      # Just use system Fastlane is easier and shorter command
+      - name: Install Fastlane
+        run: brew install fastlane
+
+      - name: Fastlane Version
+        run: fastlane --version
+
       - name: Install CocoaPods
-        #run: sudo gem install cocoapods
         run: |
           version="$(sed -n 's/^COCOAPODS: \([0-9.]*\)/\1/p' Podfile.lock)"
           sudo gem install cocoapods -v "$version"
@@ -271,9 +344,8 @@ jobs:
         run: |
           #cert="$(mktemp)"
           cert="certificate.p12"
-          keychain="build.keychain"
-          KEYCHAIN_PATH="$HOME/Library/Keychains/$keychain-db"
-          echo "KEYCHAIN_PATH=$KEYCHAIN_PATH" >> "$GITHUB_ENV"
+          #keychain="build.keychain"
+          keychain="fastlane_tmp_keychain"
           base64 --decode <<< "$CERTIFICATE" > "$cert"
           file "$cert"
           md5 "$cert"
@@ -281,7 +353,7 @@ jobs:
           security default-keychain -s "$keychain"
           security unlock-keychain -p "" "$keychain"
           security import "$cert" \
-              -k "$KEYCHAIN_PATH" \
+              -k ~/Library/Keychains/"$keychain"-db \
               -T /usr/bin/codesign \
               ${CERTIFICATE_PASSWORD:+-P "$CERTIFICATE_PASSWORD"}
           security set-key-partition-list -S apple-tool:,apple: -k "" "$keychain"
@@ -290,15 +362,52 @@ jobs:
               tar zxv
           fi
 
-      # undermines caching for performance
-      #- name: Clean Derived Data
-      #  run: rm -rf ~/Library/Developer/Xcode/DerivedData/*
+      #- name: Bundle Fastlane
+      #  run: bundle exec fastlane -v
 
-      # undermines caching for performance
-      #- name: XCode Clean
-      #  run: xcodebuild clean -workspace "$APP".xcworkspace -scheme "$SCHEME" -configuration "$CONFIGURATION" -verbose
+      # the most expensive step, takes 10-15 minutes
+      - name: Fastlane
+        run: fastlane "$FASTLANE_BUILD_LANE"  #--verbose
 
-      # This step hangs, which is almost certainly a pop-up for keychain password that has not been solved yet
-      # Switched to Fastlane build which solved this
-      - name: iOS XCode Build
-        run: xcodebuild archive -workspace "$APP".xcworkspace -scheme "$SCHEME" -configuration "$CONFIGURATION" -verbose OTHER_CODE_SIGN_FLAGS="--keychain=$KEYCHAIN_PATH"
+      - name: Find .ipa path
+        run: |
+          IPA_PATH="$(find . -type f -name '*.ipa')"
+          echo "IPA_PATH=$IPA_PATH" >> "$GITHUB_ENV"
+
+      - name: Upload IPA Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: IPA
+          path: ${{ env.IPA_PATH }}
+          retention-days: 1
+
+  # ============================================================================ #
+  deploy:
+    name: Firebase App Distribution
+    #if: ${{ env.FASTLANE_DEPLOY_LANE }}
+    if: ${{ inputs.deploy_lane || github.event.inputs.deploy_lane }}
+    needs: build
+    runs-on: macos-${{ inputs.macos_version || github.event.inputs.macos_version || 'latest' }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Configure Firebase Google Application Credentials
+        run: |
+          cat > "$GOOGLE_APPLICATION_CREDENTIALS" <<< "$GOOGLE_APPLICATION_CREDENTIALS_JSON"
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS_JSON: ${{ secrets.google_application_credentials_json }}
+
+      - name: Download IP Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: IPA
+
+      - name: Install Fastlane
+        run: brew install fastlane
+
+      - name: Fastlane Version
+        run: fastlane --version
+
+      - name: Fastlane
+        run: fastlane "$FASTLANE_DEPLOY_LANE"  #--verbose
