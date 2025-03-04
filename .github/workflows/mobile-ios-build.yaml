@@ -303,5 +303,7 @@ jobs:
       - name: XCode Clean
         run: xcodebuild clean -workspace "$APP".xcworkspace -scheme "$SCHEME" -configuration "$CONFIGURATION" -verbose
 
+      # This step hangs, which is almost certainly a pop-up for keychain password that has not been solved yet
+      # Switched to Fastlane build which solved this
       - name: iOS XCode Build
         run: xcodebuild archive -workspace "$APP".xcworkspace -scheme "$SCHEME" -configuration "$CONFIGURATION" -verbose OTHER_CODE_SIGN_FLAGS="--keychain=$KEYCHAIN_PATH"
