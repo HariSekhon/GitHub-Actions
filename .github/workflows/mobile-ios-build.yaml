@@ -297,8 +297,8 @@ jobs:
               tar zxv
           fi
 
-      - name: Clean Derived Data
-        run: rm -rf ~/Library/Developer/Xcode/DerivedData/*
+      #- name: Clean Derived Data
+      #  run: rm -rf ~/Library/Developer/Xcode/DerivedData/*
 
       - name: XCode Clean
         run: xcodebuild clean -workspace "$APP".xcworkspace -scheme "$SCHEME" -configuration "$CONFIGURATION" -verbose
