@@ -24,19 +24,13 @@ on:  # yamllint disable-line rule:truthy
   #    - master
   #    - main
   #  paths:
+  #    - '**/*.swift'
+  #    - Gemfile
+  #    - Gemfile.lock
   #    - Podfile
   #    - Podfile.lock
   #    - '!**/*.md'
-  #    - .github/workflows/mobild-ios-build.yaml
-  #pull_request:
-  #  branches:
-  #    - master
-  #    - main
-  #  paths:
-  #    - Podfile
-  #    - Podfile.lock
-  #    - '!**/*.md'
-  #    - .github/workflows/mobild-ios-build.yaml
+  #    - .github/workflows/mobile-ios-xcode-build.yaml
   workflow_call:
     inputs:
       app:
