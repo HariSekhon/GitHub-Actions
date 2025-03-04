@@ -297,9 +297,11 @@ jobs:
               tar zxv
           fi
 
+      # undermines caching for performance
       #- name: Clean Derived Data
       #  run: rm -rf ~/Library/Developer/Xcode/DerivedData/*
 
+      # undermines caching for performance
       #- name: XCode Clean
       #  run: xcodebuild clean -workspace "$APP".xcworkspace -scheme "$SCHEME" -configuration "$CONFIGURATION" -verbose
 
