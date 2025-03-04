@@ -1,0 +1,256 @@
+#
+#  Author: Hari Sekhon
+#  Date: 2025-01-31 05:44:00 +0700 (Fri, 31 Jan 2025)
+#
+#  vim:ts=2:sts=2:sw=2:et
+#
+#  https://github.com/HariSekhon/GitHub-Actions
+#
+#  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback
+#
+#  https://www.linkedin.com/in/HariSekhon
+#
+
+# ============================================================================ #
+#           M o b i l e   A n d r o i d   F a s t l a n e   B u i l d
+# ============================================================================ #
+
+---
+name: Mobile Android Fastlane Build
+
+on:  # yamllint disable-line rule:truthy
+  #push:
+  #  branches:
+  #    - master
+  #    - main
+  #  paths:
+  #    - '**/*.java'
+  #    - '**/*.kt'
+  #    - build.gradle
+  #    - gradle.properties
+  #    - gradlew
+  #    - settings.gradle
+  #    - Gemfile
+  #    - Gemfile.lock
+  #    - fastlane/**
+  #    - '!**/*.md'
+  #    - .github/workflows/mobile-android-fastlane.yaml
+  workflow_call:
+    inputs:
+      java_version:
+        type: string
+        default: '21'
+        required: false
+        description: "Java version to build with (default: 21)"
+      build_lane:
+        type: string
+        required: true
+        description: The Fastlane 'lane' to build
+      deploy_lane:
+        type: string
+        required: false
+        description: The Fastlane 'lane' to deploy
+      #apk_path_to_upload:
+      #  type: string
+      #  required: true
+      #  description: The Path to the .apk artifact to upload
+    secrets:
+      jks_base64:
+        required: true
+      google_application_credentials_json:
+        required: true
+  workflow_dispatch:
+    inputs:
+      java_version:
+        type: string
+        default: '21'
+        required: false
+        description: "Java version to build with (default: 21)"
+      build_lane:
+        type: string
+        required: true
+        description: The Fastlane 'lane' to build
+      deploy_lane:
+        type: string
+        required: false
+        description: The Fastlane 'lane' to deploy
+    secrets:
+      jks_base64:
+        required: true
+      google_application_credentials_json:
+        required: true
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash -euxo pipefail {0}
+
+env:
+  FASTLANE_BUILD_LANE: ${{ inputs.build_lane || github.event.inputs.build_lane }}
+  FASTLANE_DEPLOY_LANE: ${{ inputs.deploy_lane || github.event.inputs.deploy_lane }}
+  FASTLANE_SKIP_UPDATE_CHECK: 1
+
+  GOOGLE_APPLICATION_CREDENTIALS: /tmp/google_application_credentials.json
+  FIREBASE_CLI_VERSION: 13.31.2
+
+  # Fastlane recommends these next two
+  LC_ALL: en_US.UTF-8
+  LANG: en_US.UTF-8
+
+jobs:
+  environment_checks:
+    name: Environment Checks
+    runs-on: ubuntu-latest
+    #container: ubuntu:22.04
+    timeout-minutes: 5
+    steps:
+      - name: Linux Hardware
+        run: |
+          set +x
+          echo -n "CPUs: "
+          nproc
+          echo
+          free -g
+          echo
+          df -h
+
+      - name: Environment
+        run: env | sort
+
+      - name: Git version
+        run: git --version
+
+      - name: Configure Firebase Google Application Credentials
+        run: |
+          if [ "${#GOOGLE_APPLICATION_CREDENTIALS_JSON}" -lt 50 ]; then
+              echo "GOOGLE_APPLICATION_CREDENTIALS_JSON secret not set properly, too short to be valid"
+              exit 1
+          fi
+          cat > "$GOOGLE_APPLICATION_CREDENTIALS" <<< "$GOOGLE_APPLICATION_CREDENTIALS_JSON"
+          md5sum "$GOOGLE_APPLICATION_CREDENTIALS"
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS_JSON: ${{ secrets.google_application_credentials_json }}
+
+      # Test the Firebase credentials work first because finding this out at the end of the build is slow and expensive
+      - name: Install Firebase CLI
+        run: |
+          sudo apt update &&
+          sudo apt install -y wget &&
+          sudo wget -O /usr/local/bin/firebase "https://github.com/firebase/firebase-tools/releases/download/v$FIREBASE_CLI_VERSION/firebase-tools-linux" &&
+          sudo chmod +x /usr/local/bin/firebase &&
+          firebase --version
+
+      - name: Firebase - Test Credentials by Listing Projects
+        run: firebase projects:list
+
+  # ============================================================================ #
+  build:
+    name: Fastlane Android Build
+    runs-on: ubuntu-latest
+    #container: ubuntu:22.04
+    needs: environment_checks
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "${{ inputs.java_version || github.event.inputs.java_version }}"
+          #cache: gradle
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - uses: actions/cache@v4
+        name: Gradle Cache
+        with:
+          path: ~/.gradle/caches
+          key: gradle-cache-${{ runner.os }}-${{ runner.arch }}-${{ github.workflow }}
+          restore-keys: |
+            gradle-cache-${{ runner.os }}-${{ runner.arch }}-${{ github.workflow }}
+
+      - uses: actions/cache@v4
+        name: Gradle Wrapper Cache
+        with:
+          path: ~/.gradle/wrapper
+          key: gradle-wrapper-${{ runner.os }}-${{ runner.arch }}-${{ github.workflow }}
+          restore-keys: |
+            gradle-wrapper-${{ runner.os }}-${{ runner.arch }}-${{ github.workflow }}
+
+      - name: Install Bundler & Rake for Fastlane
+        run: |
+          sudo apt update &&
+          sudo apt install -y bundler rake
+
+      - name: Bundler Version
+        run: bundler version
+
+      # installs Fastlane and other Gems
+      - name: Bundler Update
+        run: sudo bundler update
+
+      - name: Fastlane Version
+        run: fastlane --version
+
+      - name: JKS
+        env:
+          JKS_BASE64: ${{ secrets.jks_base64 }}
+        run: |
+          jks="build.jks"
+          base64 --decode <<< "$JKS_BASE64" > "$jks"
+          file "$jks"
+          md5sum "$jks"
+
+      - name: Fastlane
+        run: bundle exec fastlane "$FASTLANE_BUILD_LANE"
+
+      - name: Fastlane
+        run: fastlane "$FASTLANE_BUILD_LANE"  #--verbose
+
+      - name: Find .apk path
+        run: |
+          APK_PATH="$(find . -type f -name '*.apk')"
+          echo "APK_PATH=$APK_PATH" >> "$GITHUB_ENV"
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: APK
+          path: ${{ env.APK_PATH }}
+          retention-days: 1
+
+  # ============================================================================ #
+  deploy:
+    name: Firebase App Distribution
+    #if: ${{ env.FASTLANE_DEPLOY_LANE }}
+    if: ${{ inputs.deploy_lane || github.event.inputs.deploy_lane }}
+    needs: build
+    runs-on: ubuntu-latest
+    #container: ubuntu:22.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Configure Firebase Google Application Credentials
+        run: |
+          cat > "$GOOGLE_APPLICATION_CREDENTIALS" <<< "$GOOGLE_APPLICATION_CREDENTIALS_JSON"
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS_JSON: ${{ secrets.google_application_credentials_json }}
+
+      - name: Download IP Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: APK
+
+      - name: Install Fastlane
+        run: |
+          sudo apt update &&
+          sudo apt install fastlane
+
+      - name: Fastlane
+        run: fastlane "$FASTLANE_DEPLOY_LANE"  #--verbose
