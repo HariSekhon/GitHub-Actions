@@ -259,7 +259,7 @@ jobs:
           sudo gem install cocoapods -v "$version"
 
       - name: Install Pod Dependencies
-        run: pod install
+        run: pod install  # --verbose
 
       - name: Copy Mobile Profiles to Library
         env:
