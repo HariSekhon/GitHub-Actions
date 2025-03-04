@@ -34,7 +34,7 @@ on:  # yamllint disable-line rule:truthy
   #    - Gemfile.lock
   #    - fastlane/**
   #    - '!**/*.md'
-  #    - .github/workflows/mobile-android-fastlane.yaml
+  #    - .github/workflows/mobile-android-fastlane-build.yaml
   workflow_call:
     inputs:
       java_version:
