@@ -32,7 +32,6 @@ on:  # yamllint disable-line rule:truthy
         default: false
     secrets:
       BUILDKITE_AGENT_TOKEN:
-        type: string
         required: true
   workflow_dispatch:
     inputs:
@@ -42,7 +41,6 @@ on:  # yamllint disable-line rule:truthy
         default: false
     secrets:
       BUILDKITE_AGENT_TOKEN:
-        type: string
         required: true
   schedule:
     # - min interval is 5 mins
