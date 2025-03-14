@@ -63,6 +63,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Linux Hardware
+        if: runner.os == "Linux"
         run: |
           set +x
           echo -n "CPUs: "
@@ -71,6 +72,16 @@ jobs:
           free -g
           echo
           df -h
+
+      - name: macOS System Version
+        if: runner.os == "macOS"
+        run: sw_vers
+
+      - name: macOS Hardware
+        if: runner.os == "macOS"
+        run: |
+          sysctl -n machdep.cpu.brand_string
+          system_profiler SPHardwareDataType
 
       - name: Environment
         run: |
