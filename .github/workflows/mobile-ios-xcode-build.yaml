@@ -159,7 +159,6 @@ jobs:
     #          Total Number of Cores: 3
     #          Memory: 7 GB
 
-    steps:
       - name: Environment
         run: env | sort
 
