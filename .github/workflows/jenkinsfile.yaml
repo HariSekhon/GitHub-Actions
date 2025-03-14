@@ -55,8 +55,29 @@ jobs:
     #container: harisekhon/jenkins:latest
     container: jenkins/jenkins:lts
     steps:
+      - name: Linux Release
+        if: runner.os == "Linux"
+        run: |
+          [ -e /.dockerenv ] && ls -l /.dockerenv
+          echo
+          cat /etc/*-release
+
+      - name: Linux Hardware
+        if: runner.os == "Linux"
+        run: |
+          set +x
+          echo -n "CPUs: "
+          nproc
+          echo
+          free -g
+          echo
+          df -h
+
       - name: Environment
         run: env | sort
+
+      - name: Git version
+        run: git --version
 
       # Workaround for actions/checkout not being able to checkout outside of $GITHUB_WORKSPACE and not being able to set GITHUB_WORKSPACE
       #
