@@ -58,6 +58,30 @@ jobs:
     name: SonarCloud
     runs-on: ubuntu-latest
     steps:
+      - name: Linux Release
+        if: runner.os == "Linux"
+        run: |
+          [ -e /.dockerenv ] && ls -l /.dockerenv
+          echo
+          cat /etc/*-release
+
+      - name: Linux Hardware
+        if: runner.os == "Linux"
+        run: |
+          set +x
+          echo -n "CPUs: "
+          nproc
+          echo
+          free -g
+          echo
+          df -h
+
+      - name: Environment
+        run: env | sort
+
+      - name: Git version
+        run: git --version
+
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
