@@ -83,8 +83,8 @@ env:
   DEBUG: ${{ inputs.debug == true || github.event.inputs.debug == 'true' || '' }}
 
 jobs:
-  trivy:
-    name: Filesystem Scan
+  environment:
+    name: Environment
     runs-on: ubuntu-latest
     container: aquasec/trivy:latest
     steps:
@@ -112,6 +112,9 @@ jobs:
       - name: Git version
         run: git --version
 
+  trivy:
+    name: Filesystem Scan
+    runs-on: ubuntu-latest
       - uses: actions/checkout@v3
 
       - name: Trivy FS
@@ -124,30 +127,6 @@ jobs:
     runs-on: ubuntu-latest
     container: aquasec/trivy:latest
     steps:
-      - name: Linux Release
-        if: runner.os == "Linux"
-        run: |
-          [ -e /.dockerenv ] && ls -l /.dockerenv
-          echo
-          cat /etc/*-release
-
-      - name: Linux Hardware
-        if: runner.os == "Linux"
-        run: |
-          set +x
-          echo -n "CPUs: "
-          nproc
-          echo
-          free -g
-          echo
-          df -h
-
-      - name: Environment
-        run: env | sort
-
-      - name: Git version
-        run: git --version
-
       - uses: actions/checkout@v3
 
       - name: Trivy FS severity exit 1
@@ -164,9 +143,6 @@ jobs:
     runs-on: ubuntu-latest
     container: aquasec/trivy:latest
     steps:
-      - name: Environment
-        run: env | sort
-
       - uses: actions/checkout@v3
 
       - name: Trivy Config
@@ -179,9 +155,6 @@ jobs:
     runs-on: ubuntu-latest
     container: aquasec/trivy:latest
     steps:
-      - name: Environment
-        run: env | sort
-
       - uses: actions/checkout@v3
 
       - name: Trivy Config severity exit 1
@@ -198,9 +171,6 @@ jobs:
     name: Filesystem Scan GitHub Security tab
     runs-on: ubuntu-latest
     steps:
-      - name: Environment
-        run: env | sort
-
       - uses: actions/checkout@v3
 
       - name: Filesystem Scan Sarif
@@ -226,9 +196,6 @@ jobs:
     name: Config Scan GitHub Security tab
     runs-on: ubuntu-latest
     steps:
-      - name: Environment
-        run: env | sort
-
       - uses: actions/checkout@v3
 
       - name: Config Scan Sarif
