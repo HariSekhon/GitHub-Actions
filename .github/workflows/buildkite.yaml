@@ -78,7 +78,7 @@ jobs:
     container: buildkite/agent:ubuntu
     steps:
       - name: Linux Release
-        if: runner.os == "Linux"
+        if: runner.os == Linux
         run: |
           [ -e /.dockerenv ] && ls -l /.dockerenv
           echo
