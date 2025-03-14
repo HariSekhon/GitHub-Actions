@@ -46,7 +46,8 @@ on:  # yamllint disable-line rule:truthy
     # - min interval is 5 mins
     # - scheduling may be delayed during periods of high load on GitHub Actions infra, such as at the top of every hour
     # - '*' is a special character in YAML so you have to quote this string
-    - cron: '*/5 * * * *'
+    #- cron: '*/5 * * * *'
+    - cron: '* */4 * * *'
 
 permissions:
   contents: read
