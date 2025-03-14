@@ -49,6 +49,22 @@ jobs:
     runs-on: ubuntu-latest
     container: ubuntu
     steps:
+      - name: Linux Hardware
+        run: |
+          set +x
+          echo -n "CPUs: "
+          nproc
+          echo
+          free -g
+          echo
+          df -h
+
+      - name: Environment
+        run: env | sort
+
+      - name: Git version
+        run: git --version
+
       - uses: actions/checkout@v3
         #name: Git Checkout  # better to show the action@version
 
