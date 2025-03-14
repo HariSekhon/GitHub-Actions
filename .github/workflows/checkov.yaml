@@ -77,6 +77,29 @@ jobs:
     if: github.actor != 'dependabot[bot]'
 
     steps:
+      - name: Linux Hardware
+        run: |
+          set +x
+          echo -n "CPUs: "
+          nproc
+          echo
+          free -g
+          echo
+          df -h
+
+      - name: Environment
+        run: |
+          [ -e /.dockerenv ] && ls -l /.dockerenv
+          echo
+          cat /etc/*-release
+          echo
+          echo "Environment Variables:"
+          echo
+          env | sort
+
+      - name: Git version
+        run: git --version
+
       - name: Generate LOG_LEVEL environment variable
         run: |
           if [ -n "$DEBUG" ]; then
@@ -84,9 +107,6 @@ jobs:
           else
             echo "LOG_LEVEL=WARNING" >> "$GITHUB_ENV"
           fi
-
-      - name: Environment
-        run: env | sort
 
       - name: Set up Python 3.13
         uses: actions/setup-python@v1
