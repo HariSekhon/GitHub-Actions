@@ -80,6 +80,15 @@ jobs:
     timeout-minutes: 15
     runs-on: ubuntu-latest
     steps:
+      - name: Linux Hardware
+        run: |
+          set +x
+          echo -n "CPUs: "
+          nproc
+          echo
+          free -g
+          echo
+          df -h
 
       - name: Environment
         run: |
@@ -90,6 +99,9 @@ jobs:
           echo "Environment Variables:"
           echo
           env | sort
+
+      - name: Git version
+        run: git --version
 
       # https://github.com/aws-actions/configure-aws-credentials#configure-aws-credentials-action-for-github-actions
       - uses: aws-actions/configure-aws-credentials@v2
