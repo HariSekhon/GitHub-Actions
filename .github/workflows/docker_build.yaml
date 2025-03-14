@@ -238,7 +238,15 @@ jobs:
     # better done in the calling workflow to prevent manual docker builds on the wrong branches
     #if: github.ref_name == 'master' || github.ref_name == 'main' || contains(github.ref_name, 'docker')
     steps:
+      - name: Linux Release
+        if: runner.os == "Linux"
+        run: |
+          [ -e /.dockerenv ] && ls -l /.dockerenv
+          echo
+          cat /etc/*-release
+
       - name: Linux Hardware
+        if: runner.os == "Linux"
         run: |
           set +x
           echo -n "CPUs: "
@@ -249,14 +257,7 @@ jobs:
           df -h
 
       - name: Environment
-        run: |
-          [ -e /.dockerenv ] && ls -l /.dockerenv
-          echo
-          cat /etc/*-release
-          echo
-          echo "Environment Variables:"
-          echo
-          env | sort
+        run: env | sort
 
       - name: Git version
         run: git --version
