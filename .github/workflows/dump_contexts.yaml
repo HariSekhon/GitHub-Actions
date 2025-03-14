@@ -62,9 +62,28 @@ jobs:
     container: ${{ matrix.os == 'ubuntu-latest' && 'ubuntu:latest' || '' }}
     timeout-minutes: 10
     steps:
+      - name: Linux Hardware
+        run: |
+          set +x
+          echo -n "CPUs: "
+          nproc
+          echo
+          free -g
+          echo
+          df -h
 
       - name: Environment
-        run: env | sort
+        run: |
+          [ -e /.dockerenv ] && ls -l /.dockerenv
+          echo
+          cat /etc/*-release
+          echo
+          echo "Environment Variables:"
+          echo
+          env | sort
+
+      - name: Git version
+        run: git --version
 
       - name: Dump GitHub context
         env:
