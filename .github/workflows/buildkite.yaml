@@ -85,7 +85,7 @@ jobs:
           cat /etc/*-release
 
       - name: Linux Hardware
-        if: runner.os == "Linux"
+        if: runner.os == Linux
         run: |
           set +x
           echo -n "CPUs: "
