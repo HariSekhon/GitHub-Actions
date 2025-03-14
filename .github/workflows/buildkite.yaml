@@ -74,7 +74,7 @@ jobs:
   buildkite:
     name: BuildKite Agent
     runs-on: ubuntu-latest
-    container: buildkite-agent-ubuntu
+    container: buildkite/agent:ubuntu
     steps:
       - name: Linux Hardware
         run: |
