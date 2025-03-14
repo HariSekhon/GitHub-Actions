@@ -92,4 +92,4 @@ jobs:
       #- uses: actions/checkout@v3
 
       - name: Run BuildKite Agent
-        run: buildkite start
+        run: buildkite-agent start
