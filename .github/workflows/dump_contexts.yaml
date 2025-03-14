@@ -62,6 +62,13 @@ jobs:
     container: ${{ matrix.os == 'ubuntu-latest' && 'ubuntu:latest' || '' }}
     timeout-minutes: 10
     steps:
+      - name: Linux Release
+        if: runner.os == "Linux"
+        run: |
+          [ -e /.dockerenv ] && ls -l /.dockerenv
+          echo
+          cat /etc/*-release
+
       - name: Linux Hardware
         if: runner.os == "Linux"
         run: |
@@ -84,14 +91,7 @@ jobs:
           system_profiler SPHardwareDataType
 
       - name: Environment
-        run: |
-          [ -e /.dockerenv ] && ls -l /.dockerenv
-          echo
-          cat /etc/*-release
-          echo
-          echo "Environment Variables:"
-          echo
-          env | sort
+        run: env | sort
 
       - name: Git version
         run: git --version
