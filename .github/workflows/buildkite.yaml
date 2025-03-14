@@ -21,6 +21,9 @@
 name: BuildKite Agent
 
 on:  # yamllint disable-line rule:truthy
+  push:
+    paths:
+      - .github/workflows/buildkite.yaml  # this workflow
   workflow_call:
     inputs:
       debug:
