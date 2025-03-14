@@ -54,6 +54,24 @@ jobs:
     runs-on: ubuntu-latest
     container: hashicorp/terraform:latest
     steps:
+      - name: Linux Release
+        if: runner.os == "Linux"
+        run: |
+          [ -e /.dockerenv ] && ls -l /.dockerenv
+          echo
+          cat /etc/*-release
+
+      - name: Linux Hardware
+        if: runner.os == "Linux"
+        run: |
+          set +x
+          echo -n "CPUs: "
+          nproc
+          echo
+          free -g
+          echo
+          df -h
+
       - name: Environment
         run: env | sort
 
