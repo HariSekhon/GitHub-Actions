@@ -80,15 +80,28 @@ jobs:
     name: Build & Publish
     runs-on: ubuntu-latest
     steps:
+      - name: Linux Hardware
+        run: |
+          set +x
+          echo -n "CPUs: "
+          nproc
+          echo
+          free -g
+          echo
+          df -h
+
       - name: Environment
         run: |
           [ -e /.dockerenv ] && ls -l /.dockerenv
           echo
-          cat /etc/*release
+          cat /etc/*-release
           echo
           echo "Environment Variables:"
           echo
           env | sort
+
+      - name: Git version
+        run: git --version
 
       - uses: actions/checkout@v3
         with:
