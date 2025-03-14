@@ -1,0 +1,94 @@
+#
+#  Author: Hari Sekhon
+#  Date: 2025-03-15 01:17:46 +0800 (Sat, 15 Mar 2025)
+#
+#  vim:ts=2:sts=2:sw=2:et
+#
+#  https://github.com/HariSekhon/GitHub-Actions
+#
+#  If you're using my code you're welcome to connect with me on LinkedIn and optionally send me feedback
+#
+#  https://www.linkedin.com/in/HariSekhon
+#
+
+# ============================================================================ #
+#                  B u i l d K i t e   A g e n t   R u n n e r
+# ============================================================================ #
+
+# Runs BuildKite Builds
+
+---
+name: BuildKite Agent
+
+on:  # yamllint disable-line rule:truthy
+  workflow_call:
+    inputs:
+      debug:
+        type: string
+        required: false
+        default: false
+    secrets:
+      buildkite_agent_token:
+        type: string
+        required: true
+  workflow_dispatch:
+    inputs:
+      debug:
+        type: string
+        required: false
+        default: false
+    secrets:
+      buildkite_agent_token:
+        type: string
+        required: true
+  schedule:
+    # - min interval is 5 mins
+    # - scheduling may be delayed during periods of high load on GitHub Actions infra, such as at the top of every hour
+    # - '*' is a special character in YAML so you have to quote this string
+    - cron: '*/5 * * * *'
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash -euxo pipefail {0}
+
+env:
+  BUILDKITE_AGENT_TOKEN: ${{ secrets.buildkite_agent_token }}
+  #BUILDKITE_AGENT_SPAWN: 1
+  BUILDKITE_AGENT_SPAWN_PER_CPU: 1  # mutually exclusive with BUILDKITE_AGENT_SPAWN
+  BUILDKITE_AGENT_DISCONNECT_AFTER_JOB: 1
+  BUILDKITE_AGENT_DISCONNECT_AFTER_IDLE_TIMEOUT: 4
+  BUILDKITE_CANCEL_GRACE_PERIOD: 10
+  BUILDKITE_WRITE_JOB_LOGS_TO_STDOUT: 1
+  #BUILDKITE_AGENT_QUEUE:
+  BUILDKITE_AGENT_TAGS: linux
+  BUILDKITE_AGENT_TAGS_FROM_HOST: 1
+  #BUILDKITE_NO_PTY: 1
+  #BUILDKITE_AGENT_LOG_LEVEL:  # debug, info, error, warn, fatal
+  DEBUG: ${{ inputs.debug == true || github.event.inputs.debug == 'true' || '' }}
+
+jobs:
+  buildkite:
+    name: BuildKite Agent
+    runs-on: ubuntu-latest
+    container: buildkite-agent-ubuntu
+    steps:
+      - name: Linux Hardware
+        run: |
+          set +x
+          echo -n "CPUs: "
+          nproc
+          echo
+          free -g
+          echo
+          df -h
+
+      - name: Environment
+        run: env | sort
+
+      #- uses: actions/checkout@v3
+
+      - name: Run BuildKite Agent
+        run: buildkite start
