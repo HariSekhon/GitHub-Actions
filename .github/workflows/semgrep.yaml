@@ -107,14 +107,14 @@ jobs:
 
     steps:
       - name: Linux Release
-        if: runner.os == "Linux"
+        if: runner.os == 'Linux'
         run: |
           [ -e /.dockerenv ] && ls -l /.dockerenv
           echo
           cat /etc/*-release
 
       - name: Linux Hardware
-        if: runner.os == "Linux"
+        if: runner.os == 'Linux'
         run: |
           set +x
           echo -n "CPUs: "
