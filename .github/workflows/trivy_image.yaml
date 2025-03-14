@@ -70,14 +70,40 @@ env:
   DEBUG: ${{ inputs.debug == true || github.event.inputs.debug == 'true' || '' }}
 
 jobs:
+  environment:
+    name: Environment
+    runs-on: ubuntu-latest
+    container: aquasec/trivy:latest
+    steps:
+      - name: Linux Release
+        if: runner.os == "Linux"
+        run: |
+          [ -e /.dockerenv ] && ls -l /.dockerenv
+          echo
+          cat /etc/*-release
+
+      - name: Linux Hardware
+        if: runner.os == "Linux"
+        run: |
+          set +x
+          echo -n "CPUs: "
+          nproc
+          echo
+          free -g
+          echo
+          df -h
+
+      - name: Environment
+        run: env | sort
+
+      - name: Git version
+        run: git --version
+
   trivy:
     name: Scan Image
     runs-on: ubuntu-latest
     container: aquasec/trivy:latest
     steps:
-      - name: Environment
-        run: env | sort
-
       - name: Trivy Image Scan
         run: |
           # informational to see all issues
@@ -88,9 +114,6 @@ jobs:
     runs-on: ubuntu-latest
     container: aquasec/trivy:latest
     steps:
-      - name: Environment
-        run: env | sort
-
       - name: Trivy Image Scan severity exit 1
         if: ${{ inputs.severity || github.event.inputs.severity }}
         env:
@@ -103,9 +126,6 @@ jobs:
     name: Trivy Image GitHub Security tab
     runs-on: ubuntu-latest
     steps:
-      - name: Environment
-        run: env | sort
-
       - name: Run Trivy vulnerability scanner to generate sarif
         #if: ${{ ! ( inputs.no_sarif || github.event.inputs.sarif ) }}
         uses: aquasecurity/trivy-action@master
