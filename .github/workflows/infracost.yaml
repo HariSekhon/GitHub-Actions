@@ -77,6 +77,30 @@ jobs:
     name: Infracost
     runs-on: ubuntu-latest
     steps:
+      - name: Linux Release
+        if: runner.os == "Linux"
+        run: |
+          [ -e /.dockerenv ] && ls -l /.dockerenv
+          echo
+          cat /etc/*-release
+
+      - name: Linux Hardware
+        if: runner.os == "Linux"
+        run: |
+          set +x
+          echo -n "CPUs: "
+          nproc
+          echo
+          free -g
+          echo
+          df -h
+
+      - name: Environment
+        run: env | sort
+
+      - name: Git version
+        run: git --version
+
       #- name: Install Infracost
       #  run: curl -fsSL https://raw.githubusercontent.com/infracost/infracost/master/scripts/install.sh | sh -x
 
