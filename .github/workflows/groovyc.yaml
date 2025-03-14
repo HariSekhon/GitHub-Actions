@@ -49,15 +49,33 @@ jobs:
     #container: groovy  # doesn't contain git and no sudo access
     container: harisekhon/bash-tools:ubuntu
     steps:
-      # allows us to use check_groovyc.sh from the harisekhon/github docker image or the local HariSekhon/DevOps-Bash-tools git checkout further down
-      - name: Setup PATH
-        run: echo "PATH=$PWD/bash-tools:$PATH" >> "$GITHUB_ENV"
+      - name: Linux Release
+        if: runner.os == "Linux"
+        run: |
+          [ -e /.dockerenv ] && ls -l /.dockerenv
+          echo
+          cat /etc/*-release
 
-      - name: OS
-        run: cat /etc/*-release
+      - name: Linux Hardware
+        if: runner.os == "Linux"
+        run: |
+          set +x
+          echo -n "CPUs: "
+          nproc
+          echo
+          free -g
+          echo
+          df -h
 
       - name: Environment
         run: env | sort
+
+      - name: Git version
+        run: git --version
+
+      # allows us to use check_groovyc.sh from the harisekhon/github docker image or the local HariSekhon/DevOps-Bash-tools git checkout further down
+      - name: Setup PATH
+        run: echo "PATH=$PWD/bash-tools:$PATH" >> "$GITHUB_ENV"
 
       - name: Install Groovy
         # on ubuntu latest we have to sudo, but not in bash-tools
