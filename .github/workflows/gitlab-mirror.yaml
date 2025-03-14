@@ -86,8 +86,28 @@ jobs:
     runs-on: ubuntu-latest
     container: harisekhon/bash-tools
     steps:
+      - name: Linux Hardware
+        run: |
+          set +x
+          echo -n "CPUs: "
+          nproc
+          echo
+          free -g
+          echo
+          df -h
+
       - name: Environment
-        run: env | sort
+        run: |
+          [ -e /.dockerenv ] && ls -l /.dockerenv
+          echo
+          cat /etc/*-release
+          echo
+          echo "Environment Variables:"
+          echo
+          env | sort
+
+      - name: Git version
+        run: git --version
 
       # not needed since everything is done via the GitHub and GitLab APIs and iterated checkouts
       #- uses: actions/checkout@v3
