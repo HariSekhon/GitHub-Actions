@@ -374,7 +374,13 @@ jobs:
     #               Chooser Runner - OS, Language, Matrix etc.
     # ============================================================================ #
 
+    # List of Available GitHub Actions Hosted Runners:
+    #
+    #   https://github.com/actions/runner-images#available-images
+    #
     runs-on: ubuntu-latest
+    #runs-on: ubuntu-24.04
+    #runs-on: ubuntu-22.04
 
     #runs-on: # AND'd criteria when given list
     #  - self-hosted
