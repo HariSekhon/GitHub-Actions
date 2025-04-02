@@ -115,6 +115,7 @@ jobs:
   trivy:
     name: Filesystem Scan
     runs-on: ubuntu-latest
+    container: aquasec/trivy:latest
     steps:
       - uses: actions/checkout@v3
 
