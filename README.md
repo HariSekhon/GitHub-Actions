@@ -736,7 +736,7 @@ You will be responsible for committing and reconciling any divergences in your l
 
 <!--
 
-Not support on GitHub Markdown:
+Not supported on GitHub Markdown:
 
 <iframe src="https://raw.githubusercontent.com/HariSekhon/HariSekhon/main/knowledge.md" width="100%" height="500px"></iframe>
 
