@@ -17,7 +17,7 @@
 # ============================================================================ #
 
 ---
-name: Shellcheck
+name: LuaCheck
 
 on:  # yamllint disable-line rule:truthy
   # there is no Lua in this repo
