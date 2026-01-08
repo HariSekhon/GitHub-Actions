@@ -92,6 +92,7 @@ defaults:
 
 env:
   DEBUG: ${{ inputs.debug == true || github.event.inputs.debug == 'true' || '' }}
+  DEFAULT_SEMGREP_IGNORE: https://github.com/semgrep/semgrep/blob/develop/.semgrepignore
 
 jobs:
   semgrep:
@@ -142,7 +143,7 @@ jobs:
       - name: configure .semgrepignore
         run: |
           if ! [ -f .semgrepignore ]; then
-            wget -O .semgrepignore https://raw.githubusercontent.com/returntocorp/semgrep/develop/cli/src/semgrep/templates/.semgrepignore
+            wget -O .semgrepignore "$DEFAULT_SEMGREP_IGNORE"
           fi
           echo semgrep.sarif >> .semgrepignore
 
