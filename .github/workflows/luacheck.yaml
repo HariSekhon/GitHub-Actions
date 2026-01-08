@@ -67,7 +67,7 @@ env:
   DEBUG: ${{ inputs.debug == true || github.event.inputs.debug == 'true' || '' }}
 
 jobs:
-  luacheck:
+  LuaCheck:
     name: LuaCheck
     # github.event.repository.fork isn't available in scheduled workflows
     # can't prevent forks of this repo, because also prevents caller workflows
