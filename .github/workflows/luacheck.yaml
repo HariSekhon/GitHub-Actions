@@ -103,7 +103,7 @@ jobs:
           submodules: ${{ inputs.submodules }}  # 'recursive' default requires Git 2.18+ to be installed first
 
       - name: Install LuaCheck
-        run: apt update && apt install -y lua-check
+        run: sudo apt update && sudo apt install -y lua-check
 
       - name: LuaCheck
         run: luacheck .
