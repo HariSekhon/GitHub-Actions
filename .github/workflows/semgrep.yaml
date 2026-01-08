@@ -140,7 +140,7 @@ jobs:
           submodules: recursive  # requires Git 2.18+ to be installed first
 
       # XXX: workaround for: https://github.com/returntocorp/semgrep/issues/5316
-      - name: configure .semgrepignore
+      - name: Configure .semgrepignore
         run: |
           if ! [ -f .semgrepignore ]; then
             wget -O .semgrepignore "$DEFAULT_SEMGREP_IGNORE"
