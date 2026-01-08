@@ -1,0 +1,109 @@
+#
+#  Author: Hari Sekhon
+#  Date: 2026-01-08 01:16:08 -0500 (Thu, 08 Jan 2026)
+#
+#  vim:ts=2:sts=2:sw=2:et
+#
+#  https://github.com/HariSekhon/GitHub-Actions
+#
+#  If you're using my code you're welcome to connect with me on LinkedIn
+#  and optionally send me feedback
+#
+#  https://www.linkedin.com/in/HariSekhon
+#
+
+# ============================================================================ #
+#                              L u a C h e c k
+# ============================================================================ #
+
+---
+name: Shellcheck
+
+on:  # yamllint disable-line rule:truthy
+  # there is no Lua in this repo
+  #push:
+  #  branches:
+  #    - master
+  #    - main
+  #  paths:
+  #    - '**/*.sh'
+  #    - .github/workflows/luacheck.yaml
+  #pull_request:
+  #  branches:
+  #    - master
+  #    - main
+  #  paths:
+  #    - '**/*.sh'
+  #    - .github/workflows/luacheck.yaml
+  workflow_call:
+    inputs:
+      submodules:
+        type: string
+        required: false
+        default: recursive
+      debug:
+        type: string
+        required: false
+        default: false
+  #workflow_dispatch:
+  #  inputs:
+  #    submodules:
+  #      type: string
+  #      required: false
+  #      default: recursive
+  #    debug:
+  #      type: boolean
+  #      required: false
+  #      default: false
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash -euxo pipefail {0}
+
+env:
+  DEBUG: ${{ inputs.debug == true || github.event.inputs.debug == 'true' || '' }}
+
+jobs:
+  luacheck:
+    name: LuaCheck
+    # github.event.repository.fork isn't available in scheduled workflows
+    # can't prevent forks of this repo, because also prevents caller workflows
+    #if: github.repository == 'HariSekhon/Github-Actions'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Linux Release
+        if: runner.os == 'Linux'
+        run: |
+          [ -e /.dockerenv ] && ls -l /.dockerenv
+          echo
+          cat /etc/*-release
+
+      - name: Linux Hardware
+        if: runner.os == 'Linux'
+        run: |
+          set +x
+          echo -n "CPUs: "
+          nproc
+          echo
+          free -g
+          echo
+          df -h
+
+      - name: Environment
+        run: env | sort
+
+      - name: Git version
+        run: git --version
+
+      - uses: actions/checkout@v3
+        with:
+          submodules: ${{ inputs.submodules }}  # 'recursive' default requires Git 2.18+ to be installed first
+
+      - name: Install LuaCheck
+        run: apt update && apt install -y luacheck
+
+      - name: LuaCheck
+        run: luacheck .
