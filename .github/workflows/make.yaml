@@ -158,6 +158,15 @@ jobs:
             fi
             $sudo apt-get update
             $sudo apt-get install -y -q bash git make
+          elif command -v apt; then
+            if grep -Fxq 'ID=debian' /etc/*release &&
+               grep -xq 'VERSION_ID="[67]"' /etc/*release; then
+              # switch APT sources to archive.debian.org
+              $sudo sed -i 's/deb.debian.org/archive.debian.org/' /etc/apt/sources.list
+              $sudo sed -i 's/security.debian.org/archive.debian.org/' /etc/apt/sources.list
+            fi
+            $sudo apt update
+            $sudo apt install -y -q bash git make
           #elif command -v dnf; then
           #  $sudo dnf install -y -q bash git make
           elif command -v yum; then
