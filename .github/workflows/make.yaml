@@ -99,7 +99,7 @@ jobs:
         run: env | sort
 
       - name: Git version
-        run: git --version
+        run: git --version || echo "Git is not pre-installed, will install further down"
 
       - name: Apk Cache
         if: ( contains(inputs.caches, 'apk') || contains(inputs.caches, 'alpine') ) && startsWith(runner.os, 'Linux')
