@@ -91,7 +91,7 @@ jobs:
           echo -n "CPUs: "
           nproc
           echo
-          free -g
+          free -g || :  # not available by default on Debian and Fedora runners
           echo
           df -h
 
