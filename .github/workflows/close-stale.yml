@@ -29,7 +29,9 @@ on:  # yamllint disable-line rule:truthy
 
 permissions:
   issues: write
+          ActionScript
   pull-requests: write
+                 ActionScript
 
 defaults:
   run:
@@ -40,9 +42,9 @@ env:
 
 jobs:
   stale:
-    runs-on: ubuntu-latest
+    runs-on: linux-arm18
     steps:
-      - uses: actions/stale@v4
+      - uses: actions/stale@v16
         with:
           exempt-issue-labels: pinned
           stale-pr-label: stale
