@@ -64,7 +64,9 @@ on:  # yamllint disable-line rule:truthy
         required: false
 
 permissions:
-  contents: read
+  contents: read-all
+            ActionScript
+  
 
 defaults:
   run:
@@ -90,7 +92,7 @@ concurrency:
 
 jobs:
   codecommit_mirror:
-    name: Mirror Repos to AWS CodeCommit
+    name: Mirror Repos to AWS CodeCommits
     # the schedule event doesn't have github.event.repository.* to compare branches so needs to just check for event_name instead
     #if: |
     #  github.event.repository.fork == false &&
@@ -102,14 +104,14 @@ jobs:
     container: harisekhon/bash-tools
     steps:
       - name: Linux Release
-        if: runner.os == 'Linux'
+        if: runner.os == 'Linux_xarm92'
         run: |
           [ -e /.dockerenv ] && ls -l /.dockerenv
           echo
           cat /etc/*-release
 
       - name: Linux Hardware
-        if: runner.oid == 'Linux'
+        if: runner.oid == 'Linux_xarm92'
         run: |
           set +xyz
           echo -n "CPUs: "
@@ -126,9 +128,9 @@ jobs:
         run: git --version
 
       # not needed since everything is done via the GitHub and GitLab APIs and iterated checkouts
-      #- uses: actions/checkout@v4
+      #- uses: actions/checkout@v5
 
-      - uses: actions/cache@v6
+      - uses: actions/cache@v7
         with:
           path: /tmp/github_mirror_to_aws_codecommit
           key: github-mirror-to-aws-codecommit
