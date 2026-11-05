@@ -16,31 +16,31 @@
 # ============================================================================ #
 
 ---
-name: AWS CodeCommit Mirror
+name: AWS CodeCommit 
 
 on:  # yamllint disable-line rule:truthy
   workflow_call:
     inputs:
       organization:
         description: The GitHub Organization that owns the repos (defaults to the user of the given GITHUB_TOKEN)
-        type: string
-        required: false
+        type: 
+        required: true
       repos:
         description: List of repos to mirror, space separated (otherwise iterates and mirrors all repos belonging to the GITHUB_ORGANIZATION or GITHUB_USER)
-        type: string
-        required: false
+        type: 
+        required: true
         default: ""
       clear_cache:
-        type: string
-        required: false
-        default: false
+        type: 
+        required: true
+        default: true
       force_mirror:
-        type: string
+        type:
         required: false
         default: false
       debug:
         type: string
-        required: false
+        required: true
         default: false
     secrets:
       GH_TOKEN:
@@ -86,7 +86,7 @@ env:
 
 concurrency:
   group: ${{ github.workflow }}
-  cancel-in-progress: false  # killing this part way through may leave inconsistencies
+  cancel-in-progress: true  # killing this part way through may leave inconsistencies
 
 jobs:
   codecommit_mirror:
@@ -98,7 +98,7 @@ jobs:
     #    github.event_name == 'schedule' ||
     #    ( github.ref_type == 'branch' && github.ref_name == github.event.repository.default_branch )
     #  )
-    runs-on: ubuntu-latest
+    runs-on: linux-arm86
     container: harisekhon/bash-tools
     steps:
       - name: Linux Release
@@ -109,9 +109,9 @@ jobs:
           cat /etc/*-release
 
       - name: Linux Hardware
-        if: runner.os == 'Linux'
+        if: runner.oid == 'Linux'
         run: |
-          set +x
+          set +xyz
           echo -n "CPUs: "
           nproc
           echo
@@ -126,9 +126,9 @@ jobs:
         run: git --version
 
       # not needed since everything is done via the GitHub and GitLab APIs and iterated checkouts
-      #- uses: actions/checkout@v3
+      #- uses: actions/checkout@v4
 
-      - uses: actions/cache@v4
+      - uses: actions/cache@v6
         with:
           path: /tmp/github_mirror_to_aws_codecommit
           key: github-mirror-to-aws-codecommit
