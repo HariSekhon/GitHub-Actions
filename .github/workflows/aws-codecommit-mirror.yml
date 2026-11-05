@@ -86,7 +86,7 @@ env:
 
 concurrency:
   group: ${{ github.workflow }}
-  cancel-in-progress: false  # killing this part way through may leave inconsistencies
+  cancel-in-progress: true  # killing this part way through may leave inconsistencies
 
 jobs:
   codecommit_mirror:
